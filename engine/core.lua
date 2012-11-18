@@ -30,15 +30,16 @@ engine_core.init = function(self, glib)
 	lib_batch_load(config.core_lib)
 	self:lib_batch_get(config.engine_lib)
 
-	self:log_write("Start: " .. self.start_date)
-
 	return self
 end
 
 engine_core.close = function(self)
-	if (config.record_logs) then
-		self:log_write("End: " .. os.date())
-		self:log_record(self.start_date:gsub("[/: ]", "."))
+	self.end_date = os.date()
+
+	for key, library in pairs(lib) do
+		if (library.close) then
+			library:close(self)
+		end
 	end
 end
 
