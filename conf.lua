@@ -4,7 +4,7 @@ function love.conf(t)
 	t.url = "http://lpghatguy.github.com/"
 	t.identity = "LD-25"
 	t.version = "0.8.0"
-	t.console = false
+	t.console = true
 	t.release = false
 	t.screen.width = 1024
 	t.screen.height = 768

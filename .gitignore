@@ -2,6 +2,7 @@
 ## Misc. Additions
 #################
 *.sublime-workspace
+.build
 
 #################
 ## Eclipse

@@ -1,0 +1,31 @@
+{
+	"folders":
+	[
+		{
+			"path": "/",
+			"folder_exclude_patterns": [".build"],
+			"file_exclude_patterns": [".gitignore", ".gitattributes", "*.sublime-*"]
+		}
+	],
+	"settings":
+	{
+	},
+	"build_systems":
+	[
+		{
+			"name": "LÖVE",
+			"cmd": ["$project_path/.build/love-win64/love.exe", "$project_path"],
+			"variants": [
+				{
+					"name": "LÖVE (x86)",
+					"cmd": ["$project_path/.build/love-win32/love.exe", "$project_path"]
+				},
+
+				{
+					"name": "LÖVE (LuaJIT)",
+					"cmd": ["$project_path/.build/love-win32-luajit/love.exe", "$project_path"]
+				}
+			]
+		}
+	]
+}
