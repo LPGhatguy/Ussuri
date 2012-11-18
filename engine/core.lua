@@ -27,8 +27,8 @@ engine_core.init = function(self, glib)
 	config.engine_path = config.engine_path or engine_path
 	engine_core.config = config
 
-	lib_batch_load(config.core_lib)
-	self:lib_batch_get(config.engine_lib)
+	lib_batch_load(config.lib_core)
+	self:lib_batch_get(config.lib_engine)
 
 	return self
 end
