@@ -3,17 +3,19 @@ local lib, config = {}, {}
 local engine_path = debug.getinfo(1).short_src:match("([^%.]*)[\\/][^%.]*%..*$"):gsub("[\\/]", ".") .. "."
 config.engine_path = engine_path
 
-local function load_lib(load)
-	local name = load:gsub("^:", "")
+engine_core.start_date = os.date()
+
+local function lib_load(load)
+	local name = load:match("([^%.:]*)$")
 	local loaded = require(load:gsub("^:", config.engine_path)):init(engine_core)
 	lib[name] = loaded
 
 	return loaded
 end
 
-local function batch_load_lib(batch)
+local function lib_batch_load(batch)
 	for index, lib_name in next, batch do
-		load_lib(lib_name)
+		lib_load(lib_name)
 	end
 end
 
@@ -25,9 +27,19 @@ engine_core.init = function(self, glib)
 	config.engine_path = config.engine_path or engine_path
 	engine_core.config = config
 
-	batch_load_lib(config.core_lib)
+	lib_batch_load(config.core_lib)
+	self:lib_batch_get(config.engine_lib)
+
+	self:log_write("Start: " .. self.start_date)
 
 	return self
+end
+
+engine_core.close = function(self)
+	if (config.record_logs) then
+		self:log_write("End: " .. os.date())
+		self:log_record(self.start_date:gsub("[/: ]", "."))
+	end
 end
 
 return engine_core
