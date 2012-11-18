@@ -1,5 +1,5 @@
 function love.conf(t)
-	t.title = "Ludum Dare 25 Game"
+	t.title = "Ussuri Demo"
 	t.author = "LPGhatguy"
 	t.url = "http://lpghatguy.github.com/"
 	t.identity = "LD-25"
