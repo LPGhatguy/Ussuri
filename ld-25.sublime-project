@@ -7,9 +7,6 @@
 			"file_exclude_patterns": [".gitignore", ".gitattributes", "*.sublime-*"]
 		}
 	],
-	"settings":
-	{
-	},
 	"build_systems":
 	[
 		{
