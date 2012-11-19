@@ -4,8 +4,13 @@ logging.log_history = {}
 logging.log_directory = "logs"
 
 logging.log_write = function(self, ...)
+	local args = {...}
+	for key, value in pairs(args) do
+		args[key] = tostring(value)
+	end
+
 	if (config.log_history_enabled) then
-		table.insert(self.log_history, table.concat({...}))
+		table.insert(self.log_history, table.concat(args, " "))
 	end
 
 	if (config.log_realtime_enabled) then
