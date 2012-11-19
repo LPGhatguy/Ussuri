@@ -20,7 +20,8 @@ end
 oop.init = function(self, engine)
 	lib = engine.lib
 
-	object.new = lib.utility.table_copy
+	object._new = lib.utility.table_copy --base constructor
+	object.new = object._new --default constructor
 
 	self:objectify(engine)
 
