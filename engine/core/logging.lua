@@ -1,7 +1,6 @@
 local logging = {}
 local config
 logging.log_history = {}
-logging.log_directory = "logs"
 
 logging.log_write = function(self, ...)
 	local args = {...}
@@ -19,11 +18,11 @@ logging.log_write = function(self, ...)
 end
 
 logging.log_record = function(self, filename)
-	if (not love.filesystem.exists(self.log_directory)) then
-		love.filesystem.mkdir(self.log_directory)
+	if (not love.filesystem.exists(config.log_directory)) then
+		love.filesystem.mkdir(config.log_directory)
 	end
 
-	local file_out = love.filesystem.newFile(self.log_directory .. "/" .. filename .. ".txt")
+	local file_out = love.filesystem.newFile(config.log_directory .. "/" .. filename .. ".txt")
 	file_out:open("w")
 
 	local to_write = ""

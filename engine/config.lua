@@ -8,5 +8,6 @@ return
 	--core.logging
 	log_realtime_enabled = true,
 	log_history_enabled = true,
-	log_recording_enabled = false
+	log_recording_enabled = false,
+	log_directory = "logs"
 }
