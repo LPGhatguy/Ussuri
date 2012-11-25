@@ -1,6 +1,7 @@
 local logging = {}
 local config
 logging.log_history = {}
+logging.__logger = true
 
 logging.log_write = function(self, ...)
 	local args = {...}

@@ -51,10 +51,14 @@ event.event_trigger_full = function(self, event_name, arguments)
 				if (handler_func) then
 					handler_func(handler, event_pass)
 				else
-					engine:log_write("Could not find handler for", key, "of full event", event_name)
+					if (self.__logger) then
+						self:log_write("Could not find handler for", key, "of full event", event_name)
+					end
 				end
 			else
-				engine:log_write("Unsupported handler type:", type(handler), "for", key, "of full event", event_name)
+				if (self.__logger) then
+					self:log_write("Unsupported handler type:", type(handler), "for", key, "of full event", event_name)
+				end
 			end
 
 			if (event_pass.cancel) then
@@ -62,7 +66,9 @@ event.event_trigger_full = function(self, event_name, arguments)
 			end
 		end
 	else
-		engine:log_write("Could not find full event", event_name)
+		if (self.__logger) then
+			self:log_write("Could not find full event", event_name)
+		end
 	end
 end
 
@@ -80,14 +86,20 @@ event.event_trigger_light = function(self, event_name, arguments)
 				if (handler_func) then
 					handler_func(handler, unpack(arguments))
 				else
-					engine:log_write("Could not find handler for", key, "of light event", event_name)
+					if (self.__logger) then
+						self:log_write("Could not find handler for", key, "of light event", event_name)
+					end
 				end
 			else
-				engine:log_write("Unsupported handler type:", type(handler), "for", key, "of light event", event_name)
+				if (self.__logger) then
+					self:log_write("Unsupported handler type:", type(handler), "for", key, "of light event", event_name)
+				end
 			end
 		end
 	else
-		engine:log_write("Could not find light event", event_name)
+		if (self.__logger) then
+			self:log_write("Could not find light event", event_name)
+		end
 	end
 end
 
@@ -102,8 +114,7 @@ event.event_pass.new = function(self, event_name, arguments)
 	return pass
 end
 
-event.init = function(self, gengine)
-	engine = gengine
+event.init = function(self, engine)
 	lib = engine.lib
 
 	lib.oop:objectify(self.event_pass)
@@ -112,7 +123,8 @@ event.init = function(self, gengine)
 	return self
 end
 
-event.close = function(self)
+event.close = function(self, engine)
+	
 end
 
 return event
