@@ -27,9 +27,24 @@ lib_manage.lib_load = function(self, path, name)
 	local loaded = require(path)
 	if (loaded and loaded.init) then
 		loaded = loaded:init(self)
+		loaded.init = nil
 	end
 
-	lib[name] = loaded
+	if (string.match(name, "[%.]")) then
+		local name = name:gsub(":", "")
+		local lib_name = name:match("([^%.:]*)$")
+		local store_in = lib
+		for addition in string.gmatch(name, "([^%.]+)%.") do
+			if (not store_in[addition]) then
+				store_in[addition] = {}
+			end
+			store_in = store_in[addition]
+		end
+
+		store_in[lib_name] = loaded
+	else
+		lib[name] = loaded
+	end
 
 	return lib
 end
@@ -46,7 +61,7 @@ end
 
 lib_manage.init = function(self, engine)
 	lib = engine.lib or lib
-	engine_path = engine.engine_path or engine_path
+	engine_path = engine.config.engine_path or engine_path
 
 	engine:inherit(self)
 

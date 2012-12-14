@@ -8,6 +8,7 @@ engine_core.start_date = os.date()
 local function lib_load(load)
 	local name = load:match("([^%.:]*)$")
 	local loaded = require(load:gsub("^:", config.engine_path)):init(engine_core)
+	loaded.init = nil
 	lib[name] = loaded
 
 	return loaded
@@ -35,6 +36,8 @@ end
 
 engine_core.close = function(self)
 	self.end_date = os.date()
+
+	lib.event:event_trigger("quit")
 
 	for key, library in pairs(lib) do
 		if (library.close) then
