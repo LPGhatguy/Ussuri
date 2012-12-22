@@ -1,5 +1,8 @@
 local utility = {}
 
+utility.do_nothing = function()
+end
+
 utility.get_engine_path = function()
 	return debug.getinfo(1).short_src:match("([^%.]*)[\\/][^%.]*%..*$")
 end
@@ -19,12 +22,14 @@ utility.table_copy = function(from, to)
 end
 
 utility.table_merge = function(from, to)
-	for key, value in pairs(from) do
-		if (not to[key]) then
-			if (type(value) == "table") then
-				to[key] = utility.table_copy(value)
-			else
-				to[key] = value
+	if (from) then
+		for key, value in pairs(from) do
+			if (not to[key]) then
+				if (type(value) == "table") then
+					to[key] = utility.table_copy(value)
+				else
+					to[key] = value
+				end
 			end
 		end
 	end
