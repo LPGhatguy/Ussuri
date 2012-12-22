@@ -26,7 +26,7 @@ lib_manage.lib_load = function(self, path, name)
 
 	local loaded = require(path)
 	if (loaded and loaded.init) then
-		loaded = loaded:init(self)
+		loaded = loaded:init(self) or loaded
 		loaded.init = nil
 	end
 
