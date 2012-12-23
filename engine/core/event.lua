@@ -108,7 +108,7 @@ end
 event.init = function(self, engine)
 	lib = engine.lib
 
-	lib.oop:objectify(self.event_pass)
+	lib.oop:objectify(self.event_pass, true)
 	engine:inherit(self)
 
 	return self
