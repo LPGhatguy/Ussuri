@@ -1,10 +1,16 @@
-local delayed = {}
+local delay = {}
 
-delayed.delay_time = 0
-delayed.delay_elapsed = 0
-delayed.delay_set = true
+delay.delay_time = 0
+delay.delay_elapsed = 0
+delay.delay_set = true
 
-delayed.delay_step = function(self, delta)
+delay.event = {
+	update = function(self, event)
+		self:delay_step(event.delta)
+	end
+}
+
+delay.delay_step = function(self, delta)
 	local elapsed = self.delay_elapsed + delta
 	self.delay_elapsed = elapsed
 
@@ -13,7 +19,7 @@ delayed.delay_step = function(self, delta)
 	end
 end
 
-delayed.new = function(self, delay, action)
+delay.new = function(self, delay, action)
 	local new = self:_new()
 
 	new.delay_time = delay or new.delay_time
@@ -22,12 +28,12 @@ delayed.new = function(self, delay, action)
 	return new
 end
 
-delayed.delay_reset = function(self)
+delay.delay_reset = function(self)
 	self.delay_elapsed = 0
 	self.delay_set = true
 end
 
-delayed.init = function(self, engine)
+delay.init = function(self, engine)
 	self.delay_action = engine.lib.utility.do_nothing
 
 	engine.lib.oop:objectify(self)
@@ -35,4 +41,4 @@ delayed.init = function(self, engine)
 	return self
 end
 
-return delayed
+return delay
