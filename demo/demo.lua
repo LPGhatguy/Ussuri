@@ -1,9 +1,16 @@
 local engine = require("engine.core")
+local lib, extend
+local state = true
 
 function love.load()
 	engine:init()
+	local lib = engine.lib
+	local extend = lib.extend
 
-	love.graphics.setPointSize(1)
+	engine:event_hook("update", extend.delay(0.2, function(self)
+		state = not state
+		self:delay_reset()
+	end))
 
 	engine:event_hook("keydown", function(self, event)
 		if (event.key == "escape") then
@@ -13,12 +20,18 @@ function love.load()
 	end)
 
 	engine:event_hook("draw", function(self)
-		love.graphics.print(love.timer.getDelta(), 10, 10)
+		if (state) then
+			love.graphics.rectangle("fill", 100, 100, 50, 50)
+		end
 	end)
 end
 
 function love.keypressed(key, unicode)
 	engine:fire_keydown(key, unicode)
+end
+
+function love.update(delta)
+	engine:fire_update(delta)
 end
 
 function love.draw()
