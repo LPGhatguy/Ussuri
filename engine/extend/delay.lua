@@ -14,7 +14,8 @@ delay.delay_step = function(self, delta)
 	local elapsed = self.delay_elapsed + delta
 	self.delay_elapsed = elapsed
 
-	if (elapsed >= self.delay_time) then
+	if (elapsed >= self.delay_time and self.delay_set) then
+		self.delay_set = false
 		self:delay_action()
 	end
 end

@@ -1,29 +1,35 @@
 local debris_manager = {}
 
-debris_manager.debrismanage_children = {}
+debris_manager.children = {}
+
+debris_manager.event = {
+	update = function(self, event)
+		self:debrismanage_step(event.delta)
+	end
+}
 
 debris_manager.debrismanage_step = function(self, delta)
-	for child, time_left in next, self.debris_children do
+	for child, time_left in next, self.children do
 		local time_updated = time_left - delta
 
 		if (time_updated <= 0) then
-			self.child[child] = nil
+			self.children[child] = nil
 			self:destroy_child(child)
 		else
-			self.child[child] = time_updated
-			self:update_child(child)
+			self.children[child] = time_updated
+			self:update_child(child, delta)
 		end
 	end
 end
 
-debris_manager.debrismanage_update_child = function(self, child)
+debris_manager.update_child = function(self, child, delta)
 	if (type(child) == "table" and child["update"]) then
 		child:update(self)
 	end
 end
 
-debris_manager.debrismanage_destroy_child = function(self, child)
-	if (type(child) == "table" and destroy["update"]) then
+debris_manager.destroy_child = function(self, child)
+	if (type(child) == "table" and destroy["destroy"]) then
 		child:destroy(self)
 	end
 end
