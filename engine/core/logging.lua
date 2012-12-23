@@ -41,6 +41,7 @@ logging.init = function(self, engine)
 
 	engine:inherit(self)
 	engine:log_write("Start:", engine.start_date)
+	engine:log_write("Using engine version", engine.config.version)
 
 	return self
 end
