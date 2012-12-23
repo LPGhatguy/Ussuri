@@ -32,6 +32,7 @@ debris_manager.destroy_child = function(self, child)
 	if (type(child) == "table" and destroy["destroy"]) then
 		child:destroy(self)
 	end
+	self.children[child] = nil
 end
 
 debris_manager.init = function(self, engine)
