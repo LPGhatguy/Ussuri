@@ -4,6 +4,12 @@ debris.debris_lifetime = 2
 debris.debris_expended = 0
 debris.debris_alive = true
 
+debris.event = {
+	update = function(self, event)
+		self:debris_step(event.delta)
+	end
+}
+
 debris.debris_step = function(self, delta)
 	if (self.debris_alive) then
 		local expended = self.debris_expended + event.delta
