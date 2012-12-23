@@ -33,8 +33,8 @@ oop.init = function(self, engine)
 
 	object._new = lib.utility.table_copy --base constructor
 	object.new = object._new --default constructor
-	object._metanew = function(...) --hacky metatable trick
-		return self.new(...)
+	object._metanew = function(self, ...) --hacky metatable trick
+		return self.new(self, ...)
 	end
 
 	self:objectify(engine)
