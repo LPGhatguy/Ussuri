@@ -3,9 +3,10 @@ local lib = {}
 local engine
 
 event.events = {}
+event.event_auto_sort = false
 
 event.event_handler_sorter = function(first, second)
-	return (first[3] or 0) > (second[3] > 0)
+	return (first[3] or math.huge) < (second[3] or math.huge)
 end
 
 event.event_sort_handlers = function(self, event_name)
@@ -60,7 +61,11 @@ event.event_hook = function(self, event_name, object, handler, priority)
 	self.events[event_name] = handlers
 
 	if (object) then
-		table.insert(handlers, {object, handler, priority or 0})
+		table.insert(handlers, {object, handler, tonumber(priority)})
+	end
+
+	if (self.event_auto_sort) then
+		self:event_sort_handlers(event_name)
 	end
 end
 
