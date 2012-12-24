@@ -22,14 +22,24 @@ end
 
 engine_core.init = function(self, glib)
 	lib = glib or lib
-	engine_core.lib = lib
+	self.lib = lib
 
 	config = require(engine_path .. "config")
 	config.engine_path = config.engine_path or engine_path
-	engine_core.config = config
+	self.config = config
+
+	setmetatable(config, {
+		__newindex = function()
+			print("Attempt to change config after engine initialization!")
+		end
+	})
 
 	lib_batch_load(config.lib_core)
-	self:lib_batch_get(config.lib_engine)
+	--self:lib_batch_get(config.lib_engine)
+
+	for folder, order in next, config.lib_folders do
+		self:lib_folder_load(folder, order)
+	end
 
 	return self
 end
