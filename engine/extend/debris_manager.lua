@@ -29,7 +29,7 @@ debris_manager.update_child = function(self, child, delta)
 end
 
 debris_manager.destroy_child = function(self, child)
-	if (type(child) == "table" and destroy["destroy"]) then
+	if (type(child) == "table" and child["destroy"]) then
 		child:destroy(self)
 	end
 	self.children[child] = nil
