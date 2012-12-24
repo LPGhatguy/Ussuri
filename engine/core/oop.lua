@@ -5,6 +5,10 @@ local lib
 
 oop.object = object
 
+object.inherit = function(self, from)
+	lib.utility.table_merge(from, self)
+end
+
 oop.objectify = function(self, to, lightweight)
 	lib.utility.table_merge(self.object, to)
 
@@ -22,10 +26,6 @@ oop.objectify = function(self, to, lightweight)
 			})
 		end
 	end
-end
-
-object.inherit = function(self, from)
-	lib.utility.table_merge(from, self)
 end
 
 oop.init = function(self, engine)
