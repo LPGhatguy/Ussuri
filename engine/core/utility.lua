@@ -50,6 +50,31 @@ utility.table_merge_adv = function(from, to, transform)
 	end
 end
 
+utility.table_tree = function(location, level)
+	local out = ""
+	local level = level or 0
+
+	for key, value in next, location do
+		out = out .. ("\t"):rep(level) ..
+			"(" .. type(key) .. ") " ..
+			tostring(key) .. ": "
+
+		if (type(value) == "string") then
+			out = out .. "\"" .. value .. "\""
+		elseif (type(value) == "table") then
+			out = out .. "(table)\n" .. utility.table_tree(value, level + 1)
+		elseif (type(value) == "function") then
+			out = out .. "(" .. tostring(value):gsub("00+", "") .. ")"
+		else
+			out = out .. tostring(value)
+		end
+
+		out = out .. "\n"
+	end
+
+	return out:sub(1, -2)
+end
+
 utility.init = function(self, engine)
 	return self
 end
