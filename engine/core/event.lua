@@ -3,10 +3,10 @@ local lib = {}
 local engine
 
 event.events = {}
-event.event_auto_sort = false
+event.event_auto_sort = true
 
 event.event_handler_sorter = function(first, second)
-	return (first[3] or math.huge) < (second[3] or math.huge)
+	return (first[3] or 500) < (second[3] or 500)
 end
 
 event.event_sort_handlers = function(self, event_name)
@@ -29,23 +29,33 @@ event.event_create_batch = function(self, ...)
 	end
 end
 
-event.event_hook_auto = function(self, object, priority)
-	local object_type = type(object)
+event.event_get_handler = function(object, handler, event_name)
+	return handler or (type(object) == "table") and ((object.event and object.event[event_name]) or object[event_name]) or object
+end
 
-	if (object_type == "table") then
+event.event_get_priority = function(priority, object, event_name)
+	return priority or (type(object) == "table") and (object.event_priority and object.event_priority[event_name])
+end
+
+event.event_hook_auto = function(self, object, priority)
+	if (type(object) == "table") then
 		local methods = object.event or object
 
 		for name, handler in next, methods do
-			table.insert(event, {object, handler, priority})
+			table.insert(self.events[name], {object, handler, self.event_get_priority(priority, object, name)})
 		end
-	elseif (object_type == "function") then
+	elseif (type(object) == "function") then
 		for event_name, event in next, self.events do
 			table.insert(event, {object, object, priority})
 		end
 	end
+
+	if (self.event_auto_sort) then
+		self:event_sort_handlers()
+	end
 end
 
-event.event_hook_batch = function(self, object, handlers, priority)
+event.event_hook_batch = function(self, handlers, object, priority)
 	if (type(handlers) == "table") then
 		for handler_id, handler_name in next, handlers do
 			self:event_hook(handler_name, object, nil, priority)
@@ -56,7 +66,8 @@ event.event_hook_batch = function(self, object, handlers, priority)
 end
 
 event.event_hook = function(self, event_name, object, handler, priority)
-	local handler = handler or (type(object) == "table") and ((object.event and object.event[event_name]) or object[event_name]) or object
+	local handler = self.event_get_handler(object, handler, event_name)
+	local priority = self.event_get_priority(priority, object, event_name)
 	local handlers = self.events[event_name] or {}
 	self.events[event_name] = handlers
 
@@ -83,6 +94,11 @@ event.event_trigger = function(self, event_name, arguments)
 
 				if (event_pass.cancel) then
 					break
+				end
+
+				if (event_pass.unhook) then
+					event_pass.unhook = false
+					table.remove(handlers, key)
 				end
 			end
 		end
@@ -120,6 +136,7 @@ event.init = function(self, engine)
 end
 
 event.close = function(self, engine)
+	engine:event_trigger("quit")
 end
 
 return event
