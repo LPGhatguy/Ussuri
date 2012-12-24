@@ -6,7 +6,7 @@ logging.__logger = true
 logging.log_write = function(self, ...)
 	local args = {...}
 	for key, value in pairs(args) do
-		args[key] = tostring(value)
+		args[key] = tostring(value):gsub("\n", "\r\n")
 	end
 
 	if (config.log_history_enabled) then
@@ -41,14 +41,15 @@ logging.init = function(self, engine)
 
 	engine:inherit(self)
 	engine:log_write("Start:", engine.start_date)
-	engine:log_write("Using engine version", engine.config.version)
+	engine:log_write("Using engine version " .. tostring(engine.config.version))
 
 	return self
 end
 
 logging.close = function(self, engine)
 	engine:log_write("End:", engine.end_date)
-	if (engine.config.log_recording_enabled) then
+
+	if (config.log_recording_enabled) then
 		engine:log_record(engine.start_date:gsub("[:/ ]", "."))
 	end
 end
