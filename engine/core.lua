@@ -28,14 +28,7 @@ engine_core.init = function(self, glib)
 	config.engine_path = config.engine_path or engine_path
 	self.config = config
 
-	setmetatable(config, {
-		__newindex = function()
-			print("Attempt to change config after engine initialization!")
-		end
-	})
-
 	lib_batch_load(config.lib_core)
-	--self:lib_batch_get(config.lib_engine)
 
 	for folder, order in next, config.lib_folders do
 		self:lib_folder_load(folder, order)
@@ -47,12 +40,11 @@ end
 engine_core.close = function(self)
 	self.end_date = os.date()
 
-	lib.event:event_trigger("quit")
-
 	for key, library in pairs(lib) do
 		if (library.close) then
 			library:close(self)
 		end
+		lib[key] = nil
 	end
 end
 
