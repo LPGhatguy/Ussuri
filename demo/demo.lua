@@ -1,55 +1,119 @@
---Load the engine
-local engine = require("engine.core")
+local engine, lib, extend
+local time_particle, particle_manager
 
 function love.load()
-	--Initialize the engine and its libraries
+	engine = require("engine.core")
 	engine:init()
 
-	--Make some shorthand references for efficiency
-	local lib = engine.lib
-	local extend = lib.extend
+	lib = engine.lib
+	extend = lib.extend
 
-	--Create a debris manager to manage our particles
-	local manager = extend.debris_manager()
+	--initialize the particle class
+	time_particle = {
+		x = 0,
+		y = 0,
+		v_x = 0,
+		v_y = 0,
+		color = {0, 0, 0},
+		new = function(self, x, y)
+			local particle = self:_new()
 
-	--Create a method to update our particles
-	--The default destructor is fine, so we won't mess with it
-	manager.update_child = function(self, child, delta)
-		child.x = child.x + child.v_x * delta
-		child.y = child.y + child.v_y * delta
+			particle.x = x
+			particle.y = y
+			particle.v_x = math.random(-70, 70)
+			particle.v_y = math.random(-70, 70)
+			particle.color = {math.random(100, 200), math.random(100, 200), math.random(100, 200)}
+
+			return particle
+		end
+	}
+	lib.oop:objectify(time_particle, true)
+
+	--initialize the particle manager class
+	particle_manager = {
+		elapsed = 0,
+		x = 0,
+		y = 0,
+		update_child = function(self, child, delta)
+			child.x = child.x + child.v_x * delta
+			child.y = child.y + child.v_y * delta
+		end
+	}
+
+	lib.oop:objectify(particle_manager)
+	particle_manager:inherit(extend.debris_manager)
+
+	particle_manager.event.update = function(self, event)
+		self.elapsed = self.elapsed + event.delta
+		self.x = 512 + 256 * math.cos(self.elapsed)
+		self.y = 384 + 192 * math.sin(self.elapsed)
+
+		self:debrismanage_step(event.delta)
 	end
 
-	--Wire up the particle spawner to the update event
+	particle_manager.event.draw = function(self)
+		love.graphics.setColor(200, 0, 0)
+		love.graphics.circle("fill", self.x, self.y, 3)
+
+		for object, time_left in next, self.children do
+			love.graphics.setColor(object.color)
+			love.graphics.print(math.ceil(time_left), object.x, object.y)
+		end
+	end
+
+	--create our manager and hook it into the engine
+	local manager = particle_manager:new()
+	engine:event_hook_auto(manager)
+
+	--create a spawner loop to create particles for the manager
 	engine:event_hook("update", extend.delay:new(0.05, function(self)
-		manager.children[{x = 300, y = 300, v_x = math.random(-70, 70), v_y = math.random(-70, 70)}] = 5
+		manager.children[time_particle:new(manager.x, manager.y)] = 5
 		self:delay_reset()
 	end))
 
-	--Wire up the manager to the update event
-	engine:event_hook("update", manager)
+	--enable debug monitor and console functionality (both WIP)
+	engine:event_hook_auto(extend.debug_monitor)
+	engine:event_hook_auto(extend.console)
 
-	--Draw the particles to the screen!
-	engine:event_hook("draw", function(self)
-		for object, time_left in next, manager.children do
-			love.graphics.print(math.ceil(time_left), object.x, object.y)
-		end
-	end)
-
-	--This must be fired absolutely first, so we pass a priority of 0 so no escape keypressed fall through.
+	--allow the user to quit
 	engine:event_hook("keydown", function(self, event)
 		if (event.key == "escape") then
+			if (love.keyboard.isDown("`")) then
+				engine:log_write(lib.utility.table_tree(engine))
+				engine.config.log_recording_enabled = true
+			end
+
 			event.cancel = true
 			love.event.push("quit")
 		end
 	end, nil, 0)
 
-	--We don't care what order this gets fired, just that it does.
+	--shake the screen for fun
 	engine:event_hook("keydown", function(self, event)
-		engine:log_write(event.key, event.unicode)
+		if (event.key == " ") then
+			local shake = extend.debris:new(2)
+			shake.rotation = 0
+
+			shake.debris_update = function(self, delta)
+				self.rotation = math.random(-50, 50) / 5000
+			end
+
+			shake.event.draw = function(self, event)
+				love.graphics.rotate(self.rotation)
+
+				event.unhook = not self.debris_alive
+			end
+
+			shake.event_priority = {
+				draw = 0
+			}
+
+			engine:event_hook_auto(shake)
+		end
 	end)
 end
 
---Everything below here is just to wire code up to the engine and fire events
+--wire up events for the engine to catch
 function love.keypressed(key, unicode)
 	engine:fire_keydown(key, unicode)
 end
