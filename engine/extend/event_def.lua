@@ -28,7 +28,7 @@ end
 definitions.init = function(self, engine)
 	lib = engine.lib
 
-	engine:event_create_batch("update", "draw", "keydown", "keyup")
+	engine:event_create_batch("update", "draw", "keydown", "keyup", "quit")
 	engine:inherit(self)
 
 	return self
