@@ -9,7 +9,6 @@ return
 	lib_folders = {
 		[":extend"] = {"event_def"}
 	},
-	lib_engine = {":extend.event_def", ":extend.debris", ":extend.debris_manager", ":extend.delay"},
 	--core.logging
 	log_realtime_enabled = true,
 	log_history_enabled = true,
