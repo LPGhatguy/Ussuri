@@ -6,7 +6,7 @@ delay.delay_set = true
 
 delay.event = {
 	update = function(self, event)
-		self:delay_step(event.delta)
+		event.unhook = self:delay_step(event.delta)
 	end
 }
 
@@ -16,7 +16,7 @@ delay.delay_step = function(self, delta)
 
 	if (elapsed >= self.delay_time and self.delay_set) then
 		self.delay_set = false
-		self:delay_action()
+		return self:delay_action()
 	end
 end
 
