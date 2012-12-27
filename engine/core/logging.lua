@@ -1,20 +1,23 @@
 local logging = {}
+local print = print
 local config
 logging.log_history = {}
+logging.log_strung = ""
 logging.__logger = true
 
 logging.log_write = function(self, ...)
-	local args = {...}
-	for key, value in pairs(args) do
-		args[key] = tostring(value):gsub("\n", "\r\n")
+	local add = ""
+	for key, value in pairs({...}) do
+		add = add .. " " .. tostring(value):gsub("\n", "\r\n")
 	end
 
 	if (config.log_history_enabled) then
-		table.insert(self.log_history, table.concat(args, " "))
+		table.insert(self.log_history, add)
+		self.log_strung = self.log_strung .. "\n" .. add
 	end
 
 	if (config.log_realtime_enabled) then
-		print(...)
+		print(add)
 	end
 end
 
