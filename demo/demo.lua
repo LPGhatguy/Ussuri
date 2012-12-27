@@ -1,9 +1,12 @@
-local engine, lib, extend
-local time_particle, particle_manager
+local lib, extend
 
 function love.load()
 	engine = require("engine.core")
 	engine:init()
+
+	print = function(...)
+		engine:log_write(...)
+	end
 
 	lib = engine.lib
 	extend = lib.extend
@@ -62,7 +65,7 @@ function love.load()
 	end
 
 	--create our manager and hook it into the engine
-	local manager = particle_manager:new()
+	manager = particle_manager:new()
 	engine:event_hook_auto(manager)
 
 	--create a spawner loop to create particles for the manager
@@ -72,8 +75,8 @@ function love.load()
 	end))
 
 	--enable debug monitor and console functionality (both WIP)
-	engine:event_hook_auto(extend.debug_monitor)
-	engine:event_hook_auto(extend.console)
+	engine:event_hook_auto(lib.debug.debug_monitor)
+	engine:event_hook_auto(lib.debug.console)
 
 	--allow the user to quit
 	engine:event_hook("keydown", function(self, event)
@@ -116,6 +119,14 @@ end
 --wire up events for the engine to catch
 function love.keypressed(key, unicode)
 	engine:fire_keydown(key, unicode)
+end
+
+function love.mousepressed(x, y, button)
+	engine:fire_mousedown(x, y, button)
+end
+
+function love.mousereleased(x, y, button)
+	engine:fire_mouseup(x, y, button)
 end
 
 function love.update(delta)
