@@ -7,6 +7,16 @@ utility.get_engine_path = function()
 	return debug.getinfo(1).short_src:match("([^%.]*)[\\/][^%.]*%..*$")
 end
 
+utility.string_split = function(source, splitter)
+	local out = {}
+
+	for piece in string.gmatch(source, "[^" .. splitter .. "]+") do
+		table.insert(out, piece)
+	end
+
+	return out
+end
+
 utility.table_copy = function(from, to)
 	local to = to or {}
 
@@ -73,6 +83,25 @@ utility.table_tree = function(location, level)
 	end
 
 	return out:sub(1, -2)
+end
+
+utility.table_size = function(the_table, recursive)
+	local size = 0
+
+	if (recursive) then
+		for key, value in next, the_table do
+			size = size + 1
+			if (type(value) == "table") then
+				size = size + utility.table_size(value, true)
+			end
+		end
+	else
+		for key, value in next, the_table do
+			size = size + 1
+		end
+	end
+
+	return size
 end
 
 utility.init = function(self, engine)
