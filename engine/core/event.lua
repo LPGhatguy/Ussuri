@@ -5,9 +5,23 @@ local engine
 event.events = {}
 event.event_auto_sort = true
 
+--overridable event internal utility methods
+
 event.event_handler_sorter = function(first, second)
 	return (first[3] or 500) < (second[3] or 500)
 end
+
+event.event_get_handler = function(object, handler, event_name)
+	return handler or (type(object) == "table") and ((object.event and object.event[event_name]) or object[event_name]) or object
+end
+
+event.event_get_priority = function(priority, object, event_name)
+	return ((type(priority) == "table") and priority[event_name]) or
+		((type(priority) == "number") and priority) or
+		((type(object) == "table") and (object["event_priority"] and object["event_priority"][event_name]))
+end
+
+--event methods
 
 event.event_sort_handlers = function(self, event_name)
 	if (event_name) then
@@ -27,14 +41,6 @@ event.event_create_batch = function(self, ...)
 	for key, event_name in next, {...} do
 		self:event_create(event_name)
 	end
-end
-
-event.event_get_handler = function(object, handler, event_name)
-	return handler or (type(object) == "table") and ((object.event and object.event[event_name]) or object[event_name]) or object
-end
-
-event.event_get_priority = function(priority, object, event_name)
-	return priority or (type(object) == "table") and (object.event_priority and object.event_priority[event_name])
 end
 
 event.event_hook_auto = function(self, object, priority)
