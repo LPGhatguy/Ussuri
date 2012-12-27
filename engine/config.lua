@@ -7,7 +7,10 @@ return
 	--core.lib_manage
 	lib_core = {":core.utility", ":core.oop", ":core.logging", ":core.event", ":core.lib_manage"},
 	lib_folders = {
-		[":extend"] = {"event_def"}
+		[":extend"] = {"event_def"},
+		[":debug"] = {},
+		[":input"] = {},
+		[":gui"] = {}
 	},
 	--core.logging
 	log_realtime_enabled = true,
