@@ -1,9 +1,15 @@
 local lib_manage = {}
 local lib, engine_path
 
+local lib_meta = {
+	__index = function(self, ...)
+		return self:lib_get(...)
+	end
+}
+
 lib_manage.lib_get = function(self, path, name)
-	if (lib[path]) then
-		return lib[path]
+	if (rawget(lib, path)) then
+		return rawget(lib, path)
 	else
 		return self:lib_load(path, name)
 	end
