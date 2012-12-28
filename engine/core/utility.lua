@@ -60,9 +60,10 @@ utility.table_merge_adv = function(from, to, transform)
 	end
 end
 
-utility.table_tree = function(location, level)
+utility.table_tree = function(location, level, max_depth)
 	local out = ""
 	local level = level or 0
+	local max_depth = max_depth or 6
 
 	for key, value in next, location do
 		out = out .. ("\t"):rep(level) ..
@@ -72,7 +73,9 @@ utility.table_tree = function(location, level)
 		if (type(value) == "string") then
 			out = out .. "\"" .. value .. "\""
 		elseif (type(value) == "table") then
-			out = out .. "(table)\n" .. utility.table_tree(value, level + 1)
+			if (level < max_depth) then
+				out = out .. "(table)\n" .. utility.table_tree(value, level + 1, max_depth)
+			end
 		elseif (type(value) == "function") then
 			out = out .. "(" .. tostring(value):gsub("00+", "") .. ")"
 		else
