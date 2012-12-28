@@ -2,7 +2,6 @@ local logging = {}
 local print = print
 local config
 logging.log_history = {}
-logging.log_strung = ""
 logging.__logger = true
 
 logging.log_write = function(self, ...)
@@ -13,7 +12,6 @@ logging.log_write = function(self, ...)
 
 	if (config.log_history_enabled) then
 		table.insert(self.log_history, add)
-		self.log_strung = self.log_strung .. "\n" .. add
 	end
 
 	if (config.log_realtime_enabled) then
