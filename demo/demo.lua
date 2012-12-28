@@ -5,7 +5,7 @@ function love.load()
 	engine:init()
 
 	print = function(...)
-		engine:log_write(...)
+		engine:log_write("{o}", ...)
 	end
 
 	lib = engine.lib
