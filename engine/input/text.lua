@@ -70,6 +70,10 @@ text.backspace = function(self, side)
 end
 
 text.text_in = function(self, text)
+	if (self.cursor ~= self.selection) then
+		self:backspace()
+	end
+
 	self:text_at(text, self.cursor)
 end
 
