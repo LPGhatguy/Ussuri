@@ -1,4 +1,5 @@
 local console = {}
+local print = print
 local engine, lib
 console.elapsed_time = 0
 console.enabled = false
@@ -8,11 +9,6 @@ console.toggle_key = "`"
 console.toggle_modifiers = {"lctrl"}
 console.captures_updates = true
 console.input_box = nil
-console.styles = {
-	["i"] = {0, 80, 200},
-	["o"] = {0, 200, 0},
-	["e"] = {200, 0, 0}
-}
 
 console.event_priority = {
 	keydown = 2,
@@ -26,7 +22,7 @@ console.event = {
 		if (self.enabled) then
 			local w, h = love.graphics.getWidth(), love.graphics.getHeight()
 
-			love.graphics.setColor(50, 50, 50, 150)
+			love.graphics.setColor(0, 0, 0, 200)
 			love.graphics.rectangle("fill", 8, 8, w - 16, h - 16)
 
 			local default_font = love.graphics.getFont()
@@ -34,24 +30,20 @@ console.event = {
 
 			self.input_box:textbox_draw()
 
-			local at = 0
-			for key, piece in next, engine.log_history do
-				local style = piece:match("{(.*)}")
-				love.graphics.setColor(self.styles[style] or {255, 255, 255})
-				love.graphics.print(piece:gsub("{.*}", ""), 8, 40 + (self.font:getHeight() * at))
-				at = at + 1
-			end
-			at = nil
+			lib.gui.gui:prints(table.concat(engine.log_history, "\n"), 8, 40)
 
-			love.graphics.setFont(default_font)
+			if (default_font and self.font ~= default_font) then
+				love.graphics.setFont(default_font)
+			end
 		end
 	end,
 	keydown = function(self, event)
 		if (event.key == self.toggle_key and love.keyboard.isDown(unpack(self.toggle_modifiers))) then
 			self.enabled = not self.enabled
 			event.cancel = true
-		else
+		elseif (self.enabled) then
 			self.input_box:textbox_keydown(event)
+			event.cancel = true
 		end
 	end,
 	update = function(self, event)
@@ -79,7 +71,7 @@ console.init = function(self, g_engine)
 	self.input_box.height = 20
 
 	self.input_box.text_submit = function(self)
-		engine:log_write("{i}", ">" .. self.text)
+		engine:log_writes("in", self.text)
 		local loaded, err = loadstring(self.text)
 		local result = false
 
@@ -92,10 +84,9 @@ console.init = function(self, g_engine)
 			end
 		end
 
-
 		if (not result) then
 			local err = err:gsub("^%[.*%]", "")
-			engine:log_write("{e}", err)
+			engine:log_writes("err", err)
 		end
 
 		self.text = ""
