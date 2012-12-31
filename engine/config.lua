@@ -5,9 +5,9 @@ return
 	--core
 	engine_path = nil, --filled in by engine initialization
 	--core.lib_manage
-	lib_core = {":core.utility", ":core.oop", ":core.logging", ":core.event", ":core.lib_manage"},
+	lib_core = {":core.utility", ":core.oop", ":core.logging", ":core.event", ":core.event_def", ":core.lib_manage"},
 	lib_folders = {
-		[":extend"] = {"event_def"},
+		[":extend"] = {},
 		[":debug"] = {},
 		[":input"] = {},
 		[":gui"] = {}
