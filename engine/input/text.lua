@@ -35,12 +35,10 @@ text.text_keydown = function(self, event)
 			elseif (key == "return") then
 				self.enabled = false
 				self:text_submit()
-			elseif (key == "tab") then
+			elseif (key == "tab" or key == "escape") then
 				self.enabled = false
 			end
 		end
-
-		event.cancel = true
 	end
 end
 

@@ -8,6 +8,9 @@ textbox.selection_color = {0, 80, 200}
 textbox.text_color = {255, 255, 255}
 
 textbox.textbox_keydown = function(self, event)
+	if (self.enabled) then
+		event.cancel = true
+	end
 	self:text_keydown(event)
 end
 
