@@ -7,16 +7,6 @@ utility.get_engine_path = function()
 	return debug.getinfo(1).short_src:match("([^%.]*)[\\/][^%.]*%..*$")
 end
 
-utility.string_split = function(source, splitter)
-	local out = {}
-
-	for piece in string.gmatch(source, "[^" .. splitter .. "]+") do
-		table.insert(out, piece)
-	end
-
-	return out
-end
-
 utility.table_copy = function(from, to)
 	local to = to or {}
 
