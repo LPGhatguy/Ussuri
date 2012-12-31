@@ -5,10 +5,12 @@ logging.log_history = {}
 logging.__logger = true
 
 logging.log_write = function(self, ...)
-	local add = ""
-	for key, value in pairs({...}) do
-		add = add .. " " .. tostring(value):gsub("\n", "\r\n")
+	local out = {}
+	for key, value in next, {...} do
+		out[key] = tostring(value) or "nil"
 	end
+
+	local add = table.concat(out, " ")
 
 	if (config.log_history_enabled) then
 		table.insert(self.log_history, add)
@@ -17,6 +19,10 @@ logging.log_write = function(self, ...)
 	if (config.log_realtime_enabled) then
 		print(add)
 	end
+end
+
+logging.log_writes = function(self, style, ...)
+	self:log_write("\b" .. style .. "\b", ...)
 end
 
 logging.log_record = function(self, filename)
@@ -29,7 +35,7 @@ logging.log_record = function(self, filename)
 
 	local to_write = ""
 	for key, line in next, self.log_history do
-		to_write = to_write .. tostring(line) .. "\r\n"
+		to_write = to_write .. tostring(line):gsub("\n", "\r\n") .. "\r\n"
 	end
 
 	file_out:write(to_write)
