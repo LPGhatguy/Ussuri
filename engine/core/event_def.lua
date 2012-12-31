@@ -8,10 +8,9 @@ definitions.fire_keydown = function(self, key, unicode)
 	})
 end
 
-definitions.fire_keyup = function(self, key, unicode)
+definitions.fire_keyup = function(self, key)
 	return self:event_trigger("keyup", {
-		key = key,
-		unicode = unicode
+		key = key
 	})
 end
 
@@ -31,6 +30,26 @@ definitions.fire_mouseup = function(self, x, y, button)
 	})
 end
 
+definitions.fire_joydown = function(self, joystick, button)
+	return self:event_trigger("joydown", {
+		joystick = joystick,
+		button = button
+	})
+end
+
+definitions.fire_joyup = function(self, joystick, button)
+	return self:event_trigger("joyup", {
+		joystick = joystick,
+		button = button
+	})
+end
+
+definitions.fire_focus = function(self, focus)
+	return self:event_trigger("focus", {
+		focus = focus
+	})
+end
+
 definitions.fire_update = function(self, delta)
 	return self:event_trigger("update", {
 		delta = delta
@@ -44,7 +63,8 @@ end
 definitions.init = function(self, engine)
 	lib = engine.lib
 
-	engine:event_create_batch("update", "draw", "keydown", "keyup", "mousedown", "mouseup", "quit")
+	engine:event_create_batch("update", "draw", "quit", "focus",
+		"keydown", "keyup", "joydown", "joyup", "mousedown", "mouseup")
 	engine:inherit(self)
 
 	return self
