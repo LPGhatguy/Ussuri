@@ -132,6 +132,16 @@ sound.stop = function(self, name)
 	end
 end
 
+sound.toggle_sound = function(self)
+	local current_volume = love.audio.getVolume()
+	if (current_volume == 0) then
+		love.audio.setVolume(self.old_volume or 1)
+	else
+		self.old_volume = current_volume
+		love.audio.setVolume(0)
+	end
+end
+
 sound.init = function(self, engine)
 	engine.lib.oop:objectify(self)
 
