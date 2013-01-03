@@ -4,4 +4,4 @@ The purpose for this framework arose after *Ludum Dare 24* where I (Lucien Great
 
 The engine made its debut in my Ludum Dare 25 compo entry and is being worked on nearly constantly.
 
-This work is covered under the MIT License, with more detail available in license.txt
+This work is covered under the Zlib License, with more detail available in license.txt
