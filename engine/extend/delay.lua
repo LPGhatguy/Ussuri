@@ -1,3 +1,9 @@
+--[[
+Action Delay
+Delays an action to occur at a later time
+Written by Lucien Greathouse
+]]
+
 local delay = {}
 
 delay.delay_time = 0

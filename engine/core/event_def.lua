@@ -1,3 +1,9 @@
+--[[
+Event Definitions
+Extends the original event model by adding methods for event firing
+Written by Lucien Greathouse
+]]
+
 local definitions = {}
 local lib
 

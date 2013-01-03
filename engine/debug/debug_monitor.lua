@@ -1,14 +1,24 @@
+--[[
+Debug Monitor
+Used for quick or custom debug information
+Written by Lucien Greathouse
+]]
+
 local monitor = {}
+
 monitor.enabled = false
+monitor.numeric_accuracy = 3
 monitor.font_arg = {18}
 monitor.toggle_key = "q"
 monitor.toggle_modifiers = {"lctrl"}
-monitor.features = {
-	fps = true,
-	total_time = true
+monitor.disabled = {}
+monitor.values = {
+	fps = 0,
+	time = 0
 }
 
 monitor.event_priority = {
+	update = 0,
 	keydown = 0,
 	draw = 951
 }
@@ -16,11 +26,10 @@ monitor.event_priority = {
 monitor.event = {
 	draw = function(self)
 		if (self.enabled) then
-			local features = self.features
 			local out = "DEBUG\n"
 
-			if (features.fps) then
-				out = out .. love.timer.getFPS() .. " FPS\n"
+			for key, value in next, self.values do
+				out = out .. key:upper() .. ": " .. self:draw_value(value) .. "\n"
 			end
 
 			local default_font = love.graphics.getFont()
@@ -33,6 +42,10 @@ monitor.event = {
 			love.graphics.setFont(default_font)
 		end
 	end,
+	update = function(self, event)
+		self.values.fps = love.timer.getFPS()
+		self.values.time = self.values.time + event.delta
+	end,
 	keydown = function(self, event)
 		if (event.key == self.toggle_key and love.keyboard.isDown(unpack(self.toggle_modifiers))) then
 			self.enabled = not self.enabled
@@ -40,6 +53,14 @@ monitor.event = {
 		end
 	end
 }
+
+monitor.draw_value = function(self, value)
+	if (type(value) == "number") then
+		return tostring(value):match("%d*%.?" .. ("%d?"):rep(self.numeric_accuracy))
+	else
+		return tostring(value)
+	end
+end
 
 monitor.init = function(self, engine)
 	self.font = love.graphics.newFont(unpack(self.font_arg))

@@ -1,4 +1,9 @@
---requires engine.utility
+--[[
+Object Orientation
+Enables instantation and inheritance
+Written by Lucien Greathouse
+]]
+
 local oop = {}
 local object = {}
 local lib

@@ -1,3 +1,9 @@
+--[[
+Debris Manager
+Use for batch or lightweight debris objects
+Written by Lucien Greathouse
+]]
+
 local debris_manager = {}
 
 debris_manager.children = {}

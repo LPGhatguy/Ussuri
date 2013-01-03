@@ -1,3 +1,9 @@
+--[[
+Basic Textbox
+Implements basic text rendering and input
+Written by Lucien Greathouse
+]]
+
 local textbox = {}
 local lib
 textbox.x = 0

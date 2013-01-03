@@ -1,3 +1,9 @@
+--[[
+Stateless Event System
+Enables stateless event control and runtime determined fallthrough
+Written by Lucien Greathouse
+]]
+
 local event = {}
 local lib = {}
 local engine

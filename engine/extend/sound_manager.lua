@@ -1,4 +1,11 @@
+--[[
+Lightweight Sound Manager
+Temporary for light use; will be replaced later
+Written by Lucien Greathouse
+]]
+
 local sound = {}
+
 sound.playing_music = {}
 sound.playing_effects = {}
 sound.loaded = {}
@@ -140,6 +147,15 @@ sound.toggle_sound = function(self)
 		self.old_volume = current_volume
 		love.audio.setVolume(0)
 	end
+end
+
+sound.enable_sound = function(self)
+	love.audio.setVolume(self.old_volume or 1)
+end
+
+sound.disable_sound = function(self)
+	self.old_volume = love.audio.getVolume()
+	love.audio.setVolume(0)
 end
 
 sound.init = function(self, engine)

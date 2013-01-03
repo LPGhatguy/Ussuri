@@ -1,5 +1,7 @@
---color.lua
---contains code adapted from the LÖVE wiki (love2d.org/wiki)
+--[[
+Color Utility Library
+Contains code adapted from the LÖVE wiki (love2d.org/wiki)
+]]
 local color = {}
 
 color.hsv = function(h, s, v, a)

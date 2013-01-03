@@ -1,3 +1,9 @@
+--[[
+Library Manager
+Manages the loading and indexing of libraries
+Written by Lucien Greathouse
+]]
+
 local lib_manage = {}
 local lib, engine_path
 

@@ -1,5 +1,12 @@
+--[[
+Text Data/Input Class
+Meant to be inherited by a textbox. Controls the behavior of the textbox, not the rendering.
+Written by Lucien Greathouse
+]]
+
 local text = {}
 local lib
+
 text.cursor = 0
 text.selection = 0
 text.text = ""
@@ -16,6 +23,8 @@ text.text_keydown = function(self, event)
 			if (key == "a") then
 				self:set_cursor(math.huge)
 				self.selection = 0
+			elseif (key == "d") then
+				self.selection = self.cursor
 			end
 		else
 			if (key:len() == 1) then

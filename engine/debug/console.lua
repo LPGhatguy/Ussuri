@@ -1,6 +1,13 @@
+--[[
+Console
+Enables execution of Lua code in-game. Useful for debugging
+Written by Lucien Greathouse
+]]
+
 local console = {}
 local print = print
 local engine, lib
+
 console.elapsed_time = 0
 console.enabled = false
 console.font_name = nil
