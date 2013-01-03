@@ -51,6 +51,7 @@ function love.load()
 	engine:event_hook_auto(lib.debug.console)
 
 	local sound = extend.sound_manager:new()
+
 	engine:event_hook_auto(sound)
 
 	sound:load_effect("demo/resource/bloop.ogg")

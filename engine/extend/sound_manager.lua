@@ -54,6 +54,7 @@ sound.play_music = function(self, name, looping)
 		local source = love.audio.newSource(found, "stream")
 		source:setLooping(looping)
 		source:play()
+
 		table.insert(self.playing_music, source)
 		return source
 	end
@@ -65,6 +66,7 @@ sound.play_effect = function(self, name, looping)
 		local source = love.audio.newSource(found)
 		source:setLooping(looping)
 		source:play()
+
 		table.insert(self.playing_effects, source)
 		return source
 	end
