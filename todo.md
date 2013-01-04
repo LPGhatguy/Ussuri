@@ -2,7 +2,7 @@
 
 >
 ### High Priority
-1. Add state machine integration to event framework
+1. Add state machine
 
 >
 ### Medium Priority
