@@ -52,4 +52,3 @@ function love.load()
 		end
 	end)
 end
-
