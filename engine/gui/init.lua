@@ -1,3 +1,9 @@
+--[[
+GUI Utility Library
+Provides various GUI drawing utility methods
+Written by Lucien Greathouse
+]]
+
 local gui = {}
 local print = print
 local lib = {}
@@ -27,6 +33,13 @@ gui.style_decompose = function(self, text)
 	end
 
 	return out_text, out_style
+end
+
+--If you're worried about sandboxing, this method is a little sketchy.
+gui.style_add = function(self, name, style)
+	if (not self.styles[name]) then
+		self.styles[name] = style
+	end
 end
 
 gui.prints = function(self, text, x, y)

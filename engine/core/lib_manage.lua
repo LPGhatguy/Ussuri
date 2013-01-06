@@ -76,14 +76,23 @@ lib_manage.lib_load = function(self, path, name)
 		local name = name:gsub(":", "")
 		local lib_name = name:match("([^%.:]*)$")
 		local store_in = lib
+		local store_old = store_in
+
 		for addition in string.gmatch(name, "([^%.]+)%.") do
 			if (not store_in[addition]) then
 				store_in[addition] = {}
 			end
+
+			store_old = store_in
 			store_in = store_in[addition]
 		end
 
-		store_in[lib_name] = loaded
+		if (lib_name == "init") then
+			lib.utility.table_merge(loaded, store_in)
+			loaded = store_in
+		else
+			store_in[lib_name] = loaded
+		end
 	else
 		lib[name] = loaded
 	end
