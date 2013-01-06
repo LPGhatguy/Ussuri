@@ -50,6 +50,14 @@ logging.log_record = function(self, filename)
 	file_out:close()
 end
 
+logging.log_clear = function(self)
+	self.log_history = {}
+end
+
+logging.log_pop = function(self)
+	self.log_history[#self.log_history] = nil
+end
+
 logging.init = function(self, engine)
 	config = engine.config or config
 
