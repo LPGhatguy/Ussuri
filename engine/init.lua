@@ -59,6 +59,8 @@ function love.run()
 							love.audio.stop()
 						end
 
+						engine:close()
+
 						return
 					end
 				end
