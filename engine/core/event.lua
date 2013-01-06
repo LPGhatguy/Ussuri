@@ -49,6 +49,21 @@ event.event_create_batch = function(self, ...)
 	end
 end
 
+event.event_hook = function(self, event_name, object, handler, priority)
+	local handler = self.event_get_handler(object, handler, event_name)
+	local priority = self.event_get_priority(priority, object, event_name)
+	local handlers = self.events[event_name] or {}
+	self.events[event_name] = handlers
+
+	if (object) then
+		table.insert(handlers, {object, handler, tonumber(priority)})
+	end
+
+	if (self.event_auto_sort) then
+		self:event_sort_handlers(event_name)
+	end
+end
+
 event.event_hook_auto = function(self, object, priority)
 	if (type(object) == "table") then
 		local methods = object.event or object
@@ -74,21 +89,6 @@ event.event_hook_batch = function(self, handlers, object, priority)
 		end
 	else
 		self:event_hook_auto(object, priority or handlers) --handlers is passed as priority instead
-	end
-end
-
-event.event_hook = function(self, event_name, object, handler, priority)
-	local handler = self.event_get_handler(object, handler, event_name)
-	local priority = self.event_get_priority(priority, object, event_name)
-	local handlers = self.events[event_name] or {}
-	self.events[event_name] = handlers
-
-	if (object) then
-		table.insert(handlers, {object, handler, tonumber(priority)})
-	end
-
-	if (self.event_auto_sort) then
-		self:event_sort_handlers(event_name)
 	end
 end
 
