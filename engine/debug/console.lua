@@ -76,7 +76,8 @@ console.init = function(self, g_engine)
 	self.input_box.x = 12
 	self.input_box.y = 12
 	self.input_box.width = love.graphics.getWidth() - 24
-	self.input_box.height = 20
+	self.input_box.height = 16
+	self.input_box.background_color = {100, 100, 100, 100}
 
 	self.input_box.text_submit = function(box)
 		if (self.log_input) then
