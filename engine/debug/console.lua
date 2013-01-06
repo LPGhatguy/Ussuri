@@ -10,6 +10,7 @@ local engine, lib
 
 console.elapsed_time = 0
 console.enabled = false
+console.log_input = true
 console.font_name = nil
 console.font_size = 14
 console.toggle_key = "`"
@@ -37,7 +38,7 @@ console.event = {
 
 			self.input_box:textbox_draw()
 
-			lib.gui.gui:prints(table.concat(engine.log_history, "\n"), 8, 40)
+			lib.gui:prints(table.concat(engine.log_history, "\n"), 8, 40)
 
 			if (default_font and self.font ~= default_font) then
 				love.graphics.setFont(default_font)
@@ -74,18 +75,21 @@ console.init = function(self, g_engine)
 	self.input_box = lib.gui.textbox:new("", self.font)
 	self.input_box.x = 12
 	self.input_box.y = 12
-	self.input_box.width = love.graphics.getWidth() - 14
+	self.input_box.width = love.graphics.getWidth() - 24
 	self.input_box.height = 20
 
-	self.input_box.text_submit = function(self)
-		engine:log_writes("in", self.text)
-		local loaded, err = loadstring(self.text)
+	self.input_box.text_submit = function(box)
+		if (self.log_input) then
+			engine:log_writes("in", box.text)
+		end
+
+		local loaded, err = loadstring(box.text)
 		local result = false
 
 		if (loaded) then
 			result, err = pcall(loaded)
 		else
-			loaded = loadstring("print(" .. self.text .. ")")
+			loaded = loadstring("print(" .. box.text .. ")")
 			if (loaded) then
 				result, err = pcall(loaded)
 			end
@@ -96,8 +100,8 @@ console.init = function(self, g_engine)
 			engine:log_writes("err", err)
 		end
 
-		self.text = ""
-		self.enabled = true
+		box.text = ""
+		box.enabled = true
 	end
 
 	return self
