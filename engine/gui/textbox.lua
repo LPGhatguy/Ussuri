@@ -11,7 +11,9 @@ textbox.y = 0
 textbox.width = auto
 textbox.height = auto
 textbox.selection_color = {0, 80, 200}
+textbox.cursor_color = {255, 255, 255}
 textbox.text_color = {255, 255, 255}
+textbox.background_color = {100, 100, 100}
 
 textbox.textbox_keydown = function(self, event)
 	if (self.enabled) then
@@ -31,7 +33,9 @@ textbox.textbox_draw = function(self)
 	local height = self.height or self.font:getHeight()
 
 	love.graphics.setScissor(x, y, math.max(width, 1), height)
-	love.graphics.setColor(255, 255, 255)
+
+	love.graphics.setColor(self.background_color)
+	love.graphics.rectangle("fill", x, y, math.max(width, 1), height)
 
 	local cursor_x = x + self.font:getWidth(self.text:sub(1, self.cursor))
 
@@ -44,6 +48,8 @@ textbox.textbox_draw = function(self)
 			love.graphics.setColor(self.selection_color)
 			love.graphics.rectangle("fill", cursor_x, y, width, self.font:getHeight())
 		end
+
+		love.graphics.setColor(self.cursor_color)
 		love.graphics.line(cursor_x, x, cursor_x, y + self.font:getHeight())
 	end
 
