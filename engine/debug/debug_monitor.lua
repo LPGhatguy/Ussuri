@@ -39,7 +39,9 @@ monitor.event = {
 
 			love.graphics.print(out, 5, 5)
 
-			love.graphics.setFont(default_font)
+			if (default_font) then
+				love.graphics.setFont(default_font)
+			end
 		end
 	end,
 	update = function(self, event)
