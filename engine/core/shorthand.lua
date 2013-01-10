@@ -1,22 +1,19 @@
 --[[
 Shorthand Utilities
 Used in console commands for quick debugging and execution -- don't use these in real library additions... please
-The commands created here are slow and not meant for anything legitimate
+The commands created here are slow and not meant for anything except the console
 Written by Lucien Greathouse
 ]]
 
 local engine
+local lib
 _ = {}
 
-local tpop = function(from, index)
-	local got = from[index or 1]
-	table.remove(from, index or 1)
-
-	return got
-end
-
 _.init = function(self, engine)
+	lib = engine.lib
 	_ = engine
+
+	local tpop = lib.utility.table_pop
 
 	setmetatable(engine, {
 		__call = function(self)
