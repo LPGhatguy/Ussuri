@@ -8,12 +8,14 @@ local gui = {}
 local print = print
 local lib = {}
 gui.styles = {
-	["default"] = {255, 255, 255},
+	["white"] = {255, 255, 255},
 	["red"] = {200, 0, 0},
-	["blue"] = {0, 200, 0},
-	["green"] = {0, 80, 200},
+	["pink"] = {200, 0, 200},
+	["yellow"] = {200, 200, 0},
+	["blue"] = {0, 80, 200},
+	["green"] = {0, 200, 80},
 	["in"] = {0, 80, 200},
-	["out"] = {0, 200, 0},
+	["out"] = {0, 200, 80},
 	["err"] = {200, 0, 0}
 }
 
@@ -24,7 +26,7 @@ gui.style_decompose = function(self, text)
 	local unstyled = string.match(text, "^[^\b]+")
 	if (unstyled) then
 		out_text[1] = string.match(text, "^[^\b]+")
-		out_style[1] = "default"
+		out_style[1] = "white"
 	end
 
 	for style_piece, text_piece in string.gmatch(text, "\b(.-)\b([^\b]*)") do
