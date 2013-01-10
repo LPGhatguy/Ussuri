@@ -13,6 +13,73 @@ utility.get_engine_path = function()
 	return debug.getinfo(1).short_src:match("([^%.]*)[\\/][^%.]*%..*$")
 end
 
+utility.string_split = function(source, splitter)
+	local last, current = 1
+	local out = {}
+
+	while (true) do
+		current = source:find(splitter, last, true)
+
+		if (not current) then
+			break
+		end
+
+		table.insert(out, source:sub(last, current - 1))
+		last = current + splitter:len()
+	end
+
+	table.insert(out, source:sub(last))
+
+	return out
+end
+
+utility.table_contains = function(from, search)
+	for key, value in next, from do
+		if (value == search) then
+			return true
+		end
+	end
+
+	return false
+end
+
+utility.table_compare = function(first, second)
+	if (second) then
+		for key, value in pairs(first) do
+			local success = false
+
+			if (type(value) == type(second[key])) then
+				if (type(value) == "table") then
+					success = utility.table_compare(value, second[key])
+				else
+					success = (second[key] == value)
+				end
+			end
+			
+			if (not success) then
+				return false
+			end
+		end
+
+		return true
+	else
+		return false
+	end
+end
+
+utility.table_pop = function(from, key)
+	local key = key or 1
+	local value = from[key]
+
+	if (type(key) == "number") then
+		table.remove(from, key)
+	else
+		from[key] = nil
+	end
+
+	return value
+end
+
 utility.table_copy = function(from, to)
 	local to = to or {}
 
