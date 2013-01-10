@@ -5,6 +5,7 @@ Written by Lucien Greathouse
 ]]
 
 local logging = {}
+local lib
 local print = print
 local config
 
@@ -24,12 +25,17 @@ logging.log_write = function(self, ...)
 	end
 
 	if (config.log_realtime_enabled) then
-		print(add)
+		print(self:log_strip_style(add))
 	end
 end
 
 logging.log_writes = function(self, style, ...)
 	self:log_write("\b" .. style .. "\b", ...)
+end
+
+logging.log_strip_style = function(self, text)
+	local out = text:gsub("\b.-\b", "")
+	return out
 end
 
 logging.log_record = function(self, filename)
@@ -42,7 +48,7 @@ logging.log_record = function(self, filename)
 
 	local to_write = ""
 	for key, line in next, self.log_history do
-		to_write = to_write .. tostring(line):gsub("\n", "\r\n") .. "\r\n"
+		to_write = to_write .. self:log_strip_style(tostring(line):gsub("\n", "\r\n")) .. "\r\n"
 	end
 
 	file_out:write(to_write)
@@ -55,10 +61,11 @@ logging.log_clear = function(self)
 end
 
 logging.log_pop = function(self)
-	self.log_history[#self.log_history] = nil
+	return lib.utility.table_pop(self.log_history, #self.log_history - 1)
 end
 
 logging.init = function(self, engine)
+	lib = engine.lib
 	config = engine.config or config
 
 	engine:inherit(self)
