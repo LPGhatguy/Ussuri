@@ -10,17 +10,13 @@ local engine = require("engine")
 function love.load()
 	love.graphics.setBackgroundColor(0, 70, 150)
 
-	print = function(...)
-		engine:log_writes("out", ...)
-	end
-
 	lib = engine.lib
 	misc = lib.misc
 
 	engine:event_hook("keydown", function(self, event)
 		if (event.key == "escape") then
 			if (love.keyboard.isDown("lshift")) then
-				print((lib.utility.table_tree(lib)))
+				engine:log_write((lib.utility.table_tree(lib)))
 				engine.config.log_recording_enabled = true
 			end
 
@@ -31,6 +27,4 @@ function love.load()
 
 	engine:event_hook_auto(lib.debug.debug_monitor)
 	engine:event_hook_auto(lib.debug.console)
-
-	print(lib.debug.unit:test())
 end
