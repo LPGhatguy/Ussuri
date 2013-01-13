@@ -4,7 +4,7 @@ Contains code adapted from the LÖVE wiki (love2d.org/wiki)
 ]]
 local color = {}
 
-color.hsv = function(h, s, v, a)
+color.hsv_to_rgb = function(h, s, v, a)
 	if (s <= 0) then
 		return v, v, v, a
 	end
@@ -32,7 +32,7 @@ color.hsv = function(h, s, v, a)
 	return (r + m) * 255, (g + m) * 255, (b + m) * 255, a
 end
 
-color.hsl = function(h, s, l, a)
+color.hsl_to_rgb = function(h, s, l, a)
     if (s <= 0) then
     	return l, l, l, a
     end
@@ -59,5 +59,9 @@ color.hsl = function(h, s, l, a)
 
 	return (r + m) * 255, (g + m) * 255, (b + m) * 255, a
 end
+
+--shortcut methods for conversions to rgb
+color.hsl = color.hsl_to_rgb
+color.hsv = color.hsv_to_rgb
 
 return color
