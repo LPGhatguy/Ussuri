@@ -90,7 +90,8 @@ console.init = function(self, g_engine)
 		if (loaded) then
 			result, err = pcall(loaded)
 		else
-			loaded = loadstring("print(" .. box.text .. ")")
+			--This is the half-decent way to handle this...
+			loaded = loadstring("return _+(" .. box.text .. ")")
 			if (loaded) then
 				result, err = pcall(loaded)
 			end
