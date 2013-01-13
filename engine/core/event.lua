@@ -40,7 +40,12 @@ event.event_sort_handlers = function(self, event_name)
 end
 
 event.event_create = function(self, event_name)
-	self.events[event_name] = self.events[event_name] or {}
+	local event = self.events[event_name]
+
+	event = event or {}
+	event.pass = event.pass or self.event_pass:new()
+
+	self.events[event_name] = event
 end
 
 event.event_create_batch = function(self, ...)
@@ -93,8 +98,8 @@ event.event_hook_batch = function(self, handlers, object, priority)
 end
 
 event.event_trigger = function(self, event_name, arguments)
-	local event_pass = self.event_pass:new(event_name, arguments)
 	local handlers = self.events[event_name]
+	local event_pass = handlers.pass:update(arguments)
 
 	if (handlers) then
 		for key, handler in next, handlers do
@@ -104,13 +109,13 @@ event.event_trigger = function(self, event_name, arguments)
 			if (type(method) == "function") then
 				method(object, event_pass)
 
-				if (event_pass.cancel) then
-					break
-				end
-
 				if (event_pass.unhook) then
 					event_pass.unhook = false
 					table.remove(handlers, key)
+				end
+
+				if (event_pass.cancel) then
+					break
 				end
 			end
 		end
@@ -124,7 +129,7 @@ event.event_trigger = function(self, event_name, arguments)
 end
 
 event.event_pass = {}
-event.event_pass.new = function(self, event_name, arguments)
+event.event_pass.new = function(self, arguments)
 	local pass = self:_new()
 
 	if (arguments) then
@@ -136,6 +141,18 @@ event.event_pass.new = function(self, event_name, arguments)
 	pass.cancel = false
 
 	return pass
+end
+
+event.event_pass.update = function(self, arguments)
+	if (arguments) then
+		for key, value in next, arguments do
+			self[key] = value
+		end
+	end
+
+	self.cancel = false
+
+	return self
 end
 
 event.init = function(self, engine)
