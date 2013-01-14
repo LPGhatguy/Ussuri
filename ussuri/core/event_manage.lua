@@ -54,11 +54,19 @@ event_manage.event_create_batch = function(self, ...)
 	end
 end
 
+event_manage.event_hook_start = function(self)
+	self.event_auto_sort = false
+end
+
+event_manage.event_hook_end = function(self)
+	self.event_auto_sort = true
+	self:event_sort_handlers()
+end
+
 event_manage.event_hook = function(self, event_name, object, handler, priority)
 	local handler = self.event_get_handler(object, handler, event_name)
 	local priority = self.event_get_priority(priority, object, event_name)
-	local handlers = self.events[event_name] or {}
-	self.events[event_name] = handlers
+	local handlers = self.events[event_name]
 
 	if (object) then
 		table.insert(handlers, {object, handler, tonumber(priority)})
