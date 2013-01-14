@@ -5,10 +5,11 @@ Written by Lucien Greathouse
 ]]
 
 local text = {}
-local lib
+local lib, input
 
 text.cursor = 0
 text.selection = 0
+text.limit = -1
 text.text = ""
 text.enabled = true
 
@@ -25,6 +26,17 @@ text.text_keydown = function(self, event)
 				self.selection = 0
 			elseif (key == "d") then
 				self.selection = self.cursor
+			elseif (key == "c") then
+				input:copy(self:get_selection())
+			elseif (key == "x") then
+				input:copy(self:get_selection())
+
+				if (self.selection ~= self.cursor) then
+					self:backspace()
+				end
+			elseif (key == "v") then
+				local min, max = math.min(self.cursor, self.selection), math.max(self.cursor, self.selection)
+				self:text_in(input:paste())
 			end
 		else
 			if (key:len() == 1) then
@@ -51,9 +63,6 @@ text.text_keydown = function(self, event)
 	end
 end
 
-text.text_submit = function(self)
-end
-
 text.event = {
 	keydown = text.text_keydown
 }
@@ -76,6 +85,12 @@ text.backspace = function(self, side)
 	self.selection = self.cursor
 end
 
+text.get_selection = function(self)
+	local min, max = math.min(self.cursor, self.selection), math.max(self.cursor, self.selection)
+
+	return self.text:sub(min + 1, max)
+end
+
 text.text_in = function(self, text)
 	if (self.cursor ~= self.selection) then
 		self:backspace()
@@ -86,6 +101,8 @@ end
 
 text.text_at = function(self, text, x)
 	self.text = self.text:sub(1, x) .. text .. self.text:sub(x + 1)
+	self.text = self.text:sub(1, self.limit)
+
 	self:move_cursor(text:len())
 end
 
@@ -105,13 +122,16 @@ text.new = function(self, text)
 	local new = self:_new()
 
 	new.text = text or new.text
+	new.text_submit = lib.misc.event:new()
 
 	return new
 end
 
 text.init = function(self, engine)
 	lib = engine.lib
+	input = lib.input
 
+	self.text_submit = lib.misc.event:new()
 	lib.oop:objectify(self)
 
 	return self

@@ -66,9 +66,8 @@ textbox.event = {
 }
 
 textbox.new = function(self, text, font)
-	local new = self:_new()
+	local new = self:text_new(text)
 
-	new.text = text or new.text
 	new.font = font or new.font
 
 	return new
@@ -78,6 +77,8 @@ textbox.init = function(self, engine)
 	lib = engine.lib
 
 	lib.oop:objectify(self)
+
+	self.text_new = lib.input.text.new
 	self:inherit(lib.input.text)
 
 	return self

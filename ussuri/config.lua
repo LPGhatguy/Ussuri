@@ -1,16 +1,15 @@
 return {
 	--details
-	version = 1.1,
+	version = 1.2,
 	--core
 	engine_path = nil, --filled in by engine initialization
+	lib_core = {":core.utility", ":core.oop", ":core.logging", ":core.event_manage", ":core.event_def", ":core.lib_manage", ":core.shorthand"},
 	--core.lib_manage
-	lib_core = {":core.utility", ":core.oop", ":core.logging", ":core.event", ":core.event_def", ":core.lib_manage", ":core.shorthand"},
 	lib_folders = {
-		[":extend"] = {},
-		[":misc"] = {},
-		[":debug"] = {},
-		[":input"] = {},
-		[":gui"] = {}
+		{":misc", {}},
+		{":input", {}},
+		{":gui", {}},
+		{":debug", {}}
 	},
 	--core.logging
 	log_realtime_enabled = true,

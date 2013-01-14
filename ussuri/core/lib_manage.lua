@@ -48,7 +48,6 @@ lib_manage.lib_folder_load = function(self, folder, order)
 		end
 	end
 
-	--This is ugly, but LÖVE is picky about argument count and gsub returns multiple arguments
 	local fixed_path = path:gsub("%.", "/")
 	local files = love.filesystem.enumerate(fixed_path)
 
@@ -67,7 +66,7 @@ lib_manage.lib_load = function(self, path, name)
 	local path = path:gsub("^:", engine_path)
 
 	local loaded = require(path)
-	if (loaded and loaded.init) then
+	if (type(loaded) == "table" and loaded.init) then
 		loaded = loaded:init(self) or loaded
 		loaded.init = nil
 	end

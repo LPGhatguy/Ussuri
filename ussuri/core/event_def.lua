@@ -1,6 +1,6 @@
 --[[
 Event Definitions
-Extends the original event model by adding methods for event firing
+Extends the generic event model by adding LÖVE-specific events to fire
 Written by Lucien Greathouse
 ]]
 

@@ -6,7 +6,6 @@ Written by Lucien Greathouse
 
 local logging = {}
 local lib
-local print = print
 local config
 
 logging.log_history = {}

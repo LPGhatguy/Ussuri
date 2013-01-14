@@ -1,23 +1,23 @@
 --[[
 Ussuri Demo
-A small demo of the engine's capabilities
+A small demo of Ussuri's capabilities
 Written by Lucien Greathouse
 ]]
 
 local lib, misc
-local engine = require("engine")
+local ussuri = require("ussuri")
 
 function love.load()
 	love.graphics.setBackgroundColor(0, 70, 150)
 
-	lib = engine.lib
+	lib = ussuri.lib
 	misc = lib.misc
 
-	engine:event_hook("keydown", function(self, event)
+	ussuri:event_hook("keydown", function(self, event)
 		if (event.key == "escape") then
 			if (love.keyboard.isDown("lshift")) then
-				engine:log_write((lib.utility.table_tree(lib)))
-				engine.config.log_recording_enabled = true
+				ussuri:log_write((lib.utility.table_tree(lib)))
+				ussuri.config.log_recording_enabled = true
 			end
 
 			event.cancel = true
@@ -25,6 +25,6 @@ function love.load()
 		end
 	end, nil, -1)
 
-	engine:event_hook_auto(lib.debug.debug_monitor)
-	engine:event_hook_auto(lib.debug.console)
+	ussuri:event_hook_auto(lib.debug.debug_monitor)
+	ussuri:event_hook_auto(lib.debug.console)
 end

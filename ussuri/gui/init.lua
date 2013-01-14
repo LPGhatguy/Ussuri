@@ -13,10 +13,7 @@ gui.styles = {
 	["pink"] = {200, 0, 200},
 	["yellow"] = {200, 200, 0},
 	["blue"] = {0, 80, 200},
-	["green"] = {0, 200, 80},
-	["in"] = {0, 80, 200},
-	["out"] = {0, 200, 80},
-	["err"] = {200, 0, 0}
+	["green"] = {0, 200, 80}
 }
 
 gui.style_decompose = function(self, text)

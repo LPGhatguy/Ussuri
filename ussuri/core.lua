@@ -30,8 +30,8 @@ engine_core.init = function(self, glib)
 
 	lib_batch_load(config.lib_core)
 
-	for folder, order in next, config.lib_folders do
-		self:lib_folder_load(folder, order)
+	for at, group in next, config.lib_folders do
+		self:lib_folder_load(group[1], group[2])
 	end
 
 	return self

@@ -1,6 +1,5 @@
-local engine
 local path = debug.getinfo(1).short_src:match("([^%.]*)[\\/][^%.]*%..*$"):gsub("[\\/]", ".") .. "."
-engine = require(path .. "core")
+local engine = require(path .. "core")
 
 function love.run()
 	engine:init()

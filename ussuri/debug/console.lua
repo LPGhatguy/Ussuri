@@ -5,7 +5,6 @@ Written by Lucien Greathouse
 ]]
 
 local console = {}
-local print = print
 local engine, lib
 
 console.elapsed_time = 0
@@ -40,7 +39,7 @@ console.event = {
 
 			lib.gui:prints(table.concat(engine.log_history, "\n"), 8, 40)
 
-			if (default_font and self.font ~= default_font) then
+			if (default_font) then
 				love.graphics.setFont(default_font)
 			end
 		end
@@ -79,9 +78,9 @@ console.init = function(self, g_engine)
 	self.input_box.height = 16
 	self.input_box.background_color = {100, 100, 100, 100}
 
-	self.input_box.text_submit = function(box)
+	self.input_box.text_submit = self.input_box.text_submit + function(box)
 		if (self.log_input) then
-			engine:log_writes("in", box.text)
+			engine:log_writes("blue", box.text)
 		end
 
 		local loaded, err = loadstring(box.text)
@@ -99,7 +98,7 @@ console.init = function(self, g_engine)
 
 		if (not result) then
 			local err = err:gsub("^%[.*%]", "")
-			engine:log_writes("err", err)
+			engine:log_writes("red", err)
 		end
 
 		box.text = ""
