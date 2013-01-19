@@ -26,6 +26,11 @@ delay.delay_step = function(self, delta)
 	end
 end
 
+delay.delay_reset = function(self)
+	self.delay_elapsed = 0
+	self.delay_set = true
+end
+
 delay.new = function(self, delay, action)
 	local new = self:_new()
 
@@ -33,11 +38,6 @@ delay.new = function(self, delay, action)
 	new.delay_action = action or new.delay_action
 
 	return new
-end
-
-delay.delay_reset = function(self)
-	self.delay_elapsed = 0
-	self.delay_set = true
 end
 
 delay.init = function(self, engine)
