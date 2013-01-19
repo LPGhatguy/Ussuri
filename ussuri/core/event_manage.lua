@@ -1,6 +1,6 @@
 --[[
 Stateless Event System
-Enables stateless event control and runtime determined fallthrough
+Enables stateless event control and runtime determined handler fallthrough
 Written by Lucien Greathouse
 ]]
 
