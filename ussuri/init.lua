@@ -64,7 +64,7 @@ function love.run()
 					end
 				end
 
-				love.handlers[e](a,b,c,d)
+				love.handlers[e](a, b, c, d)
 			end
 		end
 
