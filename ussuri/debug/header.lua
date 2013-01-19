@@ -1,7 +1,7 @@
 local header = {}
 local engine, lib
 header.event_priority = {
-	update = -1
+	keydown = -1
 }
 
 header.event = {
