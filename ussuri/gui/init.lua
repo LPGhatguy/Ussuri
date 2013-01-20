@@ -1,7 +1,6 @@
 --[[
 GUI Utility Library
 Provides various GUI drawing utility methods
-Written by Lucien Greathouse
 ]]
 
 local gui = {}

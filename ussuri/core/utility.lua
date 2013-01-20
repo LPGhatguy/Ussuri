@@ -1,7 +1,6 @@
 --[[
 General Utility Library
 Includes useful methods otherwise defined as boilerplate without modifying existing libraries
-Written by Lucien Greathouse
 ]]
 
 local utility = {}

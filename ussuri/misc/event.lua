@@ -1,3 +1,8 @@
+--[[
+Event Object
+A drop-in replacement for functions with multiple bodies
+]]
+
 local event = {}
 event.handlers = {}
 
@@ -8,13 +13,13 @@ event.post = function(self)
 end
 
 event.call = function(self, ...)
-	self:pre()
+	self:pre(...)
 
 	for key, value in next, self.handlers do
 		value(...)
 	end
 
-	self:post()
+	self:post(...)
 
 	return self
 end

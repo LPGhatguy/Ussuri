@@ -1,7 +1,6 @@
 --[[
 Logging System
 Enables logging both in realtime and to logfiles
-Written by Lucien Greathouse
 ]]
 
 local logging = {}

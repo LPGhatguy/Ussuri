@@ -1,7 +1,6 @@
 --[[
 Stateless Event System
 Enables stateless event control and runtime determined handler fallthrough
-Written by Lucien Greathouse
 ]]
 
 local event_manage = {}
@@ -134,7 +133,10 @@ event_manage.event_get_pass = function(self, event_name)
 	return self.events[event_name].pass
 end
 
+--event pass definition
+
 event_manage.event_pass = {}
+
 event_manage.event_pass.new = function(self, arguments)
 	local pass = self:_new()
 

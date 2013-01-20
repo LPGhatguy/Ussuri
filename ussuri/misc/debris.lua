@@ -1,7 +1,6 @@
 --[[
 Standalone Debris Object
 Use for single unique debris objects
-Written by Lucien Greathouse
 ]]
 
 local debris = {}

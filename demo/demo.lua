@@ -1,7 +1,6 @@
 --[[
 Ussuri Demo
 A small demo of Ussuri's capabilities
-Written by Lucien Greathouse
 ]]
 
 local ussuri = require("ussuri")

@@ -1,7 +1,6 @@
 --[[
 Event Definitions
 Extends the generic event model by adding LÖVE-specific events to fire
-Written by Lucien Greathouse
 ]]
 
 local definitions = {}

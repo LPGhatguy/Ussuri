@@ -1,7 +1,6 @@
 --[[
 Library Manager
 Manages the loading and indexing of libraries
-Written by Lucien Greathouse
 ]]
 
 local lib_manage = {}

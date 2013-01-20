@@ -1,7 +1,6 @@
 --[[
 Console
 Enables execution of Lua code in-game. Useful for debugging
-Written by Lucien Greathouse
 ]]
 
 local console = {}

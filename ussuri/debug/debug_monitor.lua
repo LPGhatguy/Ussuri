@@ -1,7 +1,6 @@
 --[[
 Debug Monitor
 Used for quick or custom debug information
-Written by Lucien Greathouse
 ]]
 
 local monitor = {}

@@ -1,7 +1,6 @@
 --[[
 Framework Unit Testing
 For debugging of various features of the engine; performs sanity checks galore
-Written by Lucien Greathouse
 ]]
 
 local unit = {}

@@ -2,7 +2,6 @@
 Shorthand Utilities
 Used in console commands for quick debugging and execution -- don't use these in real library additions... please
 The commands created here are slow and not meant for anything except the console
-Written by Lucien Greathouse
 ]]
 
 local engine

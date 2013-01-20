@@ -1,7 +1,6 @@
 --[[
 Object Orientation
 Enables instantation and inheritance of objects
-Written by Lucien Greathouse
 ]]
 
 local oop = {}

@@ -1,7 +1,6 @@
 --[[
 Lightweight Sound Manager
 Temporary for light use; will be replaced later
-Written by Lucien Greathouse
 ]]
 
 local sound = {}

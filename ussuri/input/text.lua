@@ -1,7 +1,6 @@
 --[[
 Text Data/Input Class
 Meant to be inherited by a textbox. Controls the behavior of the textbox, not the rendering.
-Written by Lucien Greathouse
 ]]
 
 local text = {}
