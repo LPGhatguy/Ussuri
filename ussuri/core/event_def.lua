@@ -65,6 +65,10 @@ definitions.fire_draw = function(self)
 	return self:event_trigger("draw")
 end
 
+definitions.fire_quit = function(self)
+	return self:event_trigger("quit")
+end
+
 definitions.init = function(self, engine)
 	lib = engine.lib
 
@@ -73,6 +77,10 @@ definitions.init = function(self, engine)
 	engine:inherit(self)
 
 	return self
+end
+
+definitions.close = function(self, engine)
+	engine:fire_quit()
 end
 
 return definitions

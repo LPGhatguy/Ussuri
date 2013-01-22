@@ -203,8 +203,4 @@ event_manage.init = function(self, engine)
 	return self
 end
 
-event_manage.close = function(self, engine)
-	engine:event_trigger("quit")
-end
-
 return event_manage
