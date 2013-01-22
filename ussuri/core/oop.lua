@@ -5,12 +5,16 @@ Enables instantation and inheritance of objects
 
 local oop = {}
 local object = {}
-local lib
+local lib, table_copy
 
 oop.object = object
 
 object.inherit = function(self, from)
 	lib.utility.table_merge(from, self)
+end
+
+object._new = function(self)
+	return table_copy(self, {}, true)
 end
 
 oop.objectify = function(self, to)
@@ -19,8 +23,8 @@ end
 
 oop.init = function(self, engine)
 	lib = engine.lib
+	table_copy = lib.utility.table_copy
 
-	object._new = lib.utility.table_copy --base constructor
 	object.new = object._new --default constructor
 
 	self:objectify(engine)
