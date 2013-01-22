@@ -79,15 +79,19 @@ utility.table_pop = function(from, key)
 	return value
 end
 
-utility.table_copy = function(from, to)
+utility.table_copy = function(from, to, meta)
 	local to = to or {}
 
 	for key, value in pairs(from) do
 		if (type(value) == "table") then
-			to[key] = utility.table_copy(value)
+			to[key] = utility.table_copy(value, {}, meta)
 		else
 			to[key] = value
 		end
+	end
+
+	if (meta) then
+		setmetatable(to, getmetatable(from))
 	end
 
 	return to
