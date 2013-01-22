@@ -6,7 +6,7 @@ header.event_priority = {
 
 header.event = {
 	keydown = function(self, event)
-		if (event.key == "escape") then
+		if (event.key == "tab" and love.keyboard.isDown("lctrl")) then
 			event.cancel = true
 
 			if (love.keyboard.isDown("lshift")) then
