@@ -137,7 +137,7 @@ end
 
 event_manage.event_trigger = function(self, event_name, arguments)
 	local handlers = self.events[event_name]
-	local event_pass = handlers.pass:update(arguments)
+	local event_pass = handlers.pass:refurbish(arguments)
 
 	for key, handler in next, handlers do
 		local object = handler[1]
@@ -182,7 +182,7 @@ event_manage.event_pass.new = function(self, arguments)
 	return pass
 end
 
-event_manage.event_pass.update = function(self, arguments)
+event_manage.event_pass.refurbish = function(self, arguments)
 	if (arguments) then
 		for key, value in next, arguments do
 			self[key] = value
