@@ -48,4 +48,9 @@ engine_core.close = function(self)
 	end
 end
 
+engine_core.quit = function(self)
+	self:close()
+	love.event.push("quit")
+end
+
 return engine_core
