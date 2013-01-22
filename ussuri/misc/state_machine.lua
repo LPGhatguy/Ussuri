@@ -8,7 +8,17 @@ local lib
 
 state.event = {}
 state.state = ""
+state.pre = {}
+state.post = {}
 state.handlers = {}
+
+state.set_state = function(self, value)
+	self.event["state_changing"](self, {})
+
+	self.state = value
+
+	self.event["state_changed"](self, {})
+end
 
 setmetatable(state.event, {
 	__index = function(self, key)
@@ -19,7 +29,18 @@ setmetatable(state.event, {
 				local method = handlers[key]
 
 				if (method) then
+					local pre = machine.pre[key]
+					local post = machine.post[key]
+
+					if (pre) then
+						pre(machine, ...)
+					end
+
 					method(machine, ...)
+
+					if (post) then
+						post(machine, ...)
+					end
 				end
 			end
 		end
