@@ -18,12 +18,16 @@ end
 
 meta.__add = function(self, message)
 	if (message) then
-		self:log_write(type(message) == "table" and unpack(message) or message)
+		self:log_writes("green", type(message) == "table" and unpack(message) or message)
 	end
 end
 
 meta.__sub = function(self, arg)
-	self:log_pop(arg)
+	arg = tonumber(arg) or 1
+
+	for i = 1, arg do
+		self:log_pop(arg)
+	end
 end
 
 meta.__mul = function(self, arg)
