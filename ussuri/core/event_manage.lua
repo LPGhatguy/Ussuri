@@ -17,13 +17,16 @@ event_manage.event_handler_sorter = function(first, second)
 end
 
 event_manage.event_get_handler = function(object, handler, event_name)
-	return handler or (type(object) == "table") and ((object.event and object.event[event_name]) or object[event_name]) or object
+	return handler or
+		((type(object) == "table") and ((object.event and object.event[event_name]) or object[event_name])) or
+		((type(object) == "function") and object)
 end
 
 event_manage.event_get_priority = function(priority, object, event_name)
-	return ((type(priority) == "table") and priority[event_name]) or
+	return tonumber(
+		((type(priority) == "table") and priority[event_name]) or
 		((type(priority) == "number") and priority) or
-		((type(object) == "table") and (object["event_priority"] and object["event_priority"][event_name]))
+		((type(object) == "table") and (object["event_priority"] and object["event_priority"][event_name])))
 end
 
 --event methods
@@ -68,7 +71,7 @@ event_manage.event_hook = function(self, event_name, object, handler, priority)
 	local handlers = self.events[event_name]
 
 	if (object) then
-		table.insert(handlers, {object, handler, tonumber(priority)})
+		table.insert(handlers, {object, handler, priority})
 	end
 
 	if (self.event_auto_sort) then
@@ -76,12 +79,36 @@ event_manage.event_hook = function(self, event_name, object, handler, priority)
 	end
 end
 
-event_manage.event_hook_auto = function(self, object, priority)
-	if (type(object) == "table") then
-		local methods = object.event or object
+event_manage.event_hook_auto = function(self, object, handler, priority)
+	local handler = self.event_get_handler(object, handler)
+	local priority = self.event_get_priority(priority, object, event_name)
 
-		for name, handler in next, methods do
-			table.insert(self.events[name], {object, handler, self.event_get_priority(priority, object, name)})
+	if (type(object) == "table") then
+		local methods = object.event
+
+		for event_name, object_handler in next, methods do
+			table.insert(self.events[event_name], {object, handler or object_handler, self.event_get_priority(priority, object, event_name)})
+		end
+	elseif (type(object) == "function") then
+		for event_name, event in next, self.events do
+			table.insert(event, {object, object, priority})
+		end
+	end
+
+	if (self.event_auto_sort) then
+		self:event_sort_handlers()
+	end
+end
+
+event_manage.event_hook_all = function(self, object, handler, priority)
+	local handler = self.event_get_handler(object, handler)
+	local priority = self.event_get_priority(priority, object)
+
+	if (type(object) == "table") then
+		local methods = object.event
+
+		for event_name, event in next, self.events do
+			table.insert(event, {object, self.event_get_handler(object, nil, event_name), self.event_get_priority(priority, object, event_name)})
 		end
 	elseif (type(object) == "function") then
 		for event_name, event in next, self.events do
@@ -96,9 +123,13 @@ end
 
 event_manage.event_hook_batch = function(self, handlers, object, priority)
 	if (type(handlers) == "table") then
+		self:event_hook_start()
+
 		for handler_id, handler_name in next, handlers do
 			self:event_hook(handler_name, object, nil, priority)
 		end
+
+		self:event_hook_end()
 	else
 		self:event_hook_auto(object, priority or handlers) --handlers is passed as priority instead
 	end
