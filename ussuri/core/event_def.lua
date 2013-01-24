@@ -72,8 +72,8 @@ end
 definitions.init = function(self, engine)
 	lib = engine.lib
 
-	engine:event_create_batch("update", "draw", "quit", "focus",
-		"keydown", "keyup", "joydown", "joyup", "mousedown", "mouseup")
+	engine:event_create({"update", "draw", "quit", "focus",
+		"keydown", "keyup", "joydown", "joyup", "mousedown", "mouseup"})
 	engine:inherit(self)
 
 	return self
