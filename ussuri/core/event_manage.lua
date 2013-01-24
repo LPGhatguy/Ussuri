@@ -10,7 +10,6 @@ local engine
 event_manage.events = {}
 
 local handler_compare = function(first, second)
-	print("handler compare!")
 	return first[3] < second[3]
 end
 
