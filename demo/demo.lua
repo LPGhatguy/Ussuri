@@ -9,32 +9,38 @@ function love.load()
 	local lib = ussuri.lib
 
 	local intro_graphic = love.graphics.newImage("demo/asset/image/intro_graphic.png")
+	local title_graphic = love.graphics.newImage("demo/asset/image/title_graphic.png")
 
 	local machine = lib.misc.state_machine:new()
-	machine.state = "intro"
-	machine.intro_time = 0
 	machine.handlers = {
 		["intro"] = {
+			state_changed = function(self)
+				self.intro_time = 0
+			end,
 			draw = function(self)
 				love.graphics.setColor(255, 255, 255)
 				love.graphics.draw(intro_graphic, 0, 0)
 
-				if (self.intro_time < 2) then
-					love.graphics.setColor(0, 0, 0, math.max((255 - (255 * (self.intro_time ^ 2))), 0))
-				elseif (self.intro_time < 4) then
-					love.graphics.setColor(0, 0, 0, (255 * ((self.intro_time - 2) / 2)))
-				elseif (self.intro_time < 5) then
-					love.graphics.setColor(0, 0, 0)
-				else
-					love.graphics.setColor(0, 0, 0)
-					self:set_state("menu")
+				if (self.intro_time > 3) then
+					self:set_state("title")
 				end
-
-				love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
 			end,
 			update = function(self, event)
 				self.intro_time = self.intro_time + event.delta
+			end
+		},
+		["title"] = {
+			draw = function(self)
+				love.graphics.setColor(255, 255, 255)
+
+				love.graphics.draw(title_graphic, 0, 0)
+				love.graphics.printf("Press space to continue...", 0, 740, 1024, "center")
 			end,
+			keydown = function(self, event)
+				if (event.key == " ") then
+					self:set_state("menu")
+				end
+			end
 		},
 		["menu"] = {
 			draw = function(self)
@@ -62,9 +68,10 @@ function love.load()
 		}
 	}
 
-	ussuri:event_hook_batch({"draw", "keydown", "update", "quit"}, machine)
+	machine:set_state("intro")
+	ussuri:event_hook({"draw", "keydown", "update"}, machine, nil, 550)
 
-	ussuri:event_hook_auto(ussuri.lib.debug.header)
-	ussuri:event_hook_auto(ussuri.lib.debug.debug_monitor)
-	ussuri:event_hook_auto(ussuri.lib.debug.console)
+	ussuri:event_hook(nil, ussuri.lib.debug.header)
+	ussuri:event_hook(nil, ussuri.lib.debug.debug_monitor)
+	ussuri:event_hook(nil, ussuri.lib.debug.console)
 end
