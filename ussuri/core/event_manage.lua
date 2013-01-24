@@ -8,183 +8,177 @@ local lib = {}
 local engine
 
 event_manage.events = {}
-event_manage.event_auto_sort = true
 
---overridable event internal utility methods
-
-event_manage.event_handler_sorter = function(first, second)
-	return (first[3] or 500) < (second[3] or 500)
+local handler_compare = function(first, second)
+	print("handler compare!")
+	return first[3] < second[3]
 end
 
-event_manage.event_get_handler = function(object, handler, event_name)
-	return handler or
-		((type(object) == "table") and ((object.event and object.event[event_name]) or object[event_name])) or
-		((type(object) == "function") and object)
-end
+event_manage.event_create = function(self, event_name, data)
+	local events = self.events
 
-event_manage.event_get_priority = function(priority, object, event_name)
-	return tonumber(
-		((type(priority) == "table") and priority[event_name]) or
-		((type(priority) == "number") and priority) or
-		((type(object) == "table") and (object["event_priority"] and object["event_priority"][event_name])))
-end
+	if (type(event_name) == "table") then
+		for index = 1, #event_name do
+			local name = tostring(event_name[index])
 
---event methods
-
-event_manage.event_sort_handlers = function(self, event_name)
-	if (event_name) then
-		table.sort(self.events[event_name], self.event_handler_sorter)
+			if (not events[name]) then
+				events[name] = {
+					pass = self.event_pass:new(data)
+				}
+			end
+		end
 	else
-		for name, handlers in next, self.events do
-			table.sort(handlers, self.event_handler_sorter)
+		event_name = tostring(event_name)
+
+		if (not events[event_name]) then
+			events[event_name] = {
+				pass = self.event_pass:new(data)
+			}
 		end
 	end
 end
 
-event_manage.event_create = function(self, event_name)
+event_manage.event_destroy = function(self, event_name)
+	if (type(event_name) == "table") then
+		for index = 1, #event_name do
+			self.events[tostring(event_name[index])] = nil
+		end
+	else
+		self.events[tostring(event_name)] = nil
+	end
+end
+
+event_manage.event_trigger = function(self, event_name, data)
 	local event = self.events[event_name]
 
-	event = event or {}
-	event.pass = event.pass or self.event_pass:new()
+	if (event) then
+		local pass = event.pass
+		pass:refurbish(data)
 
-	self.events[event_name] = event
-end
+		for index = 1, #event do
+			local handler = event[index]
+			local object, method = handler[1], handler[2]
 
-event_manage.event_create_batch = function(self, ...)
-	for key, event_name in next, {...} do
-		self:event_create(event_name)
-	end
-end
+			method(object, pass)
 
-event_manage.event_hook_start = function(self)
-	self.event_auto_sort = false
-end
-
-event_manage.event_hook_end = function(self)
-	self.event_auto_sort = true
-	self:event_sort_handlers()
-end
-
-event_manage.event_hook = function(self, event_name, object, handler, priority)
-	local handler = self.event_get_handler(object, handler, event_name)
-	local priority = self.event_get_priority(priority, object, event_name)
-	local handlers = self.events[event_name]
-
-	if (object) then
-		table.insert(handlers, {object, handler, priority})
-	end
-
-	if (self.event_auto_sort) then
-		self:event_sort_handlers(event_name)
-	end
-end
-
-event_manage.event_hook_auto = function(self, object, handler, priority)
-	local handler = self.event_get_handler(object, handler)
-	local priority = self.event_get_priority(priority, object, event_name)
-
-	if (type(object) == "table") then
-		local methods = object.event
-
-		for event_name, object_handler in next, methods do
-			table.insert(self.events[event_name], {object, handler or object_handler, self.event_get_priority(priority, object, event_name)})
-		end
-	elseif (type(object) == "function") then
-		for event_name, event in next, self.events do
-			table.insert(event, {object, object, priority})
-		end
-	end
-
-	if (self.event_auto_sort) then
-		self:event_sort_handlers()
-	end
-end
-
-event_manage.event_hook_all = function(self, object, handler, priority)
-	local handler = self.event_get_handler(object, handler)
-	local priority = self.event_get_priority(priority, object)
-
-	if (type(object) == "table") then
-		local methods = object.event
-
-		for event_name, event in next, self.events do
-			table.insert(event, {object, self.event_get_handler(object, nil, event_name), self.event_get_priority(priority, object, event_name)})
-		end
-	elseif (type(object) == "function") then
-		for event_name, event in next, self.events do
-			table.insert(event, {object, object, priority})
-		end
-	end
-
-	if (self.event_auto_sort) then
-		self:event_sort_handlers()
-	end
-end
-
-event_manage.event_hook_batch = function(self, handlers, object, priority)
-	if (type(handlers) == "table") then
-		self:event_hook_start()
-
-		for handler_id, handler_name in next, handlers do
-			self:event_hook(handler_name, object, nil, priority)
-		end
-
-		self:event_hook_end()
-	else
-		self:event_hook_auto(object, priority or handlers) --handlers is passed as priority instead
-	end
-end
-
-event_manage.event_trigger = function(self, event_name, arguments)
-	local handlers = self.events[event_name]
-	local event_pass = handlers.pass:refurbish(arguments)
-
-	for key, handler in next, handlers do
-		local object = handler[1]
-		local method = handler[2]
-
-		if (type(method) == "function") then
-			method(object, event_pass)
-
-			if (event_pass.unhook) then
-				event_pass.unhook = false
-				table.remove(handlers, key)
+			if (pass.unhook) then
+				event[index] = nil
 			end
 
-			if (event_pass.cancel) then
+			if (pass.cancel) then
 				break
 			end
 		end
 	end
-
-	return event_pass
 end
 
-event_manage.event_get_pass = function(self, event_name)
-	return self.events[event_name].pass
+event_manage.event_sort = function(self, event_name)
+	local events = self.events
+
+	if (type(event_name) == "table") then
+		for index, name in next, event_name do
+			local event = events[name]
+
+			if (event) then
+				table.sort(event, handler_compare)
+			end
+		end
+	elseif (event_name) then
+		local event = events[name]
+
+		if (event) then
+			table.sort(event, handler_compare)
+		end
+	else
+		for index, event in next, self.events do
+			table.sort(event, handler_compare)
+		end
+	end
 end
 
---event pass definition
+event_manage.event_hook = function(self, event_name, object, method, priority, no_sort)
+	if (type(event_name) == "table") then
+		for index = 1, #event_name do
+			self:event_hook(event_name[index], object, method, priority, true)
+		end
+	elseif (event_name) then
+		event_name = tostring(event_name)
 
-event_manage.event_pass = {}
+		local event = self.events[event_name]
+		if (event) then
+			if (type(priority) == "table") then
+				priority = tonumber(priority[event_name])
+			else
+				priority = tonumber(priority)
+			end
 
-event_manage.event_pass.new = function(self, arguments)
-	local pass = self:_new()
+			if (type(object) == "function") then
+				table.insert(event, {
+					{},
+					object,
+					priority
+				})
+			elseif (type(object) == "table") then
+				table.insert(event, {
+					object,
+					method or (object.event and object.event[event_name]),
+					priority or (object.event_priority and object.event_priority[event_name]) or 0
+				})
+			end
+		end
+	else
+		if (type(object) == "table") then
+			if (object.event) then
+				if (method) then
+					for event_name in next, object.event do
+						local event = self.events[tostring(event_name)]
 
-	if (arguments) then
-		for key, value in next, arguments do
-			pass[key] = value
+						if (event) then
+							table.insert(event, {
+								object,
+								method,
+								priority or (object.event_priority and object.event_priority[event_name]) or 0
+							})
+						end
+					end
+				else
+					for event_name, event_method in next, object.event do
+						local event = self.events[tostring(event_name)]
+
+						if (event) then
+							table.insert(event, {
+								object,
+								event_method,
+								priority or (object.event_priority and object.event_priority[event_name]) or 0
+							})
+						end
+					end
+				end
+			end
 		end
 	end
 
-	pass.cancel = false
-
-	return pass
+	if (not no_sort) then
+		self:event_sort()
+	end
 end
 
-event_manage.event_pass.refurbish = function(self, arguments)
-	if (arguments) then
-		for key, value in next, arguments do
+event_manage.event_hook_batch = function(self, event_name, objects, method, priority)
+	for index = 1, #objects do
+		self:event_hook(event_name, objects[index], method, priority)
+	end
+end
+
+--event pass
+event_manage.event_pass = {}
+
+event_manage.event_pass.new = function(self, data)
+	return self:_new():refurbish(data)
+end
+
+event_manage.event_pass.refurbish = function(self, data)
+	if (data) then
+		for key, value in next, data do
 			self[key] = value
 		end
 	end
