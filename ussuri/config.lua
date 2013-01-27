@@ -6,7 +6,7 @@ return {
 	lib_core = {":core.utility", ":core.oop", ":core.logging", ":core.event_manage", ":core.event_def", ":core.lib_manage", ":core.shorthand"},
 	--core.lib_manage
 	lib_folders = {
-		{":misc", {}},
+		{":misc", {"state_machine"}},
 		{":input", {}},
 		{":gui", {}},
 		{":debug", {}}
