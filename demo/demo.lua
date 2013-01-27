@@ -18,7 +18,7 @@ function love.load()
 	fader.height = love.graphics.getHeight()
 
 	fader.draw = function(self)
-		love.graphics.setColor(0, 0, 0, self.alpha)
+		love.graphics.setColor(0, 0, 0, math.min(self.alpha, 255))
 		love.graphics.rectangle("fill", 0, 0, self.width, self.height)
 	end
 
@@ -26,26 +26,25 @@ function love.load()
 		["in"] = {
 			draw = fader.draw,
 			update = function(self, event)
-				self.alpha = 255 - (255 * (self.elapsed / self.time))
+				self.alpha = 270 - (270 * (self.elapsed / self.time))
 			end
 		},
 		["out"] = {
 			draw = fader.draw,
 			update = function(self, event)
-				self.alpha = 255 * (self.elapsed / self.time)
+				self.alpha = 270 * (self.elapsed / self.time)
 			end
 		},
 		["wait"] = {
 			draw = fader.draw
-		},
-		--[""] = {}
+		}
 	}
 
 	local machine = lib.misc.state_machine:new()
 	machine.handlers = {
 		["intro"] = {
 			state_changed = function(self)
-				fader:queue({"wait", 1}, {"in", 2}, {"wait", 2}, {"out", 2}, {"wait", 0, self.set_state, self, "title"})
+				fader:queue({"wait", 0.5}, {"in", 1}, {"wait", 2}, {"out", 1}, {"wait", 0.5, self.set_state, self, "title"})
 			end,
 			draw = function(self)
 				love.graphics.setColor(255, 255, 255)
@@ -64,7 +63,7 @@ function love.load()
 			end,
 			keydown = function(self, event)
 				if (event.key == " ") then
-					fader:queue({"out", 1}, {"in", 1, self.set_state, self, "menu"})
+					fader:queue({"out", 0.6}, {"in", 0.6, self.set_state, self, "menu"})
 				end
 			end
 		},

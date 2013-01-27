@@ -3,7 +3,7 @@ local lib, table_pop
 
 queue.time = 0
 queue.elapsed = 0
-queue.acting = true
+queue.acting = false
 queue.enabled = true
 queue.stack = {}
 
@@ -13,6 +13,7 @@ queue.queue_update = function(self, event)
 			self.elapsed = self.elapsed + event.delta
 
 			if (self.elapsed > self.time) then
+				print(self.elapsed)
 				self.elapsed = 0
 				self:queue_step()
 			end
@@ -29,23 +30,31 @@ queue.queue_step = function(self)
 		local action = table_pop(self.stack)
 
 		local state = table_pop(action)
-		local time = tonumber(table_pop(action))
-		local method = table_pop(action)
 
-		acting = true
-		if (state) then
-			self:set_state(state)
-		end
+		if (type(state) == "string") then
+			local time = tonumber(table_pop(action))
+			local method = table_pop(action)
 
-		if (time) then
-			self.time = time
-		end
+			self.acting = true
+			if (state) then
+				self:set_state(state)
+			end
 
-		if (method) then
-			method(unpack(action))
+			if (time) then
+				self.time = time
+			end
+
+			if (method) then
+				method(unpack(action))
+			end
+		elseif (type(state) == "function") then
+			self.time = 0
+			self.elapsed = 0
+			self.acting = false
+			state(unpack(action))
 		end
 	else
-		acting = false
+		self.acting = false
 		self:set_state("")
 	end
 end
