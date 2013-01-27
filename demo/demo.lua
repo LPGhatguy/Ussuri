@@ -7,29 +7,55 @@ local ussuri = require("ussuri")
 
 function love.load()
 	local lib = ussuri.lib
+	local utility = lib.utility
 
 	local intro_graphic = love.graphics.newImage("demo/asset/image/intro_graphic.png")
 	local title_graphic = love.graphics.newImage("demo/asset/image/title_graphic.png")
+
+	fader = lib.misc.queue:new()
+	fader.alpha = 255
+	fader.width = love.graphics.getWidth()
+	fader.height = love.graphics.getHeight()
+
+	fader.draw = function(self)
+		love.graphics.setColor(0, 0, 0, self.alpha)
+		love.graphics.rectangle("fill", 0, 0, self.width, self.height)
+	end
+
+	fader.handlers = {
+		["in"] = {
+			draw = fader.draw,
+			update = function(self, event)
+				self.alpha = 255 - (255 * (self.elapsed / self.time))
+			end
+		},
+		["out"] = {
+			draw = fader.draw,
+			update = function(self, event)
+				self.alpha = 255 * (self.elapsed / self.time)
+			end
+		},
+		["wait"] = {
+			draw = fader.draw
+		},
+		--[""] = {}
+	}
 
 	local machine = lib.misc.state_machine:new()
 	machine.handlers = {
 		["intro"] = {
 			state_changed = function(self)
-				self.intro_time = 0
+				fader:queue({"wait", 1}, {"in", 2}, {"wait", 2}, {"out", 2}, {"wait", 0, self.set_state, self, "title"})
 			end,
 			draw = function(self)
 				love.graphics.setColor(255, 255, 255)
 				love.graphics.draw(intro_graphic, 0, 0)
-
-				if (self.intro_time > 3) then
-					self:set_state("title")
-				end
-			end,
-			update = function(self, event)
-				self.intro_time = self.intro_time + event.delta
 			end
 		},
 		["title"] = {
+			state_changed = function(self)
+				fader:queue({"in", 1})
+			end,
 			draw = function(self)
 				love.graphics.setColor(255, 255, 255)
 
@@ -38,7 +64,7 @@ function love.load()
 			end,
 			keydown = function(self, event)
 				if (event.key == " ") then
-					self:set_state("menu")
+					fader:queue({"out", 1}, {"in", 1, self.set_state, self, "menu"})
 				end
 			end
 		},
@@ -70,6 +96,10 @@ function love.load()
 
 	machine:set_state("intro")
 	ussuri:event_hook({"draw", "keydown", "update"}, machine, nil, 550)
+	ussuri:event_hook({"draw", "update"}, fader, nil, 551)
+
+	lib.debug.debug_monitor.lookups.acting = {fader, "acting"}
+	lib.debug.debug_monitor.lookups.state = {fader, "state"}
 
 	ussuri:event_hook(nil, ussuri.lib.debug.header)
 	ussuri:event_hook(nil, ussuri.lib.debug.debug_monitor)
