@@ -13,7 +13,6 @@ queue.queue_update = function(self, event)
 			self.elapsed = self.elapsed + event.delta
 
 			if (self.elapsed > self.time) then
-				print(self.elapsed)
 				self.elapsed = 0
 				self:queue_step()
 			end
