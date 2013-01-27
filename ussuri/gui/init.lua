@@ -4,8 +4,8 @@ Provides various GUI drawing utility methods
 ]]
 
 local gui = {}
-local print = print
 local lib = {}
+
 gui.styles = {
 	["white"] = {255, 255, 255},
 	["red"] = {200, 0, 0},
