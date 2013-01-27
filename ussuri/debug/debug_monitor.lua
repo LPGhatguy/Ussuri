@@ -15,6 +15,7 @@ monitor.values = {
 	fps = 0,
 	time = 0
 }
+monitor.lookups = {}
 
 monitor.event_priority = {
 	update = 0,
@@ -29,6 +30,10 @@ monitor.event = {
 
 			for key, value in next, self.values do
 				out = out .. key:upper() .. ": " .. self:draw_value(value) .. "\n"
+			end
+
+			for key, value in next, self.lookups do
+				out = out .. key:upper() .. ": " .. self:draw_value(value[1][value[2]]) .. "\n"
 			end
 
 			local default_font = love.graphics.getFont()
