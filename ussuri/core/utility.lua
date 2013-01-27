@@ -97,12 +97,12 @@ utility.table_copy = function(from, to, meta)
 	return to
 end
 
-utility.table_merge = function(from, to)
+utility.table_merge = function(from, to, meta)
 	if (from) then
 		for key, value in pairs(from) do
 			if (not to[key]) then
 				if (type(value) == "table") then
-					to[key] = utility.table_copy(value)
+					to[key] = utility.table_copy(value, {}, meta)
 				else
 					to[key] = value
 				end
