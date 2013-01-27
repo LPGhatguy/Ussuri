@@ -4,6 +4,7 @@ A drop-in replacement for functions with multiple bodies
 ]]
 
 local event = {}
+
 event.handlers = {}
 
 event.pre = function(self)
@@ -34,14 +35,6 @@ local meta = {
 	__call = event.call,
 	__add = event.register
 }
-
-event.new = function(self)
-	local new = self:_new()
-
-	setmetatable(new, meta)
-
-	return new
-end
 
 event.init = function(self, engine)
 	setmetatable(self, meta)
