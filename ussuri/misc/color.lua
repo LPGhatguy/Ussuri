@@ -2,6 +2,7 @@
 Color Utility Library
 Contains code adapted from the LÖVE wiki (love2d.org/wiki)
 ]]
+
 local color = {}
 
 color.hsv_to_rgb = function(h, s, v, a)

@@ -5,6 +5,7 @@ Implements basic text rendering and input
 
 local textbox = {}
 local lib
+
 textbox.x = 0
 textbox.y = 0
 textbox.width = auto

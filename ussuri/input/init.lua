@@ -1,4 +1,5 @@
 local input = {}
+
 input.clipboard = ""
 
 input.copy = function(self, text)
