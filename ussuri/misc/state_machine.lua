@@ -25,22 +25,23 @@ setmetatable(state.event, {
 		local event = function(machine, ...)
 			local handlers = machine.handlers[machine.state]
 
+			local pre = machine.pre[key]
+			local post = machine.post[key]
+
+			if (pre) then
+				pre(machine, ...)
+			end
+
 			if (handlers) then
 				local method = handlers[key]
-				local pre = machine.pre[key]
-				local post = machine.post[key]
-
-				if (pre) then
-					pre(machine, ...)
-				end
 
 				if (method) then
 					method(machine, ...)
 				end
+			end
 
-				if (post) then
-					post(machine, ...)
-				end
+			if (post) then
+				post(machine, ...)
 			end
 		end
 
