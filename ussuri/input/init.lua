@@ -1,13 +1,20 @@
-local input = {}
+--[[
+Input Service
+Presently just provides access to a string for the application's clipboard
+]]
 
-input.clipboard = ""
+local input
 
-input.copy = function(self, text)
-	self.clipboard = text
-end
+input = {
+	clipboard = "",
 
-input.paste = function(self)
-	return self.clipboard
-end
+	copy = function(self, text)
+		self.clipboard = text
+	end,
+
+	paste = function(self)
+		return self.clipboard
+	end
+}
 
 return input

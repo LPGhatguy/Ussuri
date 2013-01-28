@@ -1,30 +1,37 @@
-local header = {}
+--[[
+Debug Header
+Intercepts Keystrokes to assist in speedy debugging
+]]
+
 local engine, lib
+local header
 
-header.event_priority = {
-	keydown = -1
-}
+header = {
+	event_priority = {
+		keydown = -1
+	},
 
-header.event = {
-	keydown = function(self, event)
-		if (event.key == "tab" and love.keyboard.isDown("lctrl")) then
-			event.cancel = true
+	event = {
+		keydown = function(self, event)
+			if (event.key == "tab" and love.keyboard.isDown("lctrl")) then
+				event.cancel = true
 
-			if (love.keyboard.isDown("lshift")) then
-				engine.config.log_recording_enabled = true
-				engine:log_write(lib.utility.table_tree(engine))
+				if (love.keyboard.isDown("lshift")) then
+					engine.config.log_recording_enabled = true
+					engine:log_write(lib.utility.table_tree(engine))
+				end
+
+				love.event.push("quit")
 			end
-
-			love.event.push("quit")
 		end
+	},
+
+	init = function(self, g_engine)
+		engine = g_engine
+		lib = engine.lib
+
+		return self
 	end
 }
-
-header.init = function(self, g_engine)
-	engine = g_engine
-	lib = engine.lib
-
-	return self
-end
 
 return header

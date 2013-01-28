@@ -1,5 +1,5 @@
-local engine_core = {}
 local lib, config = {}, {}
+local engine_core = {}
 
 local engine_path = debug.getinfo(1).short_src:match("([^%.]*)[\\/][^%.]*%..*$"):gsub("[\\/]", ".") .. "."
 config.engine_path = engine_path

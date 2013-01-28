@@ -3,22 +3,32 @@ State Machine
 A state machine with possible (but not critical) integration into Ussuri's event framework
 ]]
 
-local state = {}
 local lib
+local state
 
-state.event = {}
-state.state = ""
-state.pre = {}
-state.post = {}
-state.handlers = {}
+state = {
+	event = {},
+	pre = {},
+	post = {},
+	handlers = {},
+	state = "",
 
-state.set_state = function(self, value)
-	self.event["state_changing"](self, {})
+	set_state = function(self, value)
+		self.event["state_changing"](self, {})
 
-	self.state = value
+		self.state = value
 
-	self.event["state_changed"](self, {})
-end
+		self.event["state_changed"](self, {})
+	end,
+
+	init = function(self, engine)
+		lib = engine.lib
+
+		lib.oop:objectify(self)
+
+		return self
+	end
+}
 
 setmetatable(state.event, {
 	__index = function(self, key)
@@ -51,13 +61,5 @@ setmetatable(state.event, {
 		return event
 	end
 })
-
-state.init = function(self, engine)
-	lib = engine.lib
-
-	lib.oop:objectify(self)
-
-	return self
-end
 
 return state
