@@ -5,7 +5,7 @@ The commands created here are slow and not meant for anything except the console
 ]]
 
 local engine
-local lib, tpop
+local lib, table_pop
 _ = {}
 
 local meta = {}
@@ -18,7 +18,7 @@ end
 
 meta.__add = function(self, message)
 	if (message) then
-		self:log_writes("green", type(message) == "table" and unpack(message) or message)
+		self:log_writes("green", (type(message) == "table") and unpack(message) or message)
 	end
 end
 
@@ -31,8 +31,8 @@ meta.__sub = function(self, arg)
 end
 
 meta.__mul = function(self, arg)
-	local count = tpop(arg)
-	local method = tpop(arg)
+	local count = table_pop(arg)
+	local method = table_pop(arg)
 
 	for i = 1, count do
 		method(i, unpack(arg))
@@ -40,8 +40,8 @@ meta.__mul = function(self, arg)
 end
 
 meta.__pow = function(self, arg)
-	local count = tpop(arg)
-	local method = tpop(arg)
+	local count = table_pop(arg)
+	local method = table_pop(arg)
 
 	for i = 1, count do
 		method(unpack(arg))
@@ -52,7 +52,7 @@ _.init = function(self, engine)
 	lib = engine.lib
 	_ = engine
 
-	tpop = lib.utility.table_pop
+	table_pop = lib.utility.table_pop
 
 	setmetatable(engine, meta)
 
