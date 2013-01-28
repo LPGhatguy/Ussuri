@@ -3,9 +3,10 @@ return {
 	version = 1.2,
 	--core
 	engine_path = nil, --filled in by engine initialization
-	lib_core = {":core.utility", ":core.oop", ":core.logging", ":core.event_manage", ":core.event_def", ":core.lib_manage", ":core.shorthand"},
+	lib_core = {":core.utility", ":core.oop", ":core.logging", ":core.event_manage", ":core.event_def", ":core.lib_manage"},
 	--core.lib_manage
 	lib_folders = {
+		{":extend", {}},
 		{":misc", {"state_machine"}},
 		{":input", {}},
 		{":gui", {}},
