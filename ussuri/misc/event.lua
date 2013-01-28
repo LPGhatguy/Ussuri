@@ -7,20 +7,18 @@ local event = {}
 
 event.handlers = {}
 
-event.pre = function(self)
-end
-
-event.post = function(self)
-end
-
 event.call = function(self, ...)
-	self:pre(...)
+	if (self.pre) then
+		self:pre(...)
+	end
 
 	for key, value in next, self.handlers do
 		value(...)
 	end
 
-	self:post(...)
+	if (self.post) then
+		self:post(...)
+	end
 
 	return self
 end
