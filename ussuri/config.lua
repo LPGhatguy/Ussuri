@@ -1,10 +1,8 @@
 return {
-	--details
-	version = 1.2,
-	--core
-	engine_path = nil, --filled in by engine initialization
+	version = 1.3,
+
 	lib_core = {":core.utility", ":core.oop", ":core.logging", ":core.event_manage", ":core.event_def", ":core.lib_manage"},
-	--core.lib_manage
+
 	lib_folders = {
 		{":extend", {}},
 		{":misc", {"state_machine"}},
@@ -12,7 +10,7 @@ return {
 		{":gui", {}},
 		{":debug", {}}
 	},
-	--core.logging
+
 	log_realtime_enabled = true,
 	log_history_enabled = true,
 	log_recording_enabled = false,
