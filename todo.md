@@ -2,15 +2,14 @@
 
 >
 ### High Priority
-1. State machine
+1. Put the 'misc' libraries into a better place
+2. Resource manager
 
 >
 ### Medium Priority
-1. Physics library
+1. Physics library (Box2D/love.physics wrapper)
 2. Tile map loader
-3. Class data serializer
 
 >
 ### Low Priority
-1. Documentation (in progress, more or less)
-2. Add resolution/options frontend
+1. Add resolution/options frontend
