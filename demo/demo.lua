@@ -50,7 +50,8 @@ function love.load()
 	machine.handlers = {
 		["intro"] = {
 			state_changed = function(self)
-				fader:queue({"wait", 0.5}, {"in", 1}, {"wait", 2}, {"out", 0.5}, {"wait", 0.5, self.set_state, self, "title"})
+				fader:queue({"wait", 1}, {"in", 1}, {"wait", 1}, {"out", 1},
+					{"wait", 0.5, self.set_state, self, "title"})
 			end,
 			draw = function(self)
 				love.graphics.setColor(255, 255, 255)
