@@ -1,5 +1,5 @@
 --[[
-Resource Manager (Work in Progress!)
+Resource Manager (Work in Progress)
 Loads and unloads resources on demand
 ]]
 
@@ -8,12 +8,13 @@ local resource
 
 resource = {
 	loaded = {},
+	file_cache = {},
 	extensions = {
-		["image"] = love.graphics.newImage,
-		["imagedata"] = love.image.newImageData,
-		["soundstream"] = love.sound.newDecoder,
-		["soundeffect"] = love.sound.newSoundData,
-		["font"] = love.graphics.newFont
+		["image"] = {love.graphics.newImage},
+		["imagedata"] = {love.image.newImageData},
+		["soundstream"] = {love.sound.newDecoder},
+		["soundeffect"] = {love.sound.newSoundData},
+		["font"] = {love.graphics.newFont}
 	},
 	types = {
 		["gif"] = "image",
@@ -25,8 +26,29 @@ resource = {
 		["ttf"] = "font"
 	},
 
-	fetch = function(self, filepath, as)
-		local path, name, extension = filepath:match("(.-)/?([^/]-)%.(.-)$")
+	fetch = function(self, file_path, file_type)
+		local preloaded = self.file_cache[file_path]
+
+		if (preloaded) then
+			return preloaded
+		else
+			local path, name, extension = file_path:match("(.-)/?([^/]-)%.(.-)$")
+			local file_class = self.types[file_type] or self.types[extension]
+
+			if (file_class) then
+				local loader = self.extensions[file_class]
+
+				if (loader) then
+					local asset = lib.utility.table_pop(loader)(file_path, unpack(loader))
+
+					if (asset) then
+						self.file_cache[file_path] = asset
+						self.loaded[as] = asset
+						return asset
+					end
+				end
+			end
+		end
 	end,
 
 	load = function(self)
