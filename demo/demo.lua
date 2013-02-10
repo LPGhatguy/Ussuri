@@ -12,7 +12,7 @@ function love.load()
 	local intro_graphic = love.graphics.newImage("demo/asset/image/intro_graphic.png")
 	local title_graphic = love.graphics.newImage("demo/asset/image/title_graphic.png")
 
-	fader = lib.misc.queue:new()
+	fader = lib.misc.state_queue:new()
 	fader.color = {0, 0, 0, 255}
 	fader.width = love.graphics.getWidth()
 	fader.height = love.graphics.getHeight()

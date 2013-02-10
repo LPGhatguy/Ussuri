@@ -1,4 +1,6 @@
 --[[
+State-Machine Queue
+Used for queueing state machine changes and calls
 ]]
 
 local lib, table_pop
