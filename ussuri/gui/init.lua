@@ -34,7 +34,6 @@ gui = {
 		return out_text, out_style
 	end,
 
-	--If you're worried about sandboxing, this method is a little sketchy.
 	style_add = function(self, name, style)
 		if (not self.styles[name]) then
 			self.styles[name] = style
