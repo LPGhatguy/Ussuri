@@ -7,14 +7,16 @@ local lib
 local resource
 
 resource = {
-	loaded = {},
+	base_directory = "",
+	assets = {},
+	structure = {},
 	file_cache = {},
 	extensions = {
-		["image"] = {love.graphics.newImage},
-		["imagedata"] = {love.image.newImageData},
-		["soundstream"] = {love.sound.newDecoder},
-		["soundeffect"] = {love.sound.newSoundData},
-		["font"] = {love.graphics.newFont}
+		["image"] = {love.graphics.newImage, {}},
+		["imagedata"] = {love.image.newImageData, {}},
+		["soundstream"] = {love.sound.newDecoder, {}},
+		["soundeffect"] = {love.sound.newSoundData, {}},
+		["font"] = {love.graphics.newFont, {}}
 	},
 	types = {
 		["gif"] = "image",
@@ -26,24 +28,26 @@ resource = {
 		["ttf"] = "font"
 	},
 
+	get_file_type = function(self, file_path)
+		return self.types[file_path:match("%.(.-)$")]
+	end,
+
 	fetch = function(self, file_path, file_type)
 		local preloaded = self.file_cache[file_path]
 
 		if (preloaded) then
 			return preloaded
 		else
-			local path, name, extension = file_path:match("(.-)/?([^/]-)%.(.-)$")
-			local file_class = self.types[file_type] or self.types[extension]
+			local file_class = self.types[file_type] or self:get_file_type(file_path)
 
 			if (file_class) then
 				local loader = self.extensions[file_class]
 
 				if (loader) then
-					local asset = lib.utility.table_pop(loader)(file_path, unpack(loader))
+					local asset = loader[1](file_path, unpack(loader[2]))
 
 					if (asset) then
 						self.file_cache[file_path] = asset
-						self.loaded[as] = asset
 						return asset
 					end
 				end
@@ -51,14 +55,22 @@ resource = {
 		end
 	end,
 
-	load = function(self)
+	load = function(self, name)
+		local asset = self.assets[name]
+
+		if (asset) then
+			return asset
+		end
 	end,
 
 	unload = function(self)
 	end,
 
-	add_directory = function(self, name, directory)
-		self.loaded[name] = {directory}
+	directory = function(self, path, ...)
+		return {path = path, ...}
+	end,
+
+	file = function(self, name)
 	end,
 
 	init = function(self, engine)
@@ -69,5 +81,7 @@ resource = {
 		return self
 	end
 }
+
+setmetatable(resource.file_cache, {__mode = "v"})
 
 return resource
