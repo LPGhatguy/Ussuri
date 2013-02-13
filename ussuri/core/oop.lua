@@ -12,8 +12,20 @@ oop = {
 	end,
 
 	object = {
-		inherit = function(self, from)
-			table_merge(from, self, true)
+		inherit = function(self, from, base)
+			if (from) then
+				table_merge(from, self, true)
+
+				if (base) then
+					if (base == true) then
+						self.base = from
+					else
+						self["_" .. tostring(base)] = from
+					end
+				end
+			else
+				print("Cannot inherit from nil! (id: " .. tostring(base) .. ")")
+			end
 		end,
 		_new = function(self)
 			return table_copy(self, {}, true)
@@ -26,6 +38,7 @@ oop = {
 		table_merge = lib.utility.table_merge
 
 		self.object.new = self.object._new
+		self.object.base = self.object.base
 
 		self:objectify(engine)
 
