@@ -7,7 +7,8 @@
 >
 ### High Priority
 1. Resource manager
-2. Put the 'misc' libraries into a better place
+2. Rewrite core.lib_manage to use load instead of require
+3. Put the 'misc' libraries into a better place
 
 >
 ### Medium Priority
