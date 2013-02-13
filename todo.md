@@ -12,9 +12,10 @@
 
 >
 ### Medium Priority
-1. Physics library (Box2D/love.physics wrapper)
-2. Tile map loader
+1. GUI Components
 
 >
 ### Low Priority
 1. Add resolution/options frontend
+2. Physics library (Box2D/love.physics wrapper)
+3. Tile map loader
