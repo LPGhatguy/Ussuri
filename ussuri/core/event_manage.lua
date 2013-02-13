@@ -115,7 +115,7 @@ event_manage = {
 					table.insert(event, {
 						{},
 						object,
-						priority
+						priority or 0
 					})
 				elseif (type(object) == "table") then
 					table.insert(event, {
