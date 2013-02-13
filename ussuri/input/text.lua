@@ -1,6 +1,6 @@
 --[[
-Text Data/Input Class
-Meant to be inherited by a textbox. Controls the behavior of the textbox, not the rendering.
+Single Line Text Input Manager
+Manages input of a single line textbox
 ]]
 
 local lib, input
@@ -13,7 +13,7 @@ text = {
 	text = "",
 	enabled = true,
 
-	text_keydown = function(self, event)
+	keydown = function(self, event)
 		local key = event.key
 
 		if (self.enabled) then
@@ -127,7 +127,7 @@ text = {
 		lib = engine.lib
 		input = lib.input
 
-		self.text_submit = lib.misc.event:new()
+		self.event_text_submit = lib.misc.event:new()
 		lib.oop:objectify(self)
 
 		return self
@@ -135,7 +135,7 @@ text = {
 }
 
 text.event = {
-	keydown = text.text_keydown
+	keydown = text.keydown
 }
 
 return text

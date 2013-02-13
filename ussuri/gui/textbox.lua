@@ -1,37 +1,36 @@
 --[[
 Basic Textbox
 Implements basic text rendering on top of basic input
+Inherits gui.base, input.text
 ]]
 
 local lib
 local textbox
 
 textbox = {
-	x = 0,
-	y = 0,
-	width = auto,
-	height = auto,
+	auto_size = false,
 	selection_color = {0, 80, 200},
 	cursor_color = {255, 255, 255},
 	text_color = {255, 255, 255},
 	background_color = {100, 100, 100},
 
-	textbox_keydown = function(self, event)
+	keydown = function(self, event)
 		if (self.enabled) then
 			event.cancel = true
 		end
-		self:text_keydown(event)
+		self._text.keydown(self, event)
 	end,
 
-	textbox_mousedown = function(self, event)
+	mousedown = function(self, event)
 		self.enabled = ((event.x > self.x and event.x < self.x + self.width) and
 			(event.y > self.y and event.y < self.y + self.height))
 	end,
 
-	textbox_draw = function(self)
+	draw = function(self)
+		local auto_size = self.auto_size
 		local x, y = self.x, self.y
-		local width = self.width or self.font:getWidth(self.text)
-		local height = self.height or self.font:getHeight()
+		local width = auto_size and self.font:getWidth(self.text) or self.width
+		local height = auto_size and self.font:getHeight() or self.height
 
 		love.graphics.setScissor(x, y, math.max(width, 1), height)
 
@@ -61,11 +60,12 @@ textbox = {
 	end,
 
 	new = function(self, text, font)
-		local new = self:text_new(text)
+		local instance = self.base.new(self)
+		instance = self._text.new(instance, text)
 
-		new.font = font or new.font
+		instance.font = font or instance.font
 
-		return new
+		return instance
 	end,
 
 	init = function(self, engine)
@@ -73,17 +73,17 @@ textbox = {
 
 		lib.oop:objectify(self)
 
-		self.text_new = lib.input.text.new
-		self:inherit(lib.input.text)
+		self:inherit(lib.gui.base, true)
+		self:inherit(lib.input.text, "text")
 
 		return self
 	end
 }
 
 textbox.event = {
-	keydown = textbox.textbox_keydown,
-	draw = textbox.textbox_draw,
-	mousedown = textbox.textbox_mousedown
+	keydown = textbox.keydown,
+	draw = textbox.draw,
+	mousedown = textbox.mousedown
 }
 
 return textbox
