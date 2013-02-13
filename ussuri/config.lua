@@ -7,7 +7,7 @@ return {
 		{":extend", {}},
 		{":misc", {"state_machine"}},
 		{":input", {}},
-		{":gui", {}},
+		{":gui", {"base", "container"}},
 		{":debug", {}}
 	},
 
