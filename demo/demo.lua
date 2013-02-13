@@ -8,106 +8,54 @@ local ussuri = require("ussuri")
 function love.load()
 	local lib = ussuri.lib
 	local utility = lib.utility
+	local debug = lib.debug
+	local gui = lib.gui
 
-	local intro_graphic = love.graphics.newImage("demo/asset/image/intro_graphic.png")
-	local title_graphic = love.graphics.newImage("demo/asset/image/title_graphic.png")
+	love.graphics.setMode(604, 604)
+	love.graphics.setBackgroundColor(100, 100, 100)
 
-	fader = lib.misc.state_queue:new()
-	fader.color = {0, 0, 0, 255}
-	fader.width = love.graphics.getWidth()
-	fader.height = love.graphics.getHeight()
+	local title_font = love.graphics.newFont(24)
 
-	fader.draw = function(self)
-		love.graphics.setColor(self.color)
-		love.graphics.rectangle("fill", 0, 0, self.width, self.height)
+	local fxf = gui.container:new()
+	fxf.width = 50
+	fxf.height = 50
+
+	for x = 0, 4 do
+		for y = 0, 4 do
+			local box = gui.checkbox:new()
+			box.x = 10 * x
+			box.y = 10 * y
+
+			fxf:add(box)
+		end
 	end
 
-	fader.handlers = {
-		["in"] = {
-			draw = fader.draw,
-			update = function(self, event)
-				self.color[4] = 255 - (255 * (self.elapsed / self.time))
-			end,
-			state_changing = function(self)
-				self.color[4] = 0
-			end
-		},
-		["out"] = {
-			draw = fader.draw,
-			update = function(self, event)
-				self.color[4] = 255 * (self.elapsed / self.time)
-			end,
-			state_changing = function(self)
-				self.color[4] = 255
-			end
-		},
-		["wait"] = {
-			draw = fader.draw
-		}
-	}
+	local root = gui.frame:new()
+	root.width = 504
+	root.height = 504
+	root.x = 50
+	root.y = 50
 
-	local machine = lib.misc.state_machine:new()
-	machine.handlers = {
-		["intro"] = {
-			state_changed = function(self)
-				fader:queue({"wait", 1}, {"in", 1}, {"wait", 1}, {"out", 1},
-					{"wait", 0.5, self.set_state, self, "title"})
-			end,
-			draw = function(self)
-				love.graphics.setColor(255, 255, 255)
-				love.graphics.draw(intro_graphic, 0, 0)
-			end
-		},
-		["title"] = {
-			state_changed = function(self)
-				fader:queue({"in", 0.5})
-			end,
-			draw = function(self)
-				love.graphics.setColor(255, 255, 255)
+	for x = 0, 9 do
+		for y = 0, 9 do
+			local container = fxf:new()
+			container.x = 50 * x
+			container.y = 50 * y
 
-				love.graphics.draw(title_graphic, 0, 0)
-				love.graphics.printf("Press space to continue...", 0, 740, 1024, "center")
-			end,
-			keydown = function(self, event)
-				if (event.key == " ") then
-					fader:queue({"out", 0.6}, {"in", 0.6, self.set_state, self, "menu"})
-				end
-			end
-		},
-		["menu"] = {
-			draw = function(self)
-				love.graphics.setColor(255, 255, 255)
-				love.graphics.rectangle("fill", 50, 50, 50, 50)
-			end,
-			keydown = function(self, event)
-				if (event.key == " ") then
-					self:set_state("game")
-				elseif (event.key == "escape") then
-					ussuri:quit()
-				end
-			end
-		},
-		["game"] = {
-			draw = function(self)
-				love.graphics.setColor(255, 255, 255)
-				love.graphics.rectangle("fill", 100, 100, 100, 100)
-			end,
-			keydown = function(self, event)
-				if (event.key == "escape") then
-					self:set_state("menu")
-				end
-			end
-		}
-	}
+			root:add(container)
+		end
+	end
 
-	machine:set_state("intro")
-	ussuri:event_hook({"draw", "keydown", "update"}, machine, nil, 550)
-	ussuri:event_hook({"draw", "update"}, fader, nil, 551)
+	ussuri:event_hook(nil, root)
 
-	lib.debug.debug_monitor.lookups.acting = {fader, "acting"}
-	lib.debug.debug_monitor.lookups.state = {fader, "state"}
+	ussuri:event_hook("draw", function(self, event)
+		love.graphics.setColor(255, 255, 255)
+		love.graphics.setFont(title_font)
+		love.graphics.printf("UI Checkbox Demo", 0, 14, 604, "center")
+		love.graphics.printf("Click boxes to fill/unfill them.", 0, 570, 604, "center")
+	end)
 
-	ussuri:event_hook(nil, ussuri.lib.debug.header)
-	ussuri:event_hook(nil, ussuri.lib.debug.debug_monitor)
-	ussuri:event_hook(nil, ussuri.lib.debug.console)
+	ussuri:event_hook(nil, debug.header)
+	ussuri:event_hook(nil, debug.monitor)
+	ussuri:event_hook(nil, debug.console)
 end
