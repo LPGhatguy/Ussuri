@@ -13,6 +13,8 @@ local lib_meta = {
 }
 
 lib_manage = {
+	libraries = {},
+
 	lib_get = function(self, path, name)
 		if (rawget(lib, path)) then
 			return rawget(lib, path)
@@ -68,7 +70,7 @@ lib_manage = {
 		local loaded = require(path)
 		if (type(loaded) == "table" and loaded.init) then
 			loaded = loaded:init(self) or loaded
-			loaded.init = nil
+			table.insert(self.libraries, loaded)
 		end
 
 		if (string.match(name, "[%.]")) then
@@ -116,7 +118,17 @@ lib_manage = {
 		engine:inherit(self)
 
 		return self
+	end,
+
+	close = function(self, engine)
+		for key, library in next, self.libraries do
+			if (library.close) then
+				library:close(engine)
+			end
+		end
 	end
 }
+
+setmetatable(lib_manage.libraries, {__mode = "v"})
 
 return lib_manage
