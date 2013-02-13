@@ -34,7 +34,7 @@ console = {
 				local default_font = love.graphics.getFont()
 				love.graphics.setFont(self.font)
 
-				self.input_box:textbox_draw()
+				self.input_box:draw()
 
 				lib.gui:prints(table.concat(engine.log_history, "\n"), 8, 40)
 
@@ -48,7 +48,7 @@ console = {
 				self.enabled = not self.enabled
 				event.cancel = true
 			elseif (self.enabled) then
-				self.input_box:textbox_keydown(event)
+				self.input_box:keydown(event)
 				event.cancel = true
 			end
 		end,
@@ -60,7 +60,7 @@ console = {
 		mousedown = function(self, event)
 			if (self.enabled) then
 				event.cancel = true
-				self.input_box:textbox_mousedown(event)
+				self.input_box:mousedown(event)
 			end
 		end
 	},
@@ -77,7 +77,7 @@ console = {
 		self.input_box.height = 16
 		self.input_box.background_color = {100, 100, 100, 100}
 
-		self.input_box.text_submit = self.input_box.text_submit + function(box)
+		self.input_box.event_text_submit = self.input_box.text_submit + function(box)
 			engine:log_writes("blue", box.text)
 
 			local loaded, err = loadstring(box.text)
