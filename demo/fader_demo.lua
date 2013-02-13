@@ -82,16 +82,11 @@ function love.load()
 			draw = function(self)
 				love.graphics.setColor(255, 255, 255)
 				love.graphics.rectangle("fill", 50, 50, 50, 50)
-
-				checkbox_test:draw()
 			end,
 			keydown = function(self, event)
 				if (event.key == " ") then
 					self:set_state("game")
 				end
-			end,
-			mousedown = function(self, event)
-				checkbox_test:mousedown(event)
 			end
 		},
 		["game"] = {
@@ -108,13 +103,13 @@ function love.load()
 	}
 
 	machine:set_state("intro")
-	ussuri:event_hook({"draw", "keydown", "update", "mousedown"}, machine, nil, 550)
+	ussuri:event_hook({"draw", "keydown", "update"}, machine, nil, 550)
 	ussuri:event_hook({"draw", "update"}, fader, nil, 551)
 
-	lib.debug.debug_monitor.lookups.acting = {fader, "acting"}
-	lib.debug.debug_monitor.lookups.state = {fader, "state"}
+	lib.debug.monitor.lookups.acting = {fader, "acting"}
+	lib.debug.monitor.lookups.state = {fader, "state"}
 
-	ussuri:event_hook(nil, ussuri.lib.debug.header)
-	ussuri:event_hook(nil, ussuri.lib.debug.monitor)
-	ussuri:event_hook(nil, ussuri.lib.debug.console)
+	ussuri:event_hook(nil, lib.debug.header)
+	ussuri:event_hook(nil, lib.debug.monitor)
+	ussuri:event_hook(nil, lib.debug.console)
 end
