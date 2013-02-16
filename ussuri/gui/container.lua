@@ -30,7 +30,7 @@ container = {
 		love.graphics.translate(self.x + self.padding_x, self.y + self.padding_y)
 
 		if (self.clips_children) then
-			--TODO: Clip Children!
+			--TODO: Visually clip children
 		end
 
 		for key, child in next, self.children do
@@ -47,7 +47,7 @@ container = {
 
 		if (self.visible and not self.clips_children or (mouse_x > 0 and mouse_x < self.width) and (mouse_y > 0 and mouse_y < self.height)) then
 			for key, child in next, self.children do
-				if (child.mousedown and child.visible and 
+				if (child.mousedown and child.visible and
 				(mouse_x > child.x and mouse_x < child.x + child.width) and
 				(mouse_y > child.y and mouse_y < child.y + child.height)) then
 
