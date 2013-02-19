@@ -1,8 +1,7 @@
 # Ussuri Framework **TODO**
 
->
-### Misc
-1. GUI layout initializer system
+### Known Bugs
+1. Text drawn with existing formatting system has troubles with newlines
 
 >
 ### High Priority
