@@ -8,7 +8,7 @@ local oop
 
 oop = {
 	objectify = function(self, to)
-		lib.utility.table_merge(self.object, to)
+		table_merge(self.object, to)
 	end,
 
 	object = {
