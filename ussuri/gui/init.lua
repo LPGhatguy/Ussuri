@@ -16,6 +16,13 @@ gui = {
 		["green"] = {0, 200, 80}
 	},
 
+	point_in_item = function(item, x, y)
+		local item_x, item_y = item.x, item.y
+
+		return (x > item_x and x < item_x + item.width) and
+			(y > item_y and y < item_y + item.height)
+	end,
+
 	style_decompose = function(self, text)
 		local out_text = {}
 		local out_style = {}
