@@ -38,6 +38,8 @@ lib_manage = {
 		local loaded = {}
 		local path = folder:gsub("^:", engine_path)
 
+		self:lib_get(folder .. ".init")
+
 		if (order) then
 			for id, library in next, order do
 				if (type(library) == "table") then
@@ -67,38 +69,41 @@ lib_manage = {
 		local name = name or path
 		local path = path:gsub("^:", engine_path)
 
-		local loaded = require(path)
-		if (type(loaded) == "table" and loaded.init) then
-			loaded = loaded:init(self) or loaded
-			table.insert(self.libraries, loaded)
-		end
+		local result, loaded = pcall(require, path)
 
-		if (string.match(name, "[%.]")) then
-			local name = name:gsub(":", "")
-			local lib_name = name:match("([^%.:]*)$")
-			local store_in = lib
-			local store_old = store_in
+		if (result) then
+			if (type(loaded) == "table" and loaded.init) then
+				loaded = loaded:init(self) or loaded
+				table.insert(self.libraries, loaded)
+			end
 
-			for addition in string.gmatch(name, "([^%.]+)%.") do
-				if (not store_in[addition]) then
-					store_in[addition] = {}
+			if (string.match(name, "[%.]")) then
+				local name = name:gsub(":", "")
+				local lib_name = name:match("([^%.:]*)$")
+				local store_in = lib
+				local store_old = store_in
+
+				for addition in string.gmatch(name, "([^%.]+)%.") do
+					if (not store_in[addition]) then
+						store_in[addition] = {}
+					end
+
+					store_old = store_in
+					store_in = store_in[addition]
 				end
 
-				store_old = store_in
-				store_in = store_in[addition]
-			end
-
-			if (lib_name == "init") then
-				lib.utility.table_merge(loaded, store_in)
-				loaded = store_in
+				if (lib_name == "init") then
+					lib.utility.table_merge(loaded, store_in)
+					loaded = store_in
+				else
+					store_in[lib_name] = loaded
+				end
 			else
-				store_in[lib_name] = loaded
+				lib[name] = loaded
 			end
-		else
-			lib[name] = loaded
-		end
 
-		return lib
+			return lib
+		end
 	end,
 
 	lib_batch_load = function(self, libs)
