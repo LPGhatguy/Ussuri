@@ -6,6 +6,12 @@ config.engine_path = engine_path
 
 engine_core.start_date = os.date()
 
+local version_meta = {
+	__tostring = function(self)
+		return table.concat(self, ".")
+	end
+}
+
 local function lib_load(load)
 	local name = load:match("([^%.:]*)$")
 	local loaded = require(load:gsub("^:", config.engine_path)):init(engine_core)
@@ -28,6 +34,8 @@ engine_core.init = function(self, glib)
 	config = require(engine_path .. "config")
 	config.engine_path = config.engine_path or engine_path
 	self.config = config
+
+	setmetatable(config.version, version_meta)
 
 	lib_batch_load(config.lib_core)
 
