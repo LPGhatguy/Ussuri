@@ -1,7 +1,7 @@
 --[[
 Button
 A clickable button
-Inherits gui.base
+Inherits gui.base, gui.rectangle
 ]]
 
 local lib
@@ -9,10 +9,6 @@ local button
 
 button = {
 	background_color = {200, 200, 200},
-
-	draw = function(self)
-		love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
-	end,
 
 	mousedown = function(self)
 		self.event_mousedown()
@@ -22,6 +18,7 @@ button = {
 		local instance = self:_new()
 
 		instance.event_mousedown = lib.misc.event:new()
+		instance.draw = self._rectangle.draw
 
 		return instance
 	end,
@@ -31,6 +28,7 @@ button = {
 
 		lib.oop:objectify(self)
 		self:inherit(lib.gui.base)
+		self:inherit(lib.gui.rectangle, "rectangle")
 	end
 }
 

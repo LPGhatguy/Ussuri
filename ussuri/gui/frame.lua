@@ -1,25 +1,15 @@
 --[[
 GUI Frame
 A frame for holding other GUI elements
-Inherits gui.container
+Inherits gui.base, gui.container, gui.rectangle
 ]]
 
 local lib
 local frame
 
 frame = {
-	background_color = {0, 0, 0},
-	border_color = {255, 255, 255},
-	padding_x = 2,
-	padding_y = 2,
-
 	draw = function(self)
-		love.graphics.setColor(self.background_color)
-		love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
-
-		love.graphics.setColor(self.border_color)
-		love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
-
+		self._rectangle.draw(self)
 		self._container.draw(self)
 	end,
 
@@ -27,7 +17,9 @@ frame = {
 		lib = engine.lib
 
 		lib.oop:objectify(self)
+		self:inherit(lib.gui.base)
 		self:inherit(lib.gui.container, "container")
+		self:inherit(lib.gui.rectangle, "rectangle")
 
 		self.event.draw = self.draw
 

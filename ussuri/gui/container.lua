@@ -6,6 +6,7 @@ Inherits gui.base
 
 local lib
 local container
+local point_in_item
 
 container = {
 	clips_children = false,
@@ -27,7 +28,8 @@ container = {
 
 	draw = function(self)
 		love.graphics.push()
-		love.graphics.translate(self.x + self.padding_x, self.y + self.padding_y)
+		love.graphics.setColor(255, 255, 255)
+		love.graphics.translate(self.x, self.y)
 
 		if (self.clips_children) then
 			--TODO: Visually clip children
@@ -42,29 +44,29 @@ container = {
 	end,
 
 	mousedown = function(self, event)
-		local mx, my = event.x, event.y
-		local mouse_x, mouse_y = event.x - self.x - self.padding_x, event.y - self.y - self.padding_y
+		local mouse_x, mouse_y = event.x, event.y
+		local trans_x, trans_y = event.x - self.x, event.y - self.y
 
-		if (self.visible and not self.clips_children or (mouse_x > 0 and mouse_x < self.width) and (mouse_y > 0 and mouse_y < self.height)) then
+		if (self.visible and point_in_item(self, mouse_x, mouse_y)) then
 			for key, child in next, self.children do
-				if (child.mousedown and child.visible and
-				(mouse_x > child.x and mouse_x < child.x + child.width) and
-				(mouse_y > child.y and mouse_y < child.y + child.height)) then
+				if (child.mousedown and child.visible and point_in_item(child, trans_x, trans_y)) then
 
-					event.x = mouse_x
-					event.y = mouse_y
+					event.x = trans_x
+					event.y = trans_y
 					child:mousedown(event)
 					break
 				end
 			end
 		end
 
-		event.x = mx
-		event.y = my
+		event.x = mouse_x
+		event.y = mouse_y
 	end,
 
 	init = function(self, engine)
 		lib = engine.lib
+
+		point_in_item = lib.gui.point_in_item
 
 		lib.oop:objectify(self)
 		self:inherit(lib.gui.base, true)
