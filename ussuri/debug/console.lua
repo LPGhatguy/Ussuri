@@ -76,6 +76,8 @@ console = {
 		self.font = love.graphics.newFont(self.font, self.font_size)
 
 		lib.utility.table_copy(getfenv(0), self.environment)
+
+		self.environment.ussuri = engine
 		self.environment.print = function(...)
 			engine:log_writes("green", ...)
 		end
@@ -113,8 +115,6 @@ console = {
 			box.text = ""
 			box.enabled = true
 		end
-
-		return self
 	end
 }
 

@@ -39,8 +39,6 @@ checkbox = {
 
 		lib.oop:objectify(self)
 		self:inherit(lib.ui.base, true)
-
-		return self
 	end
 }
 

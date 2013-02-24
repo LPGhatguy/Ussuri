@@ -129,8 +129,6 @@ unit = {
 				["table size arbitrary"] = {{utility.table_size, {a = 1, b = 2, c = 3}}, {3}}
 			}
 		}
-
-		return self
 	end
 }
 

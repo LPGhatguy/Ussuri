@@ -22,8 +22,6 @@ frame = {
 		self:inherit(lib.ui.rectangle, "rectangle")
 
 		self.event.draw = self.draw
-
-		return self
 	end
 }
 

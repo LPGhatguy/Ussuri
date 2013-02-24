@@ -33,8 +33,6 @@ event = {
 	init = function(self, engine)
 		setmetatable(self, meta)
 		engine.lib.oop:objectify(self)
-
-		return self
 	end
 }
 

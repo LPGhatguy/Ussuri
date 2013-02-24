@@ -168,8 +168,6 @@ utility = {
 				size = size + 1
 			end
 		end
-
-		return size
 	end,
 
 	init = function(self, engine)

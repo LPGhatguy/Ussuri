@@ -160,8 +160,6 @@ sound = {
 
 	init = function(self, engine)
 		engine.lib.oop:objectify(self)
-
-		return self
 	end
 }
 

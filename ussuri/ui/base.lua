@@ -20,8 +20,6 @@ base = {
 		lib = engine.lib
 
 		lib.oop:objectify(self)
-
-		return self
 	end
 }
 

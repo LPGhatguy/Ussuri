@@ -191,8 +191,6 @@ event_manage = {
 
 		lib.oop:objectify(self.event_pass, true)
 		engine:inherit(self)
-
-		return self
 	end
 }
 

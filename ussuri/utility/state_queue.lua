@@ -77,8 +77,6 @@ queue = {
 
 		lib.oop:objectify(self)
 		self:inherit(lib.utility.state_machine)
-
-		return self
 	end
 }
 

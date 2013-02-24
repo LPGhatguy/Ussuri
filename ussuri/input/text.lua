@@ -129,8 +129,6 @@ text = {
 
 		self.event_text_submit = lib.utility.event:new()
 		lib.oop:objectify(self)
-
-		return self
 	end
 }
 

@@ -72,8 +72,6 @@ monitor = {
 
 	init = function(self, engine)
 		self.font = love.graphics.newFont(unpack(self.font_arg))
-
-		return self
 	end
 }
 

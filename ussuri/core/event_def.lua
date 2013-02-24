@@ -76,8 +76,6 @@ definitions = {
 		engine:event_create({"update", "draw", "quit", "focus",
 			"keydown", "keyup", "joydown", "joyup", "mousedown", "mouseup"})
 		engine:inherit(self)
-
-		return self
 	end,
 
 	close = function(self, engine)

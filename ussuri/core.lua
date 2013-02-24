@@ -14,7 +14,8 @@ local version_meta = {
 
 local function lib_load(load)
 	local name = load:match("([^%.:]*)$")
-	local loaded = require(load:gsub("^:", config.engine_path)):init(engine_core)
+	local loaded = require(load:gsub("^:", config.engine_path))
+	loaded:init(engine_core)
 	loaded.init = nil
 	lib[name] = loaded
 

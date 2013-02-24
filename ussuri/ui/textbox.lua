@@ -75,8 +75,6 @@ textbox = {
 
 		self:inherit(lib.ui.base, true)
 		self:inherit(lib.input.text, "text")
-
-		return self
 	end
 }
 

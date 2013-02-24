@@ -41,8 +41,6 @@ oop = {
 		self.object.base = self.object.base
 
 		self:objectify(engine)
-
-		return self
 	end
 }
 

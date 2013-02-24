@@ -29,8 +29,6 @@ header = {
 	init = function(self, g_engine)
 		engine = g_engine
 		lib = engine.lib
-
-		return self
 	end
 }
 
