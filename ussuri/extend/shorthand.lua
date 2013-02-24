@@ -16,11 +16,7 @@ meta = {
 
 	__add = function(self, message)
 		if (message) then
-			if (type(message) == "table") then
-				self:log_writes("green", lib.utility.table_tree(message))
-			else
-				self:log_writes("green", message)
-			end
+			self:log_writes("green", message)
 		end
 	end,
 
