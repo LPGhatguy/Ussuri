@@ -10,9 +10,9 @@ logging = {
 	log_history = {},
 
 	log_write = function(self, ...)
-		local out = {}
-		for key, value in next, {...} do
-			out[key] = tostring(value) or "nil"
+		local out = {...}
+		for key = 1, #out do
+			out[key] = tostring(out[key])
 		end
 
 		local add = table.concat(out, " ")
@@ -28,6 +28,14 @@ logging = {
 
 	log_report = function(self, ...)
 		print(...)
+	end,
+
+	log_clear = function(self)
+		self.log_history = {}
+	end,
+
+	log_pop = function(self)
+		return lib.utility.table_pop(self.log_history, #self.log_history - 1)
 	end,
 
 	log_record = function(self, filename)
@@ -48,14 +56,6 @@ logging = {
 		file_out:close()
 	end,
 
-	log_clear = function(self)
-		self.log_history = {}
-	end,
-
-	log_pop = function(self)
-		return lib.utility.table_pop(self.log_history, #self.log_history - 1)
-	end,
-
 	init = function(self, engine)
 		lib = engine.lib
 		config = engine.config or config
@@ -63,8 +63,6 @@ logging = {
 		engine:inherit(self)
 		engine:log_write("Start:", engine.start_date)
 		engine:log_write("Using engine version " .. tostring(engine.config.version))
-
-		return self
 	end,
 
 	close = function(self, engine)

@@ -8,14 +8,12 @@ local ui, logging_extension
 
 logging_extension = {
 	log_writes = function(self, color, ...)
-		local args = {...}
-		local first = "\b" .. color .. "\b" .. lib.utility.table_pop(args)
-
-		self:log_write(first, unpack(args))
+		self:log_write("\b" .. color .. "\b", ...)
 	end,
 
 	log_strip_style = function(self, text)
-		local out = text:gsub("\b.-\b ?", "")
+		local out = text:gsub("\b.-\b%s?", "")
+
 		return out
 	end,
 
@@ -58,7 +56,7 @@ ui = {
 			out_color[1] = "white"
 		end
 
-		for color_piece, text_piece in string.gmatch(text, "\b(.-)\b([^\b]*)") do
+		for color_piece, text_piece in string.gmatch(text, "\b(.-)\b%s?([^\b]*)") do
 			table.insert(out_text, text_piece)
 			table.insert(out_color, color_piece)
 		end
@@ -91,8 +89,6 @@ ui = {
 
 		lib.utility.table_deepcopy(logging_extension, lib.logging)
 		lib.utility.table_deepcopy(logging_extension, engine)
-
-		return self
 	end
 }
 
