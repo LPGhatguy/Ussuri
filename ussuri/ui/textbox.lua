@@ -12,7 +12,7 @@ textbox = {
 	selection_color = {0, 80, 200},
 	cursor_color = {255, 255, 255},
 	text_color = {255, 255, 255},
-	background_color = {100, 100, 100},
+	border_width = 0,
 
 	keydown = function(self, event)
 		if (self.enabled) then
@@ -32,10 +32,9 @@ textbox = {
 		local width = auto_size and self.font:getWidth(self.text) or self.width
 		local height = auto_size and self.font:getHeight() or self.height
 
-		love.graphics.setScissor(x, y, math.max(width, 1), height)
+		self._rectangle.draw(self)
 
-		love.graphics.setColor(self.background_color)
-		love.graphics.rectangle("fill", x, y, math.max(width, 1), height)
+		love.graphics.setScissor(x, y, math.max(width, 1), height)
 
 		local cursor_x = x + self.font:getWidth(self.text:sub(1, self.cursor))
 
@@ -74,6 +73,7 @@ textbox = {
 		lib.oop:objectify(self)
 
 		self:inherit(lib.ui.base, true)
+		self:inherit(lib.ui.rectangle, "rectangle")
 		self:inherit(lib.input.text, "text")
 	end
 }
