@@ -89,8 +89,8 @@ ui = {
 	init = function(self, engine)
 		lib = engine.lib
 
-		lib.utility.table_copy(logging_extension, lib.logging)
-		lib.utility.table_copy(logging_extension, engine)
+		lib.utility.table_deepcopy(logging_extension, lib.logging)
+		lib.utility.table_deepcopy(logging_extension, engine)
 
 		return self
 	end
