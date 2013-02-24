@@ -14,11 +14,15 @@ state = {
 	state = "",
 
 	set_state = function(self, value)
-		self.event["state_changing"](self, {})
+		self.event["state_changing"](self, {
+			to = value
+		})
 
 		self.state = value
 
-		self.event["state_changed"](self, {})
+		self.event["state_changed"](self, {
+			from = value
+		})
 	end,
 
 	init = function(self, engine)
