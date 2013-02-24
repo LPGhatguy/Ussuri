@@ -15,6 +15,7 @@ console = {
 	toggle_modifiers = {"lctrl"},
 	captures_updates = true,
 	input_box = nil,
+	environment = {},
 
 	event_priority = {
 		keydown = 2,
@@ -71,7 +72,13 @@ console = {
 	init = function(self, g_engine)
 		engine = g_engine
 		lib = engine.lib
+
 		self.font = love.graphics.newFont(self.font, self.font_size)
+
+		lib.utility.table_copy(getfenv(0), self.environment)
+		self.environment.print = function(...)
+			engine:log_writes("green", ...)
+		end
 
 		self.input_box = lib.ui.textbox:new("", self.font)
 		self.input_box.x = 12
@@ -87,11 +94,13 @@ console = {
 			local result = false
 
 			if (loaded) then
+				setfenv(loaded, self.environment)
 				result, err = pcall(loaded)
 			else
 				--This is the only half-decent way to handle this...
 				loaded = loadstring("return _+(" .. box.text .. ")")
 				if (loaded) then
+					setfenv(loaded, self.environment)
 					result, err = pcall(loaded)
 				end
 			end
