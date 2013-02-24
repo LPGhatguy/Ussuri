@@ -9,7 +9,7 @@ local rectangle
 
 rectangle = {
 	background_color = {100, 100, 100},
-	border_color = {255, 255, 255},
+	border_color = {200, 200, 200},
 	border_width = 2,
 
 	draw = function(self)
