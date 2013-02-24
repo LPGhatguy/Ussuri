@@ -1,7 +1,9 @@
 # Ussuri Framework for Lua and LÖVE
 
-The purpose for this framework arose after *Ludum Dare 24* where I (Lucien Greathouse) had nothing to begin with for code. I wrote everything from scratch, and with it being my first Ludum Dare, time was kind of sort of a real issue.
+Ussuri is designed for use with LÖVE 0.8.0 and Lua 5.1 and is tested regularly under Windows with both vanilla Lua and LuaJIT. It has been in development since November, 2012 and receives updates at least every week. Presently, I am preparing for a stable 1.0.0 release of the framework.
 
-The engine made its debut in my Ludum Dare 25 compo entry and is being worked on nearly constantly.
+Ussuri is named after a conglomerate of things such as a river, a bay, and several types of animal. You can use Ussuri for a lot of things to, showing a loose correlation, but I haven't thought that through too terribly much. Above all, Ussuri _sounds_ cool.
 
-This work is covered under the Zlib License, with more detail available in license.txt
+**If you are able to assist in testing for multiple platforms, email me at me@lpghatguy.com as I presently am the only one testing the framework.**
+
+This work is covered under the zlib/libpng license, with more detail available in license.txt

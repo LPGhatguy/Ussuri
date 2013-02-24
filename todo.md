@@ -1,19 +1,15 @@
 # Ussuri Framework **TODO**
 
-### Known Bugs
-1. Text drawn with existing formatting system has troubles with newlines
-
 >
-### High Priority
+### High Priority (before 1.0.0 release)
 1. Rewrite core.lib_manage to use load instead of require
-2. Put the 'misc' libraries into a better place (utility module)
 
 >
-### Medium Priority
+### Medium Priority (work on for post-1.0.0 release)
 1. GUI Components
 
 >
-### Low Priority
+### Low Priority (work on for whenever)
 1. Add resolution/options frontend
 2. Physics library (Box2D/love.physics wrapper)
 3. Tile map loader
