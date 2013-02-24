@@ -73,33 +73,38 @@ lib_manage = {
 
 		if (result) then
 			if (type(loaded) == "table" and loaded.init) then
-				loaded = loaded:init(self) or loaded
+				loaded:init(self)
+
 				table.insert(self.libraries, loaded)
+			elseif (type(loaded) == "function") then
+				loaded(self)
 			end
 
-			if (string.match(name, "[%.]")) then
-				local name = name:gsub(":", "")
-				local lib_name = name:match("([^%.:]*)$")
-				local store_in = lib
-				local store_old = store_in
+			if (loaded) then
+				if (string.match(name, "[%.]")) then
+					local name = name:gsub(":", "")
+					local lib_name = name:match("([^%.:]*)$")
+					local store_in = lib
+					local store_old = store_in
 
-				for addition in string.gmatch(name, "([^%.]+)%.") do
-					if (not store_in[addition]) then
-						store_in[addition] = {}
+					for addition in string.gmatch(name, "([^%.]+)%.") do
+						if (not store_in[addition]) then
+							store_in[addition] = {}
+						end
+
+						store_old = store_in
+						store_in = store_in[addition]
 					end
 
-					store_old = store_in
-					store_in = store_in[addition]
-				end
-
-				if (lib_name == "init") then
-					lib.utility.table_merge(loaded, store_in)
-					loaded = store_in
+					if (lib_name == "init") then
+						lib.utility.table_merge(loaded, store_in)
+						loaded = store_in
+					else
+						store_in[lib_name] = loaded
+					end
 				else
-					store_in[lib_name] = loaded
+					lib[name] = loaded
 				end
-			else
-				lib[name] = loaded
 			end
 
 			return lib
@@ -121,8 +126,6 @@ lib_manage = {
 		engine_path = engine.config.engine_path or engine_path
 
 		engine:inherit(self)
-
-		return self
 	end,
 
 	close = function(self, engine)
