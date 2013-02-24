@@ -17,7 +17,7 @@ button = {
 	new = function(self)
 		local instance = self:_new()
 
-		instance.event_mousedown = lib.misc.event:new()
+		instance.event_mousedown = lib.utility.event:new()
 		instance.draw = self._rectangle.draw
 
 		return instance

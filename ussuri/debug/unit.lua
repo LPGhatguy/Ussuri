@@ -103,7 +103,7 @@ unit = {
 		local second = self:evaluate(test[2])
 
 		if (first and second) then
-			return lib.utility.table_compare(first, second, true)
+			return lib.utility.table_equals(first, second, true)
 		end
 	end,
 
@@ -118,8 +118,8 @@ unit = {
 				["string split multi"] = {{utility.string_split, "XasdYasdZ", "asd"}, {{"X", "Y", "Z"}}},
 				["table contains"] = {{utility.table_contains, {1, 2, 3}, 3}, {true}},
 				["table not contains"] = {{utility.table_contains, {1, 2, 3}, 4}, {false}},
-				["table equals"] = {{utility.table_compare, {1, 2, 3}, {1, 2, 3}}, {true}},
-				["table not equals"] = {{utility.table_compare, {1, 2, 3}, {3, 2, 1}}, {false}},
+				["table equals"] = {{utility.table_equals, {1, 2, 3}, {1, 2, 3}}, {true}},
+				["table not equals"] = {{utility.table_equals, {1, 2, 3}, {3, 2, 1}}, {false}},
 				["table pop"] = {{utility.table_pop, {1, 2, 3}}, {1, {2, 3}}},
 				["table pop numeric"] = {{utility.table_pop, {1, 2, 3}, 2}, {2, {1, 3}}},
 				["table pop string"] = {{utility.table_pop, {a = 1, b = 2, c = 3}, "a"}, {1, {b = 2, c = 3}}},

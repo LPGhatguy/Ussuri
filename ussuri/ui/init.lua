@@ -1,10 +1,28 @@
 --[[
 UI Utility Library
-Provides various UI utility methods
+Provides various UI utility methods and adds colored text support to core.logging
 ]]
 
 local lib
-local ui
+local ui, logging_extension
+
+logging_extension = {
+	log_writes = function(self, color, ...)
+		local args = {...}
+		local first = "\b" .. color .. "\b" .. lib.utility.table_pop(args)
+
+		self:log_write(first, unpack(args))
+	end,
+
+	log_strip_style = function(self, text)
+		local out = text:gsub("\b.-\b ?", "")
+		return out
+	end,
+
+	log_report = function(self, ...)
+		print(self:log_strip_style(table.concat({...}, " ")))
+	end
+}
 
 ui = {
 	colors = {
@@ -70,6 +88,9 @@ ui = {
 
 	init = function(self, engine)
 		lib = engine.lib
+
+		lib.utility.table_copy(logging_extension, lib.logging)
+		lib.utility.table_copy(logging_extension, engine)
 
 		return self
 	end

@@ -1,7 +1,7 @@
 --[[
 State-Machine Queue
 Used for queueing state machine changes and calls
-Inherits misc.state_machine
+Inherits utility.state_machine
 ]]
 
 local lib, table_pop
@@ -76,7 +76,7 @@ queue = {
 		table_pop = lib.utility.table_pop
 
 		lib.oop:objectify(self)
-		self:inherit(lib.misc.state_machine)
+		self:inherit(lib.utility.state_machine)
 
 		return self
 	end

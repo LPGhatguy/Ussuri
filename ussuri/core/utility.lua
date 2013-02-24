@@ -1,6 +1,6 @@
 --[[
 General Utility Library
-Includes useful methods otherwise defined as boilerplate without modifying existing libraries
+Contains methods used by much of the engine
 ]]
 
 local utility
@@ -36,14 +36,14 @@ utility = {
 		return false
 	end,
 
-	table_compare = function(first, second)
+	table_equals = function(first, second)
 		if (second) then
 			for key, value in pairs(first) do
 				local success = false
 
 				if (type(value) == type(second[key])) then
 					if (type(value) == "table") then
-						success = utility.table_compare(value, second[key])
+						success = utility.table_equals(value, second[key])
 					else
 						success = (second[key] == value)
 					end
@@ -91,12 +91,16 @@ utility = {
 		return to
 	end,
 
-	table_merge = function(from, to, meta)
+	table_merge = function(from, to, meta, merge_children)
 		if (from) then
 			for key, value in pairs(from) do
 				if (not to[key]) then
 					if (type(value) == "table") then
-						to[key] = utility.table_copy(value, {}, meta)
+						if (merge_children) then
+							to[key] = utility.table_merge(value, {}, meta, true)
+						else
+							to[key] = utility.table_copy(value, {}, meta)
+						end
 					else
 						to[key] = value
 					end
@@ -105,19 +109,6 @@ utility = {
 		end
 
 		return to
-	end,
-
-	table_merge_adv = function(from, to, transform)
-		for key, value in pairs(from) do
-			if (not to[key]) then
-				local key, value = transform(key, value)
-				if (type(value) == "table") then
-					to[key] = utility.table_copy(value)
-				else
-					to[key] = value
-				end
-			end
-		end
 	end,
 
 	table_tree = function(location, level, max_depth)

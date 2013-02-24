@@ -24,9 +24,9 @@ function love.load()
 	button.y = 50
 	button.width = 50
 	button.height = 50
-	button.event_mousedown = button.event_mousedown + function(self)
-		print("clicked!")
-	end
+	button.event_mousedown:register(function(self)
+		ussuri:log_write("clicked!")
+	end)
 	container:add(button)
 
 	ussuri:event_hook(nil, container)
