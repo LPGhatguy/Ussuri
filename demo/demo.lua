@@ -11,8 +11,6 @@ function love.load()
 	local debug = lib.debug
 	local ui = lib.ui
 
-	love.graphics.setMode(400, 400)
-
 	local container = ui.frame:new()
 	container.x = 50
 	container.y = 50
