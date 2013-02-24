@@ -26,15 +26,18 @@ logging = {
 		end
 	end,
 
-	log_writes = function(self, style, ...)
-		self:log_write("\b" .. style .. "\b", ...)
+	log_writes = function(self, color, ...)
+		local args = {...}
+		local first = "\b" .. color .. "\b" .. lib.utility.table_pop(args)
+
+		self:log_write(first, unpack(args))
 	end,
 
 	--this method's existence is problematic:
 	--it depends on ideas in the 'gui' module
 	--in the future, other modules will add behavior
 	log_strip_style = function(self, text)
-		local out = text:gsub("\b.-\b", "")
+		local out = text:gsub("\b.-\b ?", "")
 		return out
 	end,
 

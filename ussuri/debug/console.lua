@@ -43,6 +43,7 @@ console = {
 				end
 			end
 		end,
+
 		keydown = function(self, event)
 			if (event.key == self.toggle_key and love.keyboard.isDown(unpack(self.toggle_modifiers))) then
 				self.enabled = not self.enabled
@@ -52,11 +53,13 @@ console = {
 				event.cancel = true
 			end
 		end,
+
 		update = function(self, event)
 			if (self.enabled and self.captures_updates) then
 				event.cancel = true
 			end
 		end,
+
 		mousedown = function(self, event)
 			if (self.enabled) then
 				event.cancel = true
