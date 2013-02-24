@@ -1,7 +1,7 @@
 --[[
-GUI Frame
-A frame for holding other GUI elements
-Inherits gui.base, gui.container, gui.rectangle
+UI Frame
+A frame for holding other UI elements
+Inherits ui.base, ui.container, ui.rectangle
 ]]
 
 local lib
@@ -17,9 +17,9 @@ frame = {
 		lib = engine.lib
 
 		lib.oop:objectify(self)
-		self:inherit(lib.gui.base)
-		self:inherit(lib.gui.container, "container")
-		self:inherit(lib.gui.rectangle, "rectangle")
+		self:inherit(lib.ui.base)
+		self:inherit(lib.ui.container, "container")
+		self:inherit(lib.ui.rectangle, "rectangle")
 
 		self.event.draw = self.draw
 

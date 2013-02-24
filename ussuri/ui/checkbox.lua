@@ -1,7 +1,7 @@
 --[[
 Two-State Check Box
 Checks Boxes
-Inherits gui.base
+Inherits ui.base
 ]]
 
 local lib
@@ -38,7 +38,7 @@ checkbox = {
 		lib = engine.lib
 
 		lib.oop:objectify(self)
-		self:inherit(lib.gui.base, true)
+		self:inherit(lib.ui.base, true)
 
 		return self
 	end

@@ -1,7 +1,7 @@
 --[[
-GUI Container
-A GUI item that contains other items
-Inherits gui.base
+UI Container
+A UI item that contains other items
+Inherits ui.base
 ]]
 
 local lib
@@ -66,10 +66,10 @@ container = {
 	init = function(self, engine)
 		lib = engine.lib
 
-		point_in_item = lib.gui.point_in_item
+		point_in_item = lib.ui.point_in_item
 
 		lib.oop:objectify(self)
-		self:inherit(lib.gui.base, true)
+		self:inherit(lib.ui.base, true)
 	end
 }
 

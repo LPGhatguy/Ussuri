@@ -9,17 +9,17 @@ function love.load()
 	local lib = ussuri.lib
 	local utility = lib.utility
 	local debug = lib.debug
-	local gui = lib.gui
+	local ui = lib.ui
 
 	love.graphics.setMode(400, 400)
 
-	local container = gui.frame:new()
+	local container = ui.frame:new()
 	container.x = 50
 	container.y = 50
 	container.width = 300
 	container.height = 300
 
-	local button = gui.button:new()
+	local button = ui.button:new()
 	button.x = 50
 	button.y = 50
 	button.width = 50

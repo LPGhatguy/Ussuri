@@ -1,7 +1,7 @@
 --[[
 Rectangle
 A rectangle with borders
-Inherits gui.base
+Inherits ui.base
 ]]
 
 local lib
@@ -29,7 +29,7 @@ rectangle = {
 		lib = engine.lib
 
 		lib.oop:objectify(self)
-		self:inherit(lib.gui.base)
+		self:inherit(lib.ui.base)
 	end
 }
 

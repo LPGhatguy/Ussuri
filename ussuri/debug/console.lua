@@ -36,7 +36,7 @@ console = {
 
 				self.input_box:draw()
 
-				lib.gui:prints(table.concat(engine.log_history, "\n"), 8, 40)
+				lib.ui:prints(table.concat(engine.log_history, "\n"), 8, 40)
 
 				if (default_font) then
 					love.graphics.setFont(default_font)
@@ -70,7 +70,7 @@ console = {
 		lib = engine.lib
 		self.font = love.graphics.newFont(self.font, self.font_size)
 
-		self.input_box = lib.gui.textbox:new("", self.font)
+		self.input_box = lib.ui.textbox:new("", self.font)
 		self.input_box.x = 12
 		self.input_box.y = 12
 		self.input_box.width = love.graphics.getWidth() - 24

@@ -1,7 +1,7 @@
 --[[
 Button
 A clickable button
-Inherits gui.base, gui.rectangle
+Inherits ui.base, ui.rectangle
 ]]
 
 local lib
@@ -27,8 +27,8 @@ button = {
 		lib = engine.lib
 
 		lib.oop:objectify(self)
-		self:inherit(lib.gui.base)
-		self:inherit(lib.gui.rectangle, "rectangle")
+		self:inherit(lib.ui.base)
+		self:inherit(lib.ui.rectangle, "rectangle")
 	end
 }
 

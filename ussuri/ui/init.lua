@@ -1,12 +1,12 @@
 --[[
-GUI Utility Library
-Provides various GUI drawing utility methods
+UI Utility Library
+Provides various UI utility methods
 ]]
 
 local lib
-local gui
+local ui
 
-gui = {
+ui = {
 	styles = {
 		["white"] = {255, 255, 255},
 		["red"] = {200, 0, 0},
@@ -74,4 +74,4 @@ gui = {
 	end
 }
 
-return gui
+return ui

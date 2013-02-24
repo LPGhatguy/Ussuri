@@ -1,7 +1,7 @@
 --[[
-Basic Textbox
-Implements basic text rendering on top of basic input
-Inherits gui.base, input.text
+One Line Textbox
+Implements text rendering with inherited textbox input.
+Inherits ui.base, input.text
 ]]
 
 local lib
@@ -73,7 +73,7 @@ textbox = {
 
 		lib.oop:objectify(self)
 
-		self:inherit(lib.gui.base, true)
+		self:inherit(lib.ui.base, true)
 		self:inherit(lib.input.text, "text")
 
 		return self

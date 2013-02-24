@@ -1,6 +1,6 @@
 --[[
-Base GUI Item
-The father of all GUI items (the mother is defined by the item itself)
+Base UI Item
+The father of all UI items
 ]]
 
 local lib
