@@ -73,15 +73,29 @@ utility = {
 		return value
 	end,
 
-	table_copy = function(from, to, meta)
+	table_deepcopy = function(from, to, meta)
 		local to = to or {}
 
 		for key, value in pairs(from) do
 			if (type(value) == "table") then
-				to[key] = utility.table_copy(value, {}, meta)
+				to[key] = utility.table_deepcopy(value, {}, meta)
 			else
 				to[key] = value
 			end
+		end
+
+		if (meta) then
+			setmetatable(to, getmetatable(from))
+		end
+
+		return to
+	end,
+
+	table_copy = function(from, to, meta)
+		local to = to or {}
+
+		for key, value in pairs(from) do
+			to[key] = value
 		end
 
 		if (meta) then
@@ -99,7 +113,7 @@ utility = {
 						if (merge_children) then
 							to[key] = utility.table_merge(value, {}, meta, true)
 						else
-							to[key] = utility.table_copy(value, {}, meta)
+							to[key] = utility.table_deepcopy(value, {}, meta)
 						end
 					else
 						to[key] = value

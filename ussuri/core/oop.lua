@@ -3,7 +3,7 @@ Object Orientation
 Enables instantation and inheritance of objects
 ]]
 
-local lib, table_copy, table_merge
+local lib, table_deepcopy, table_merge
 local oop
 
 oop = {
@@ -28,13 +28,13 @@ oop = {
 			end
 		end,
 		_new = function(self)
-			return table_copy(self, {}, true)
+			return table_deepcopy(self, {}, true)
 		end
 	},
 
 	init = function(self, engine)
 		lib = engine.lib
-		table_copy = lib.utility.table_copy
+		table_deepcopy = lib.utility.table_deepcopy
 		table_merge = lib.utility.table_merge
 
 		self.object.new = self.object._new
