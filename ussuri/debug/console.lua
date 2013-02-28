@@ -37,7 +37,7 @@ console = {
 
 				self.input_box:draw()
 
-				lib.ui:prints(table.concat(engine.log_history, "\n"), 8, 40)
+				lib.ui:prints(table.concat(engine.log_history, "\n"), 12, 40)
 
 				if (default_font) then
 					love.graphics.setFont(default_font)
