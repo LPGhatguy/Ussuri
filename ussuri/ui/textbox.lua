@@ -12,6 +12,7 @@ textbox = {
 	selection_color = {0, 80, 200},
 	cursor_color = {255, 255, 255},
 	text_color = {255, 255, 255},
+	cursor_width = 1,
 	border_width = 0,
 
 	keydown = function(self, event)
@@ -49,6 +50,7 @@ textbox = {
 			end
 
 			love.graphics.setColor(self.cursor_color)
+			love.graphics.setLineWidth(self.cursor_width)
 			love.graphics.line(cursor_x, x, cursor_x, y + self.font:getHeight())
 		end
 
