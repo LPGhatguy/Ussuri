@@ -16,8 +16,10 @@ lib_manage = {
 	libraries = {},
 
 	lib_get = function(self, path, name)
-		if (rawget(lib, path)) then
-			return rawget(lib, path)
+		local out = rawget(lib, path)
+
+		if (out) then
+			return out
 		else
 			return self:lib_load(path, name)
 		end
@@ -26,10 +28,19 @@ lib_manage = {
 	lib_batch_get = function(self, libs)
 		for key, library in next, libs do
 			if (type(library) == "table") then
-				local path, name = unpack(library)
-				self:lib_get(path, name)
+				self:lib_get(unpack(library))
 			else
 				self:lib_get(library)
+			end
+		end
+	end,
+
+	lib_batch_load = function(self, libs)
+		for key, library in next, libs do
+			if (type(library) == "table") then
+				self:load_lib(unpack(library))
+			else
+				self:load_lib(library)
 			end
 		end
 	end,
@@ -53,10 +64,9 @@ lib_manage = {
 		end
 
 		local fixed_path = path:gsub("%.", "/")
-		local files = love.filesystem.enumerate(fixed_path)
 
-		for id, library in next, files do
-			local library_name = library:gsub("%..*$", "")
+		for id, library in next, love.filesystem.enumerate(fixed_path) do
+			local library_name = library:match("(.-)%..-$")
 			local library_path = folder .. "." .. library_name
 			
 			if (not loaded[library_name]) then
@@ -85,14 +95,12 @@ lib_manage = {
 					local name = name:gsub(":", "")
 					local lib_name = name:match("([^%.:]*)$")
 					local store_in = lib
-					local store_old = store_in
 
 					for addition in string.gmatch(name, "([^%.]+)%.") do
 						if (not store_in[addition]) then
 							store_in[addition] = {}
 						end
 
-						store_old = store_in
 						store_in = store_in[addition]
 					end
 
@@ -108,16 +116,6 @@ lib_manage = {
 			end
 
 			return lib
-		end
-	end,
-
-	lib_batch_load = function(self, libs)
-		for key, library in next, libs do
-			if (type(library) == "table") then
-				self:load_lib(unpack(library))
-			else
-				self:load_lib(library)
-			end
 		end
 	end,
 

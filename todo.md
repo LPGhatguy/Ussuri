@@ -2,11 +2,10 @@
 
 >
 ### High Priority (before 1.0.0 release)
-1. Rewrite core.lib_manage to use load instead of require
-2. Rewrite utility.state_machine to be less awful
-3. Multiline textbox
-4. Expanded input module to support binding
-5. More unit tests
+1. Rewrite utility.state_machine to be less awful
+2. Multiline textbox
+3. Expanded input module to support binding for game usage
+4. More unit tests
 
 >
 ### Medium Priority (work on for post-1.0.0 release)
