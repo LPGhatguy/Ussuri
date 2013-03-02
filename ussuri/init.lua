@@ -23,9 +23,11 @@ function love.run()
 		end,
 		joystickpressed = function(j, b)
 			if love.joystickpressed then love.joystickpressed(j, b) end
+			engine:fire_joydown(j, b)
 		end,
 		joystickreleased = function(j, b)
 			if love.joystickreleased then love.joystickreleased(j, b) end
+			engine:fire_joyup(j, b)
 		end,
 		focus = function(f)
 			if love.focus then love.focus(f) end
