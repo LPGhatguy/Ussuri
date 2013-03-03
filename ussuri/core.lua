@@ -1,4 +1,4 @@
-local lib, config = {}, {}
+local lib, config, corelib = {}, {}, {}
 local engine_core = {}
 
 local engine_path = debug.getinfo(1).short_src:match("([^%.]*)[\\/][^%.]*%..*$"):gsub("[\\/]", ".") .. "."
@@ -18,12 +18,13 @@ local function lib_load(load)
 	loaded:init(engine_core)
 	loaded.init = nil
 	lib[name] = loaded
+	corelib[name] = loaded
 
 	return loaded
 end
 
 local function lib_batch_load(batch)
-	for index, lib_name in next, batch do
+	for key, lib_name in next, batch do
 		lib_load(lib_name)
 	end
 end
@@ -50,7 +51,7 @@ end
 engine_core.close = function(self)
 	self.end_date = os.date()
 
-	for key, library in pairs(lib) do
+	for key, library in pairs(corelib) do
 		if (library.close) then
 			library:close(self)
 		end
