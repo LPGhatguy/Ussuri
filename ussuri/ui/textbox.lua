@@ -19,6 +19,7 @@ textbox = {
 		if (self.enabled) then
 			event.cancel = true
 		end
+
 		self._text.keydown(self, event)
 	end,
 
@@ -54,6 +55,7 @@ textbox = {
 			love.graphics.line(cursor_x, x, cursor_x, y + self.font:getHeight())
 		end
 
+		love.graphics.setFont(self.font)
 		love.graphics.setColor(self.text_color)
 		love.graphics.print(self.text, x, y)
 
