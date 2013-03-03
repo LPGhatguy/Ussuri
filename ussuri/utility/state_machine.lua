@@ -1,28 +1,45 @@
 --[[
 State Machine
-A state machine with possible (but not critical) integration into Ussuri's event framework
+A state machine with self-nesting support
+Inherits oop.object
 ]]
 
 local lib
-local state
+local machine
 
-state = {
-	event = {},
-	pre = {},
-	post = {},
-	handlers = {},
+machine = {
 	state = "",
+	handlers = {},
+	pre_handlers = {},
+	post_handlers = {},
+	event = {},
 
-	set_state = function(self, value)
-		self.event["state_changing"](self, {
-			to = value
-		})
+	set_state = function(self, state)
+		local old_state = self.state
 
-		self.state = value
+		local pass = {
+			stack = {},
+			from = self.state,
+			to = state
+		}
 
-		self.event["state_changed"](self, {
-			from = value
-		})
+		self.event["state_changing"](self, pass)
+
+		if (pass.cancel) then
+			return
+		end
+
+		self.state = state
+
+		self.event["state_changed"](self, pass)
+
+		if (pass.cancel) then
+			self.state = old_state
+		end
+	end,
+
+	add_handler = function(self, event_name, handler)
+		self.handlers[event_name] = handler
 	end,
 
 	init = function(self, engine)
@@ -32,36 +49,54 @@ state = {
 	end
 }
 
-setmetatable(state.event, {
+setmetatable(machine.event, {
 	__index = function(self, key)
-		local event = function(machine, ...)
+		local event = function(machine, event_pass, ...)
 			local handlers = machine.handlers[machine.state]
 
-			local pre = machine.pre[key]
-			local post = machine.post[key]
+			local pre_handler = machine.pre_handlers[key]
+			local post_handler = machine.post_handlers[key]
 
-			if (pre) then
-				pre(machine, ...)
+			if (pre_handler) then
+				pre_handler(machine, event_pass, ...)
 			end
 
 			if (handlers) then
 				local method = handlers[key]
 
 				if (method) then
-					method(machine, ...)
+					method(machine, event_pass, ...)
+				else
+					if (handlers.event) then
+						local event_handler = handlers.event[key]
+
+						if (event_handler) then
+							local stack = event_pass.stack
+
+							stack[#stack + 1] = machine
+							event_pass.up = machine
+
+							event_handler(handlers, event_pass, ...)
+
+							stack[#stack] = nil
+							event_pass.up = stack[#stack]
+						end
+					else
+						if (getmetatable(handlers)) then
+							handlers(machine, event_pass, ...)
+						end
+					end
 				end
 			end
 
-			if (post) then
-				post(machine, ...)
+			if (post_handler) then
+				post_handler(machine, event_pass, ...)
 			end
 		end
 
-		if (key) then
-			self[key] = event
-		end
+		machine.handlers[key] = event
 		return event
 	end
 })
 
-return state
+return machine
