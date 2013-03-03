@@ -20,14 +20,18 @@ event = {
 		if (self.post) then
 			self:post(...)
 		end
-
-		return self
 	end,
 
 	register = function(self, method)
 		table.insert(self.handlers, method)
+	end,
 
-		return self
+	new = function(self, method)
+		local instance = self:_new()
+
+		instance:register(method)
+
+		return instance
 	end,
 
 	init = function(self, engine)
