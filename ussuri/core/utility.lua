@@ -6,8 +6,11 @@ Contains methods used by much of the engine
 local utility
 
 utility = {
+	DESCENDENTS_ONLY = {},
+
 	string_split = function(source, splitter)
-		local last, current = 1
+		local last = 1
+		local current
 		local out = {}
 
 		while (true) do
@@ -78,13 +81,17 @@ utility = {
 
 		for key, value in pairs(from) do
 			if (type(value) == "table") then
-				to[key] = utility.table_deepcopy(value, {}, meta)
+				if (meta ~= utility.DESCENDENTS_ONLY) then
+					to[key] = utility.table_deepcopy(value, {}, meta)
+				else
+					to[key] = utility.table_deepcopy(value, {}, true)
+				end
 			else
 				to[key] = value
 			end
 		end
 
-		if (meta) then
+		if (meta and meta ~= utility.DESCENDENTS_ONLY) then
 			setmetatable(to, getmetatable(from))
 		end
 
