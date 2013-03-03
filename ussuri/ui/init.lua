@@ -19,6 +19,8 @@ logging_extension = {
 
 	log_report = function(self, ...)
 		print(self:log_strip_style(table.concat({...}, " ")))
+
+		self:event_log()
 	end
 }
 
@@ -64,11 +66,30 @@ ui = {
 		return out_text, out_color
 	end,
 
+	print_decomposed = function(self, text, color, x, y)
+		local font = love.graphics.getFont()
+		local atx, aty = x, y
+
+		for id, piece in next, text do
+			love.graphics.setColor(self.colors[color[id]])
+			love.graphics.print(piece, atx, aty)
+
+			local _, newlines = piece:gsub("\n", "")
+
+			atx = atx + font:getWidth(piece)
+
+			if (newlines > 0) then
+				aty = aty + font:getHeight() * newlines
+				atx = x
+			end
+		end
+	end,
+
 	prints = function(self, text, x, y)
 		local text, color = self:color_decompose(text)
 		local font = love.graphics.getFont()
-
 		local atx, aty = x, y
+
 		for id, piece in next, text do
 			love.graphics.setColor(self.colors[color[id]])
 			love.graphics.print(piece, atx, aty)
@@ -86,9 +107,11 @@ ui = {
 
 	init = function(self, engine)
 		lib = engine.lib
+		utility = lib.utility
 
-		lib.utility.table_deepcopy(logging_extension, lib.logging)
-		lib.utility.table_deepcopy(logging_extension, engine)
+		logging_extension.event_log = utility.event:new()
+		utility.table_deepcopy(logging_extension, lib.logging, utility.DESCENDENTS_ONLY)
+		utility.table_deepcopy(logging_extension, engine, utility.DESCENDENTS_ONLY)
 	end
 }
 
