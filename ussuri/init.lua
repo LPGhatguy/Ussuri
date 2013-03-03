@@ -4,40 +4,49 @@ local engine = require(path .. "core")
 function love.run()
 	engine:init()
 
+	love.graphics.setFont(love.graphics.newFont())
+
 	love.handlers = setmetatable({
 		keypressed = function(b, u)
 			if love.keypressed then love.keypressed(b, u) end
 			engine:fire_keydown(b, u)
 		end,
+
 		keyreleased = function(b)
 			if love.keyreleased then love.keyreleased(b) end
 			engine:fire_keyup(b)
 		end,
+
 		mousepressed = function(x, y, b)
 			if love.mousepressed then love.mousepressed(x, y, b) end
 			engine:fire_mousedown(x, y, b)
 		end,
+
 		mousereleased = function(x, y, b)
 			if love.mousereleased then love.mousereleased(x, y, b) end
 			engine:fire_mouseup(x, y, b)
 		end,
+
 		joystickpressed = function(j, b)
 			if love.joystickpressed then love.joystickpressed(j, b) end
 			engine:fire_joydown(j, b)
 		end,
+
 		joystickreleased = function(j, b)
 			if love.joystickreleased then love.joystickreleased(j, b) end
 			engine:fire_joyup(j, b)
 		end,
+
 		focus = function(f)
 			if love.focus then love.focus(f) end
 			engine:fire_focus(f)
 		end,
+
 		quit = function()
 			return
 		end,
 		}, {
-		__index = function(self, name)
+		__key = function(self, name)
 			error("Unknown event: " .. name)
 		end,
 	})
@@ -53,6 +62,7 @@ function love.run()
 	while (true) do
 		if (event) then
 			event.pump()
+
 			for e, a, b, c, d in event.poll() do
 				if (e == "quit") then
 					if (not love.quit or not love.quit()) then
