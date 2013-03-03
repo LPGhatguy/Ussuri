@@ -1,20 +1,21 @@
 --[[
 Console
 Enables execution of Lua code in-game. Useful for debugging
+Depends on ui
 ]]
 
 local engine, lib
 local console
 
 console = {
+	x = 8,
+	y = 8,
+	border_width = 1,
 	elapsed_time = 0,
 	enabled = false,
-	font_name = nil,
-	font_size = 14,
 	toggle_key = "`",
 	toggle_modifiers = {"lctrl"},
 	captures_updates = true,
-	input_box = nil,
 	environment = {},
 
 	event_priority = {
@@ -27,17 +28,15 @@ console = {
 	event = {
 		draw = function(self)
 			if (self.enabled) then
-				local w, h = love.graphics.getWidth(), love.graphics.getHeight()
-
-				love.graphics.setColor(0, 0, 0, 200)
-				love.graphics.rectangle("fill", 8, 8, w - 16, h - 16)
+				self._frame.draw(self)
 
 				local default_font = love.graphics.getFont()
 				love.graphics.setFont(self.font)
 
 				self.input_box:draw()
 
-				lib.ui:prints(table.concat(engine.log_history, "\n"), 12, 40)
+				self.output_box:draw()
+				--lib.ui:prints(table.concat(engine.log_history, "\n"), 12, 40)
 
 				if (default_font) then
 					love.graphics.setFont(default_font)
@@ -73,7 +72,7 @@ console = {
 		engine = g_engine
 		lib = engine.lib
 
-		self.font = love.graphics.newFont(self.font, self.font_size)
+		self.font = love.graphics.newFont(14)
 
 		lib.utility.table_copy(getfenv(0), self.environment)
 
@@ -82,15 +81,31 @@ console = {
 			engine:log_writes("green", ...)
 		end
 
+		lib.oop:objectify(self)
+		self:inherit(lib.ui.frame, "frame")
+
+		self.width = love.graphics.getWidth() - 16
+		self.height = love.graphics.getHeight() - 16
+		self.background_color = {0, 0, 0, 200}
+
+		self.output_box = lib.ui.styled_textlabel:new()
+		self.output_box.x = 12
+		self.output_box.y = 40
+		self.output_box.width = love.graphics.getWidth() - 24
+		self.output_box.height = love.graphics.getHeight() - 5
+		self.output_box.background_color = {100, 100, 100, 100}
+		self.output_box.font = self.font
+		self.output_box:refurbish(table.concat(engine.log_history, "\n"))
+
 		self.input_box = lib.ui.textbox:new("", self.font)
 		self.input_box.x = 12
 		self.input_box.y = 12
 		self.input_box.width = love.graphics.getWidth() - 24
 		self.input_box.height = 16
-		self.input_box.background_color = {100, 100, 100, 100}
+		self.input_box.background_color = self.output_box.background_color
 
-		self.input_box.event_text_submit = self.input_box.text_submit + function(box)
-			engine:log_writes("blue", box.text)
+		self.input_box.event_text_submit:register(function(box)
+			engine:log_writes("blue", ">", box.text)
 
 			local loaded, err = loadstring(box.text)
 			local result = false
@@ -99,8 +114,7 @@ console = {
 				setfenv(loaded, self.environment)
 				result, err = pcall(loaded)
 			else
-				--This is the only half-decent way to handle this...
-				loaded = loadstring("return _+(" .. box.text .. ")")
+				loaded = loadstring("print(" .. box.text .. ")")
 				if (loaded) then
 					setfenv(loaded, self.environment)
 					result, err = pcall(loaded)
@@ -114,7 +128,11 @@ console = {
 
 			box.text = ""
 			box.enabled = true
-		end
+		end)
+
+		engine.event_log:register(function()
+			self.output_box:refurbish(table.concat(engine.log_history, "\n"))
+		end)
 	end
 }
 
