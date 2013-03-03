@@ -3,7 +3,6 @@ Event Definitions
 Extends the generic event model by adding LÖVE-specific events to fire
 ]]
 
-local lib
 local definitions
 
 definitions = {
@@ -71,10 +70,9 @@ definitions = {
 	end,
 
 	init = function(self, engine)
-		lib = engine.lib
-
 		engine:event_create({"update", "draw", "quit", "focus",
 			"keydown", "keyup", "joydown", "joyup", "mousedown", "mouseup"})
+
 		engine:inherit(self)
 	end,
 
