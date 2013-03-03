@@ -55,7 +55,7 @@ text = {
 					self:set_cursor(0, shift)
 				elseif (key == "return") then
 					self.enabled = false
-					self:text_submit()
+					self:event_text_submit()
 				elseif (key == "tab" or key == "escape") then
 					self.enabled = false
 				end
@@ -118,7 +118,7 @@ text = {
 		local new = self:_new()
 
 		new.text = text or new.text
-		new.text_submit = lib.utility.event:new()
+		self.event_text_submit = lib.utility.event:new()
 
 		return new
 	end,
