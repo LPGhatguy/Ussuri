@@ -123,7 +123,9 @@ unit = {
 				["table pop"] = {{utility.table_pop, {1, 2, 3}}, {1, {2, 3}}},
 				["table pop numeric"] = {{utility.table_pop, {1, 2, 3}, 2}, {2, {1, 3}}},
 				["table pop string"] = {{utility.table_pop, {a = 1, b = 2, c = 3}, "a"}, {1, {b = 2, c = 3}}},
-				["table copy"] = {{utility.table_deepcopy, {1, 2, 3}}, {{1, 2, 3}}},
+				["table deep copy"] = {{utility.table_deepcopy, {1, 2, 3}}, {{1, 2, 3}}},
+				["table deep copy to"] = {{utility.table_deepcopy, {1, 2, 3}, {4, 5, 6}}, {{1, 2, 3, 4, 5, 6}}},
+				["table copy"] = {{utility.table_copy, {1, 2, 3}}, {{1, 2, 3}}},
 				["table merge"] = {{utility.table_merge, {3, 3, 3, 4, 5}, {1, 2, 3}}, {{1, 2, 3, 4, 5}}},
 				["table size numeric"] = {{utility.table_size, {1, 2, 3}}, {3}},
 				["table size arbitrary"] = {{utility.table_size, {a = 1, b = 2, c = 3}}, {3}}
