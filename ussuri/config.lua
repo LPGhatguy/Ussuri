@@ -1,10 +1,10 @@
 return {
-	version = {1, 1, 0},
+	version = {1, 1, 0, "DEV"},
 
 	lib_core = {":core.utility", ":core.oop", ":core.logging", ":core.event_manage", ":core.event_def", ":core.lib_manage"},
 
 	lib_folders = {
-		{":utility", {"state_machine"}},
+		{":utility", {}},
 		{":input", {}},
 		{":ui", {"base", "container", "rectangle"}},
 		{":debug", {}}
