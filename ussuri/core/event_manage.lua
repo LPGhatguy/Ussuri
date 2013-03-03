@@ -17,8 +17,8 @@ event_manage = {
 		local events = self.events
 
 		if (type(event_name) == "table") then
-			for index = 1, #event_name do
-				local name = tostring(event_name[index])
+			for key = 1, #event_name do
+				local name = tostring(event_name[key])
 
 				if (not events[name]) then
 					events[name] = {
@@ -39,8 +39,8 @@ event_manage = {
 
 	event_destroy = function(self, event_name)
 		if (type(event_name) == "table") then
-			for index = 1, #event_name do
-				self.events[tostring(event_name[index])] = nil
+			for key = 1, #event_name do
+				self.events[tostring(event_name[key])] = nil
 			end
 		else
 			self.events[tostring(event_name)] = nil
@@ -54,14 +54,14 @@ event_manage = {
 			local pass = event.pass
 			pass:refurbish(data)
 
-			for index = 1, #event do
-				local handler = event[index]
+			for key = 1, #event do
+				local handler = event[key]
 				local object, method = handler[1], handler[2]
 
 				method(object, pass)
 
 				if (pass.unhook) then
-					event[index] = nil
+					event[key] = nil
 				end
 
 				if (pass.cancel) then
@@ -75,7 +75,7 @@ event_manage = {
 		local events = self.events
 
 		if (type(event_name) == "table") then
-			for index, name in next, event_name do
+			for key, name in next, event_name do
 				local event = events[name]
 
 				if (event) then
@@ -89,7 +89,7 @@ event_manage = {
 				table.sort(event, handler_compare)
 			end
 		else
-			for index, event in next, self.events do
+			for key, event in next, self.events do
 				table.sort(event, handler_compare)
 			end
 		end
@@ -97,8 +97,8 @@ event_manage = {
 
 	event_hook = function(self, event_name, object, method, priority, no_sort)
 		if (type(event_name) == "table") then
-			for index = 1, #event_name do
-				self:event_hook(event_name[index], object, method, priority, true)
+			for key = 1, #event_name do
+				self:event_hook(event_name[key], object, method, priority, true)
 			end
 		elseif (event_name) then
 			event_name = tostring(event_name)
@@ -163,12 +163,14 @@ event_manage = {
 	end,
 
 	event_hook_batch = function(self, event_name, objects, method, priority)
-		for index = 1, #objects do
-			self:event_hook(event_name, objects[index], method, priority)
+		for key = 1, #objects do
+			self:event_hook(event_name, objects[key], method, priority)
 		end
 	end,
 
 	event_pass = {
+		stack = {},
+
 		new = function(self, data)
 			return self:_new():refurbish(data)
 		end,
@@ -180,7 +182,9 @@ event_manage = {
 				end
 			end
 
+			self.stack = {}
 			self.cancel = false
+			self.up = event_manage
 
 			return self
 		end
