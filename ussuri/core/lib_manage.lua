@@ -1,13 +1,13 @@
 --[[
 Library Manager
-Manages the loading and indexing of libraries
+Manages the loading and keying of libraries
 ]]
 
 local lib, engine_path
 local lib_manage
 
 local lib_meta = {
-	__index = function(self, ...)
+	__key = function(self, ...)
 		return self:lib_get(...)
 	end
 }
@@ -38,9 +38,9 @@ lib_manage = {
 	lib_batch_load = function(self, libs)
 		for key, library in next, libs do
 			if (type(library) == "table") then
-				self:load_lib(unpack(library))
+				self:lib_load(unpack(library))
 			else
-				self:load_lib(library)
+				self:lib_load(library)
 			end
 		end
 	end,
@@ -48,11 +48,14 @@ lib_manage = {
 	lib_folder_load = function(self, folder, order)
 		local loaded = {}
 		local path = folder:gsub("^:", engine_path)
+		local fixed_path = path:gsub("%.", "/")
 
-		self:lib_get(folder .. ".init")
+		if (love.filesystem.exists(fixed_path .. "/init.lua")) then
+			self:lib_get(folder .. ".init")
+		end
 
 		if (order) then
-			for id, library in next, order do
+			for key, library in next, order do
 				if (type(library) == "table") then
 					self:lib_get(folder .. "." .. library[1], library[2])
 				else
@@ -63,9 +66,7 @@ lib_manage = {
 			end
 		end
 
-		local fixed_path = path:gsub("%.", "/")
-
-		for id, library in next, love.filesystem.enumerate(fixed_path) do
+		for key, library in next, love.filesystem.enumerate(fixed_path) do
 			local library_name = library:match("(.-)%..-$")
 			local library_path = folder .. "." .. library_name
 			
@@ -116,6 +117,8 @@ lib_manage = {
 			end
 
 			return lib
+		else
+			error(loaded)
 		end
 	end,
 
