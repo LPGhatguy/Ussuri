@@ -35,9 +35,16 @@ ui_container = {
 			love.graphics.setScissor(abs_pos_x, abs_pos_y, self.width, self.height)
 		end
 
+		local stack = event.stack
+		stack[#stack + 1] = self
+		event.up = self
+
 		for key, child in next, self.children do
-			child:draw()
+			child:draw(event)
 		end
+
+		stack[#stack] = nil
+		event.up = stack[#stack]
 
 		love.graphics.setScissor()
 		love.graphics.pop()
@@ -52,13 +59,24 @@ ui_container = {
 		event.up = self
 
 		if (not self.clips_children or self.visible and point_in_item(self, mouse_x, mouse_y)) then
-			for key, child in next, self.children do
-				if (child.mousedown and child.visible and point_in_item(child, trans_x, trans_y)) then
-					event.x = trans_x - child.x
-					event.y = trans_y - child.y
+			local searching = true
 
-					child:mousedown(event)
-					break
+			for key, child in next, self.children do
+				if (child.visible) then
+					if (searching and point_in_item(child, trans_x, trans_y)) then
+						if (child.mousedown) then
+							event.x = trans_x - child.x
+							event.y = trans_y - child.y
+
+							child:mousedown(event)
+						end
+
+						searching = false
+					else
+						if (child.mousedown_sibling) then
+							child:mousedown_sibling(event)
+						end
+					end
 				end
 			end
 		end
