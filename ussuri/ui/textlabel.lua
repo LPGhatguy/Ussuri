@@ -9,6 +9,7 @@ local textlabel
 
 textlabel = {
 	text = "",
+	align = "left",
 	text_color = {255, 255, 255},
 	border_width = 0,
 
@@ -17,7 +18,7 @@ textlabel = {
 
 		love.graphics.setFont(self.font)
 		love.graphics.setColor(self.text_color)
-		love.graphics.print(self.text, self.x, self.y)
+		love.graphics.printf(self.text, self.x, self.y, self.width, self.align)
 	end,
 
 	init = function(self, engine)
