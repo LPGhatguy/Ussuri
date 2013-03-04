@@ -29,9 +29,6 @@ console = {
 		draw = function(self, event)
 			if (self.enabled) then
 				self._frame.draw(self, event)
-
-				self.input_box:draw(event)
-				self.output_box:draw(event)
 			end
 		end,
 
@@ -54,8 +51,7 @@ console = {
 		mousedown = function(self, event)
 			if (self.enabled) then
 				event.cancel = true
-				self._container.mousedown(self, event)
-				--self.input_box:mousedown(event)
+				self._ui_container.mousedown(self, event)
 			end
 		end
 	},
@@ -81,20 +77,22 @@ console = {
 		self.background_color = {0, 0, 0, 200}
 
 		self.output_box = lib.ui.styled_textlabel:new()
-		self.output_box.x = 12
-		self.output_box.y = 40
+		self.output_box.x = 4
+		self.output_box.y = 32
 		self.output_box.width = love.graphics.getWidth() - 24
-		self.output_box.height = love.graphics.getHeight() - 5
+		self.output_box.height = love.graphics.getHeight() - 40
 		self.output_box.background_color = {100, 100, 100, 100}
 		self.output_box.font = self.font
 		self.output_box:refurbish(table.concat(engine.log_history, "\n"))
+		self:add(self.output_box)
 
 		self.input_box = lib.ui.textbox:new("", self.font)
-		self.input_box.x = 12
-		self.input_box.y = 12
+		self.input_box.x = 4
+		self.input_box.y = 4
 		self.input_box.width = love.graphics.getWidth() - 24
 		self.input_box.height = 16
 		self.input_box.background_color = self.output_box.background_color
+		self:add(self.input_box)
 
 		self.input_box.event_text_submit:connect(function(box)
 			engine:log_writes("blue", ">", box.text)
