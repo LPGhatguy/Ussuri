@@ -80,7 +80,7 @@ console = {
 		self.output_box.x = 4
 		self.output_box.y = 32
 		self.output_box.width = love.graphics.getWidth() - 24
-		self.output_box.height = love.graphics.getHeight() - 40
+		self.output_box.height = love.graphics.getHeight() - 52
 		self.output_box.background_color = {100, 100, 100, 100}
 		self.output_box.font = self.font
 		self.output_box:refurbish(table.concat(engine.log_history, "\n"))
