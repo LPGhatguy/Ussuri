@@ -1,6 +1,6 @@
 --[[
 Stateless Event System
-Enables stateless event control and runtime determined handler fallthrough
+Enables stateless event control
 ]]
 
 local lib, engine
