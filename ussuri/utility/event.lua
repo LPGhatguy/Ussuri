@@ -22,14 +22,14 @@ event = {
 		end
 	end,
 
-	register = function(self, method)
+	connect = function(self, method)
 		table.insert(self.handlers, method)
 	end,
 
 	new = function(self, method)
 		local instance = self:_new()
 
-		instance:register(method)
+		instance:connect(method)
 
 		return instance
 	end,
@@ -42,7 +42,7 @@ event = {
 
 meta = {
 	__call = event.call,
-	__add = event.register
+	__add = event.connect
 }
 
 return event

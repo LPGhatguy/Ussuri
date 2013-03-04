@@ -19,8 +19,8 @@ textlabel = {
 		self.content_text, self.content_color = lib.ui:color_decompose(self.text)
 	end,
 
-	draw = function(self)
-		self._rectangle.draw(self)
+	draw = function(self, event)
+		self._rectangle.draw(self, event)
 
 		love.graphics.setFont(self.font)
 

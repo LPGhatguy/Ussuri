@@ -62,6 +62,7 @@ event_manage = {
 
 				if (pass.unhook) then
 					event[key] = nil
+					pass.unhook = false
 				end
 
 				if (pass.cancel) then
@@ -182,7 +183,7 @@ event_manage = {
 				end
 			end
 
-			self.stack = {}
+			self.stack = {[0] = event_manage}
 			self.cancel = false
 			self.up = event_manage
 

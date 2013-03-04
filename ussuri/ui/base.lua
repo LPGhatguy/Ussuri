@@ -16,6 +16,19 @@ base = {
 	draw = function(self)
 	end,
 
+	get_absolute_position = function(self, stack)
+		local x, y = self.x, self.y
+
+		for key, item in next, stack do
+			if (item.x and item.y) then
+				x = x + item.x
+				y = y + item.y
+			end
+		end
+
+		return x, y
+	end,
+
 	init = function(self, engine)
 		lib = engine.lib
 

@@ -15,8 +15,22 @@ local lib_meta = {
 lib_manage = {
 	libraries = {},
 
+	lib_nav_path = function(self, path, from)
+		local at = from
+
+		for child in path:gsub(":", ""):gmatch("[^%.]+") do
+			if (not at[child]) then
+				return false
+			else
+				at = at[child]
+			end
+		end
+
+		return at
+	end,
+
 	lib_get = function(self, path, name)
-		local out = rawget(lib, path)
+		local out = rawget(lib, name or path) or self:lib_nav_path(path, lib)
 
 		if (out) then
 			return out

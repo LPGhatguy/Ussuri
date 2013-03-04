@@ -1,6 +1,6 @@
 --[[
 Console
-Enables execution of Lua code in-game. Useful for debugging
+Enables execution of Lua code in-game. Useful for debugging.
 Depends on ui
 ]]
 
@@ -26,21 +26,12 @@ console = {
 	},
 
 	event = {
-		draw = function(self)
+		draw = function(self, event)
 			if (self.enabled) then
-				self._frame.draw(self)
+				self._frame.draw(self, event)
 
-				local default_font = love.graphics.getFont()
-				love.graphics.setFont(self.font)
-
-				self.input_box:draw()
-
-				self.output_box:draw()
-				--lib.ui:prints(table.concat(engine.log_history, "\n"), 12, 40)
-
-				if (default_font) then
-					love.graphics.setFont(default_font)
-				end
+				self.input_box:draw(event)
+				self.output_box:draw(event)
 			end
 		end,
 
@@ -63,7 +54,8 @@ console = {
 		mousedown = function(self, event)
 			if (self.enabled) then
 				event.cancel = true
-				self.input_box:mousedown(event)
+				self._container.mousedown(self, event)
+				--self.input_box:mousedown(event)
 			end
 		end
 	},
@@ -104,7 +96,7 @@ console = {
 		self.input_box.height = 16
 		self.input_box.background_color = self.output_box.background_color
 
-		self.input_box.event_text_submit:register(function(box)
+		self.input_box.event_text_submit:connect(function(box)
 			engine:log_writes("blue", ">", box.text)
 
 			local loaded, err = loadstring(box.text)
@@ -130,7 +122,7 @@ console = {
 			box.enabled = true
 		end)
 
-		engine.event_log:register(function()
+		engine.event_log:connect(function()
 			self.output_box:refurbish(table.concat(engine.log_history, "\n"))
 		end)
 	end

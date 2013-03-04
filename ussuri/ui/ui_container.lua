@@ -5,14 +5,12 @@ Inherits ui.base
 ]]
 
 local lib
-local container
+local ui_container
 local point_in_item
 
-container = {
+ui_container = {
 	clips_children = false,
 	children = {},
-	padding_x = 0,
-	padding_y = 0,
 
 	add = function(self, object)
 		table.insert(self.children, object)
@@ -26,13 +24,15 @@ container = {
 		self.children[key] = nil
 	end,
 
-	draw = function(self)
+	draw = function(self, event)
 		love.graphics.push()
 		love.graphics.setColor(255, 255, 255)
 		love.graphics.translate(self.x, self.y)
 
 		if (self.clips_children) then
-			--TODO: Visually clip children
+			local abs_pos_x, abs_pos_y = self:get_absolute_position(event.stack)
+
+			love.graphics.setScissor(abs_pos_x, abs_pos_y, self.width, self.height)
 		end
 
 		for key, child in next, self.children do
@@ -45,19 +45,26 @@ container = {
 
 	mousedown = function(self, event)
 		local mouse_x, mouse_y = event.x, event.y
-		local trans_x, trans_y = event.x - self.x, event.y - self.y
+		local trans_x, trans_y = mouse_x - self.x, mouse_y - self.y
 
-		if (self.visible and point_in_item(self, mouse_x, mouse_y)) then
+		local stack = event.stack
+		stack[#stack + 1] = self
+		event.up = self
+
+		if (not self.clips_children or self.visible and point_in_item(self, mouse_x, mouse_y)) then
 			for key, child in next, self.children do
 				if (child.mousedown and child.visible and point_in_item(child, trans_x, trans_y)) then
+					event.x = trans_x - child.x
+					event.y = trans_y - child.y
 
-					event.x = trans_x
-					event.y = trans_y
 					child:mousedown(event)
 					break
 				end
 			end
 		end
+
+		stack[#stack] = nil
+		event.up = stack[#stack]
 
 		event.x = mouse_x
 		event.y = mouse_y
@@ -73,9 +80,9 @@ container = {
 	end
 }
 
-container.event = {
-	draw = container.draw,
-	mousedown = container.mousedown
+ui_container.event = {
+	draw = ui_container.draw,
+	mousedown = ui_container.mousedown
 }
 
-return container
+return ui_container

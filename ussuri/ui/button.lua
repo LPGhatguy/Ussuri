@@ -10,8 +10,8 @@ local button
 button = {
 	background_color = {200, 200, 200},
 
-	mousedown = function(self)
-		self.event_mousedown()
+	mousedown = function(self, event)
+		self:event_mousedown(event)
 	end,
 
 	new = function(self)

@@ -24,17 +24,18 @@ textbox = {
 	end,
 
 	mousedown = function(self, event)
-		self.enabled = ((event.x > self.x and event.x < self.x + self.width) and
-			(event.y > self.y and event.y < self.y + self.height))
+		print("activate!")
+		self.enabled = true --((event.x > self.x and event.x < self.x + self.width) and
+			--(event.y > self.y and event.y < self.y + self.height))
 	end,
 
-	draw = function(self)
+	draw = function(self, event)
 		local auto_size = self.auto_size
 		local x, y = self.x, self.y
 		local width = auto_size and self.font:getWidth(self.text) or self.width
 		local height = auto_size and self.font:getHeight() or self.height
 
-		self._rectangle.draw(self)
+		self._rectangle.draw(self, event)
 
 		love.graphics.setScissor(x, y, math.max(width, 1), height)
 

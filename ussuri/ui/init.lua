@@ -110,7 +110,6 @@ ui = {
 		utility = lib.utility
 
 		logging_extension.event_log = utility.event:new()
-		utility.table_deepcopy(logging_extension, lib.logging, utility.DESCENDENTS_ONLY)
 		utility.table_deepcopy(logging_extension, engine, utility.DESCENDENTS_ONLY)
 	end
 }

@@ -12,8 +12,8 @@ textlabel = {
 	text_color = {255, 255, 255},
 	border_width = 0,
 
-	draw = function(self)
-		self._rectangle.draw(self)
+	draw = function(self, event)
+		self._rectangle.draw(self, event)
 
 		love.graphics.setFont(self.font)
 		love.graphics.setColor(self.text_color)

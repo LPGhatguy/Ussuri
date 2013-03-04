@@ -6,7 +6,7 @@ return {
 	lib_folders = {
 		{":utility", {}},
 		{":input", {}},
-		{":ui", {"base", "container", "rectangle"}},
+		{":ui", {"base", "ui_container", "rectangle"}},
 		{":debug", {}}
 	},
 

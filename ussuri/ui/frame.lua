@@ -1,16 +1,16 @@
 --[[
 UI Frame
 A frame for holding other UI elements
-Inherits ui.base, ui.container, ui.rectangle
+Inherits ui.base, ui.ui_container, ui.rectangle
 ]]
 
 local lib
 local frame
 
 frame = {
-	draw = function(self)
-		self._rectangle.draw(self)
-		self._container.draw(self)
+	draw = function(self, event)
+		self._rectangle.draw(self, event)
+		self._ui_container.draw(self, event)
 	end,
 
 	init = function(self, engine)
@@ -18,7 +18,7 @@ frame = {
 
 		lib.oop:objectify(self)
 		self:inherit(lib.ui.base)
-		self:inherit(lib.ui.container, "container")
+		self:inherit(lib.ui.ui_container, "ui_container")
 		self:inherit(lib.ui.rectangle, "rectangle")
 
 		self.event.draw = self.draw

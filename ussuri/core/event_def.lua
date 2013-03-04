@@ -22,7 +22,9 @@ definitions = {
 	fire_mousedown = function(self, x, y, button)
 		return self:event_trigger("mousedown", {
 			x = x,
+			abs_x = x,
 			y = y,
+			abs_y = y,
 			button = button
 		})
 	end,
@@ -30,7 +32,9 @@ definitions = {
 	fire_mouseup = function(self, x, y, button)
 		return self:event_trigger("mouseup", {
 			x = x,
+			abs_x = x,
 			y = y,
+			abs_y = y,
 			button = button
 		})
 	end,
