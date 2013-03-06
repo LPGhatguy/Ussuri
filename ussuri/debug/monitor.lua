@@ -38,16 +38,10 @@ monitor = {
 					out = out .. key:upper() .. ": " .. self:draw_value(value[1][value[2]]) .. "\n"
 				end
 
-				local default_font = love.graphics.getFont()
-
 				love.graphics.setColor(255, 255, 0)
 				love.graphics.setFont(self.font)
 
 				love.graphics.print(out, 5, 5)
-
-				if (default_font) then
-					love.graphics.setFont(default_font)
-				end
 			end
 		end,
 		update = function(self, event)
