@@ -22,7 +22,7 @@ console = {
 		keydown = 2,
 		mousedown = 0,
 		update = 0,
-		draw = 952
+		draw = 950
 	},
 
 	event = {
@@ -95,28 +95,31 @@ console = {
 		self:add(self.input_box)
 
 		self.input_box.event_text_submit:connect(function(box)
-			engine:log_writes("blue", ">", box.text)
+			if (box.text:len() > 0) then
+				engine:log_writes("blue", ">", box.text)
 
-			local loaded, err = loadstring(box.text)
-			local result = false
+				local loaded, err = loadstring(box.text)
+				local result = false
 
-			if (loaded) then
-				setfenv(loaded, self.environment)
-				result, err = pcall(loaded)
-			else
-				loaded = loadstring("print(" .. box.text .. ")")
 				if (loaded) then
 					setfenv(loaded, self.environment)
 					result, err = pcall(loaded)
+				else
+					loaded = loadstring("print(" .. box.text .. ")")
+					if (loaded) then
+						setfenv(loaded, self.environment)
+						result, err = pcall(loaded)
+					end
 				end
+
+				if (not result and err) then
+					local err = err:gsub("^%[.*%]", "")
+					engine:log_writes("red", err)
+				end
+
+				box.text = ""
 			end
 
-			if (not result) then
-				local err = err:gsub("^%[.*%]", "")
-				engine:log_writes("red", err)
-			end
-
-			box.text = ""
 			box.enabled = true
 		end)
 
