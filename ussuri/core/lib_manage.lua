@@ -97,15 +97,9 @@ lib_manage = {
 		local result, loaded = pcall(require, path)
 
 		if (result) then
-			if (type(loaded) == "table" and loaded.init) then
-				loaded:init(self)
-
+			if (type(loaded) == "table") then
 				table.insert(self.libraries, loaded)
-			elseif (type(loaded) == "function") then
-				loaded(self)
-			end
 
-			if (loaded) then
 				if (string.match(name, "[%.]")) then
 					local name = name:gsub(":", "")
 					local lib_name = name:match("([^%.:]*)$")
@@ -127,6 +121,16 @@ lib_manage = {
 					end
 				else
 					lib[name] = loaded
+				end
+
+				if (loaded.init) then
+					loaded:init(self)
+				end
+			elseif (type(loaded) == "function") then
+				local result, err = pcall(loaded, self)
+
+				if (not result) then
+					error(err)
 				end
 			end
 
