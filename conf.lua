@@ -1,7 +1,7 @@
 function love.conf(t)
 	t.title = "Ussuri Demo"
 	t.author = "LPGhatguy"
-	t.url = "http://lpghatguy.github.com/"
+	t.url = "https://github.com/LPGhatguy/Ussuri"
 	t.identity = "Ussuri-Demo"
 	t.version = "0.8.0"
 	t.console = true
