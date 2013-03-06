@@ -1,7 +1,7 @@
 --[[
 UI Container
 A UI item that contains other items
-Inherits ui.base
+Inherits ui.base, utility.container
 ]]
 
 local lib
@@ -10,19 +10,6 @@ local point_in_item
 
 ui_container = {
 	clips_children = false,
-	children = {},
-
-	add = function(self, object)
-		table.insert(self.children, object)
-	end,
-
-	register = function(self, key, object)
-		self.children[key] = object
-	end,
-
-	remove = function(self, key)
-		self.children[key] = nil
-	end,
 
 	draw = function(self, event)
 		love.graphics.push()
@@ -35,16 +22,7 @@ ui_container = {
 			love.graphics.setScissor(abs_pos_x, abs_pos_y, self.width, self.height)
 		end
 
-		local stack = event.stack
-		stack[#stack + 1] = self
-		event.up = self
-
-		for key, child in next, self.children do
-			child:draw(event)
-		end
-
-		stack[#stack] = nil
-		event.up = stack[#stack]
+		self:trigger_event("draw", event)
 
 		love.graphics.setScissor()
 		love.graphics.pop()
@@ -63,18 +41,16 @@ ui_container = {
 
 			for key, child in next, self.children do
 				if (child.visible) then
-					if (searching and point_in_item(child, trans_x, trans_y)) then
+					event.x = trans_x - child.x
+					event.y = trans_y - child.y
+
+					if (point_in_item(child, trans_x, trans_y)) then
 						if (child.mousedown) then
-							event.x = trans_x - child.x
-							event.y = trans_y - child.y
-
-							child:mousedown(event)
+							self:trigger_child_event(child, "mousedown", event)
 						end
-
-						searching = false
 					else
 						if (child.mousedown_sibling) then
-							child:mousedown_sibling(event)
+							self:trigger_child_event(child, "mousedown_sibling", event)
 						end
 					end
 				end
@@ -95,6 +71,7 @@ ui_container = {
 
 		lib.oop:objectify(self)
 		self:inherit(lib.ui.base, true)
+		self:inherit(lib.utility.container)
 	end
 }
 
