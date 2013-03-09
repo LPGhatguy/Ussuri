@@ -22,7 +22,7 @@ ui_container = {
 			love.graphics.setScissor(abs_pos_x, abs_pos_y, self.width, self.height)
 		end
 
-		self:trigger_event("draw", event)
+		self:trigger_child_event("draw", event)
 
 		love.graphics.setScissor()
 		love.graphics.pop()
@@ -46,11 +46,11 @@ ui_container = {
 
 					if (point_in_item(child, trans_x, trans_y)) then
 						if (child.mousedown) then
-							self:trigger_child_event(child, "mousedown", event)
+							self:call_child_event(child, "mousedown", event)
 						end
 					else
 						if (child.mousedown_sibling) then
-							self:trigger_child_event(child, "mousedown_sibling", event)
+							self:call_child_event(child, "mousedown_sibling", event)
 						end
 					end
 				end
