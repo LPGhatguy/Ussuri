@@ -37,7 +37,7 @@ console = {
 				self.enabled = not self.enabled
 				event.cancel = true
 			elseif (self.enabled) then
-				self.input_box:keydown(event)
+				self:trigger_event("keydown", event)
 				event.cancel = true
 			end
 		end,
