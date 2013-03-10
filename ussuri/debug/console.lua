@@ -8,6 +8,7 @@ local engine, lib
 local console
 
 console = {
+	background_color = {0, 0, 0, 200},
 	x = 8,
 	y = 8,
 	border_width = 1,
@@ -61,6 +62,8 @@ console = {
 		lib = engine.lib
 
 		self.font = love.graphics.newFont(14)
+		self.width = love.graphics.getWidth() - 16
+		self.height = love.graphics.getHeight() - 16
 
 		lib.utility.table_copy(getfenv(0), self.environment)
 
@@ -71,10 +74,6 @@ console = {
 
 		lib.oop:objectify(self)
 		self:inherit(lib.ui.frame, "frame")
-
-		self.width = love.graphics.getWidth() - 16
-		self.height = love.graphics.getHeight() - 16
-		self.background_color = {0, 0, 0, 200}
 
 		local output_box = lib.ui.styled_textlabel:new()
 		self.output_box = output_box
@@ -92,14 +91,20 @@ console = {
 			history_location = 0,
 
 			keydown = function(self, event)
-				if (event.key == "up" or event.key == "down") then
-					local translation = (event.key == "down") and 1 or -1
+				local key = event.key
+
+				if (key == "up" or key == "down") then
+					local translation = (key == "down") and 1 or -1
 
 					self.history_location = math.min(math.max(self.history_location + translation, 1), #self.history)
 					self.text = self.history[self.history_location] or self.text
+					self:set_cursor(math.huge)
 				else
 					self._textbox.keydown(self, event)
-					self.history_location = #self.history + 1
+
+					if (key ~= "left" and key ~= "right") then
+						self.history_location = #self.history + 1
+					end
 				end
 			end
 		}
