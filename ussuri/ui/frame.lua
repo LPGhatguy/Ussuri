@@ -17,7 +17,6 @@ frame = {
 		lib = engine.lib
 
 		lib.oop:objectify(self)
-		self:inherit(lib.ui.base)
 		self:inherit(lib.ui.ui_container, "ui_container")
 		self:inherit(lib.ui.rectangle, "rectangle")
 

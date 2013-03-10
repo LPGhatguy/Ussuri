@@ -26,7 +26,6 @@ textlabel = {
 
 		lib.oop:objectify(self)
 
-		self:inherit(lib.ui.base)
 		self:inherit(lib.ui.rectangle, "rectangle")
 	end,
 }
