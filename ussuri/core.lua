@@ -12,18 +12,19 @@ local version_meta = {
 	end
 }
 
-local function lib_load(load)
+local lib_load = function(load)
 	local name = load:match("([^%.:]*)$")
 	local loaded = require(load:gsub("^:", config.engine_path))
+
 	loaded:init(engine_core)
-	loaded.init = nil
+
 	lib[name] = loaded
 	corelib[name] = loaded
 
 	return loaded
 end
 
-local function lib_batch_load(batch)
+local lib_batch_load = function(batch)
 	for key, lib_name in next, batch do
 		lib_load(lib_name)
 	end
@@ -41,7 +42,7 @@ engine_core.init = function(self, glib)
 
 	lib_batch_load(config.lib_core)
 
-	for at, group in next, config.lib_folders do
+	for key, group in next, config.lib_folders do
 		self:lib_folder_load(group[1], group[2])
 	end
 
@@ -55,13 +56,15 @@ engine_core.close = function(self)
 		if (library.close) then
 			library:close(self)
 		end
+
 		lib[key] = nil
+		corelib[key] = nil
 	end
 end
 
 engine_core.quit = function(self)
-	self:close()
 	love.event.push("quit")
+	self:close()
 end
 
 return engine_core
