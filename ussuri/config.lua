@@ -1,5 +1,5 @@
 return {
-	version = {1, 1, 1, "DEV"},
+	version = {1, 1, 2, "DEV"},
 
 	lib_core = {":core.utility", ":core.oop", ":core.logging", ":core.event_manage", ":core.event_def", ":core.lib_manage"},
 
