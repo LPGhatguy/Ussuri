@@ -76,27 +76,52 @@ console = {
 		self.height = love.graphics.getHeight() - 16
 		self.background_color = {0, 0, 0, 200}
 
-		self.output_box = lib.ui.styled_textlabel:new()
-		self.output_box.x = 4
-		self.output_box.y = 32
-		self.output_box.width = love.graphics.getWidth() - 24
-		self.output_box.height = love.graphics.getHeight() - 52
-		self.output_box.background_color = {100, 100, 100, 100}
-		self.output_box.font = self.font
-		self.output_box:refurbish(table.concat(engine.log_history, "\n"))
-		self:add(self.output_box)
+		local output_box = lib.ui.styled_textlabel:new()
+		self.output_box = output_box
+		output_box.x = 4
+		output_box.y = 32
+		output_box.width = love.graphics.getWidth() - 24
+		output_box.height = love.graphics.getHeight() - 52
+		output_box.background_color = {100, 100, 100, 100}
+		output_box.font = self.font
+		output_box:refurbish(table.concat(engine.log_history, "\n"))
+		self:add(output_box)
 
-		self.input_box = lib.ui.textbox:new("", self.font)
-		self.input_box.x = 4
-		self.input_box.y = 4
-		self.input_box.width = love.graphics.getWidth() - 24
-		self.input_box.height = 16
-		self.input_box.background_color = self.output_box.background_color
-		self:add(self.input_box)
+		local codebox = {
+			history = {},
+			history_location = 0,
 
-		self.input_box.event_text_submit:connect(function(box)
+			keydown = function(self, event)
+				if (event.key == "up" or event.key == "down") then
+					local translation = (event.key == "down") and 1 or -1
+
+					self.history_location = math.min(math.max(self.history_location + translation, 1), #self.history)
+					self.text = self.history[self.history_location] or self.text
+				else
+					self._textbox.keydown(self, event)
+					self.history_location = #self.history + 1
+				end
+			end
+		}
+
+		lib.oop:objectify(codebox)
+
+		codebox:inherit(lib.ui.textbox, "textbox")
+		codebox.new = lib.ui.textbox.new
+
+		local input_box = codebox:new("", self.font)
+		self.input_box = input_box
+		input_box.x = 4
+		input_box.y = 4
+		input_box.width = love.graphics.getWidth() - 24
+		input_box.height = 16
+		input_box.background_color = self.output_box.background_color
+		self:add(input_box)
+
+		input_box.event_text_submit:connect(function(box)
 			if (box.text:len() > 0) then
 				engine:log_writes("blue", ">", box.text)
+				table.insert(box.history, box.text)
 
 				local loaded, err = loadstring(box.text)
 				local result = false
