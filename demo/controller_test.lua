@@ -1,6 +1,7 @@
 --[[
 Ussuri Demo
-A small demo of Ussuri's capabilities
+A controller test for testing assistance in a future input library
+Tailored for an Xbox 360 Controller
 ]]
 
 local ussuri = require("ussuri")
