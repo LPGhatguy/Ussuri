@@ -128,6 +128,7 @@ text = {
 		input = lib.input
 
 		self.event_text_submit = lib.utility.event:new()
+
 		lib.oop:objectify(self)
 	end
 }

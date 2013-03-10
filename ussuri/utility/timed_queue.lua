@@ -1,7 +1,6 @@
 --[[
 Timed Queue
 Queues events to happen in sequence after time
-Inherits oop.object
 ]]
 
 local lib

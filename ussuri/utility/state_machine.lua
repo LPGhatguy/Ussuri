@@ -1,7 +1,6 @@
 --[[
 State Machine
 A state machine with self-nesting support
-Inherits oop.object
 ]]
 
 local lib
