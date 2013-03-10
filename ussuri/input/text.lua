@@ -103,7 +103,7 @@ text = {
 	end,
 
 	move_cursor = function(self, x, keep_selection)
-		self:set_cursor(x and self.cursor + x, keep_selection)
+		self:set_cursor(self.cursor + (x or 0), keep_selection)
 	end,
 
 	set_cursor = function(self, x, keep_selection)
