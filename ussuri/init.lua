@@ -46,7 +46,7 @@ function love.run()
 			return
 		end,
 		}, {
-		__key = function(self, name)
+		__index = function(self, name)
 			error("Unknown event: " .. name)
 		end,
 	})
