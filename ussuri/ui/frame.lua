@@ -1,7 +1,7 @@
 --[[
 UI Frame
 A frame for holding other UI elements
-Inherits ui.base, ui.ui_container, ui.rectangle
+Inherits ui.ui_container, ui.rectangle
 ]]
 
 local lib

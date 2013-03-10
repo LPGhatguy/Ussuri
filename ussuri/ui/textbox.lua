@@ -1,7 +1,7 @@
 --[[
 One Line Textbox
 Implements text rendering with inherited textbox input.
-Inherits ui.base, input.text
+Inherits ui.rectangle, input.text
 ]]
 
 local lib
@@ -79,8 +79,6 @@ textbox = {
 		lib = engine.lib
 
 		lib.oop:objectify(self)
-
-		self:inherit(lib.ui.base, true)
 		self:inherit(lib.ui.rectangle, "rectangle")
 		self:inherit(lib.input.text, "text")
 	end

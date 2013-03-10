@@ -1,7 +1,7 @@
 --[[
 Button
 A clickable button
-Inherits ui.base, ui.rectangle
+Inherits ui.rectangle
 ]]
 
 local lib

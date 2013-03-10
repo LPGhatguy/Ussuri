@@ -1,7 +1,7 @@
 --[[
 Styled Text Label
 Draws styled text
-Inherits ui.base, ui.rectangle
+Inherits ui.rectangle
 ]]
 
 local lib
@@ -31,8 +31,6 @@ textlabel = {
 		lib = engine.lib
 
 		lib.oop:objectify(self)
-
-		self:inherit(lib.ui.base)
 		self:inherit(lib.ui.rectangle, "rectangle")
 
 		self:refurbish()

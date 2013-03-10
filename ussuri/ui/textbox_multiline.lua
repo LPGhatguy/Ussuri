@@ -1,7 +1,7 @@
 --[[
 Multiple Line Textbox
 A textbox with more than one line
-Inherits input.text_multiline
+Inherits ui.rectangle, input.text_multiline
 ]]
 
 local lib
@@ -12,7 +12,8 @@ textbox = {
 		lib = engine.lib
 
 		lib.oop:objectify(self)
-		self:inherit(lib.input.text_multiline)
+		self:inherit(lib.ui.rectangle, "rectangle")
+		self:inherit(lib.input.text_multiline, "text")
 	end,
 }
 
