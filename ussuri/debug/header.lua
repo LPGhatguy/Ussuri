@@ -21,7 +21,7 @@ header = {
 					engine:log_write(lib.utility.table_tree(engine))
 				end
 
-				love.event.push("quit")
+				engine:quit()
 			end
 		end
 	},
