@@ -38,7 +38,6 @@ oop = {
 		table_merge = lib.utility.table_merge
 
 		self.object.new = self.object._new
-		self.object.base = self.object
 
 		self:objectify(engine)
 	end
