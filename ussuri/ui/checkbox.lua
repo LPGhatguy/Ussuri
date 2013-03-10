@@ -1,7 +1,7 @@
 --[[
 Two-State Check Box
 Checks Boxes
-Inherits ui.base
+Inherits ui.rectangle
 ]]
 
 local lib
@@ -16,17 +16,11 @@ checkbox = {
 	border_color = {50, 50, 50},
 
 	draw = function(self)
-		local x, y, width, height = self.x, self.y, self.width, self.height
-
-		love.graphics.setColor(self.background_color)
-		love.graphics.rectangle("fill", x, y, width, height)
-
-		love.graphics.setColor(self.border_color)
-		love.graphics.rectangle("line", x, y, width, height)
+		self._rectangle.draw(self)
 
 		if (self.checked) then
 			love.graphics.setColor(self.check_color)
-			love.graphics.rectangle("fill", x + 1, y + 1, width - 2, height - 2)
+			love.graphics.rectangle("fill", self.x + 1, self.y + 1, self.width - 2, self.height - 2)
 		end
 	end,
 
@@ -38,7 +32,7 @@ checkbox = {
 		lib = engine.lib
 
 		lib.oop:objectify(self)
-		self:inherit(lib.ui.base, true)
+		self:inherit(lib.ui.rectangle, "rectangle")
 	end
 }
 
