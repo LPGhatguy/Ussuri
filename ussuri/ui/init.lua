@@ -61,7 +61,9 @@ ui = {
 		end
 
 		for color_piece, text_piece in string.gmatch(text, "\b(.-)\b%s?([^\b]*)") do
-			table.insert(out_text, text_piece)
+			local tab_fixed = text_piece:gsub("\t", (" "):rep(3))
+
+			table.insert(out_text, tab_fixed)
 			table.insert(out_color, color_piece)
 		end
 
