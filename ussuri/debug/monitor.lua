@@ -7,11 +7,11 @@ local monitor
 
 monitor = {
 	enabled = false,
+	dark = false,
+	font_size = 18,
 	numeric_accuracy = 3,
-	toggle_key = "q",
-	font_arg = {18},
 	toggle_modifiers = {"lctrl"},
-	disabled = {},
+	toggle_key = "q",
 	lookups = {},
 
 	values = {
@@ -20,15 +20,15 @@ monitor = {
 	},
 
 	event_priority = {
-		update = 0,
-		keydown = 0,
+		update = -502,
+		keydown = -502,
 		draw = 951
 	},
 
 	event = {
 		draw = function(self)
 			if (self.enabled) then
-				local out = "DEBUG\n"
+				local out = ""
 
 				for key, value in next, self.values do
 					out = out .. key:upper() .. ": " .. self:draw_value(value) .. "\n"
@@ -38,16 +38,22 @@ monitor = {
 					out = out .. key:upper() .. ": " .. self:draw_value(value[1][value[2]]) .. "\n"
 				end
 
-				love.graphics.setColor(255, 255, 0)
 				love.graphics.setFont(self.font)
 
+				love.graphics.setColor(0, 0, 0)
+				love.graphics.print(out, 6, 6)
+				love.graphics.print(out, 4, 4)
+
+				love.graphics.setColor(255, 255, 0)
 				love.graphics.print(out, 5, 5)
 			end
 		end,
+
 		update = function(self, event)
 			self.values.fps = love.timer.getFPS()
 			self.values.time = self.values.time + event.delta
 		end,
+
 		keydown = function(self, event)
 			if (event.key == self.toggle_key and love.keyboard.isDown(unpack(self.toggle_modifiers))) then
 				self.enabled = not self.enabled
@@ -65,7 +71,7 @@ monitor = {
 	end,
 
 	init = function(self, engine)
-		self.font = love.graphics.newFont(unpack(self.font_arg))
+		self.font = love.graphics.newFont(self.font_size)
 	end
 }
 
