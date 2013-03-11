@@ -8,20 +8,22 @@ local header
 
 header = {
 	event_priority = {
-		keydown = -1
+		keydown = -503
 	},
 
 	event = {
 		keydown = function(self, event)
-			if (event.key == "tab" and love.keyboard.isDown("lctrl")) then
-				event.cancel = true
+			if (love.keyboard.isDown("lctrl")) then
+				if (event.key == "tab") then
+					event.cancel = true
 
-				if (love.keyboard.isDown("lshift")) then
-					engine.config.log_recording_enabled = true
-					engine:log_write(lib.utility.table_tree(engine))
+					if (love.keyboard.isDown("lshift")) then
+						engine.config.log_recording_enabled = true
+						engine:log_write(lib.utility.table_tree(engine))
+					end
+
+					engine:quit()
 				end
-
-				engine:quit()
 			end
 		end
 	},
