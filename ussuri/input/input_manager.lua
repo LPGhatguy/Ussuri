@@ -1,7 +1,6 @@
 --[[
 Input Manager
-Manages control bindings
-Inherits oop.object
+Game-orientated control binding manager
 ]]
 
 local lib

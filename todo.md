@@ -4,7 +4,8 @@
 ### Before 1.0.0.RELEASE
 - Expanded input module to support binding for game usage
 - Rewrite utility.resource_manager
-- Rewrite utility.sound_manager
+- Sound engine
+- UI element ordering
 
 >
 ### Post 1.0.0.RELEASE

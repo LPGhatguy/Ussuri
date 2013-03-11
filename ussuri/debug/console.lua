@@ -1,7 +1,6 @@
 --[[
 Console
 Enables execution of Lua code in-game. Useful for debugging.
-Depends on ui
 ]]
 
 local engine, lib
