@@ -1,7 +1,7 @@
 return {
 	version = {1, 1, 2, "DEV"},
 
-	lib_core = {":core.utility", ":core.oop", ":core.logging", ":core.event_manage", ":core.event_def", ":core.lib_manage"},
+	lib_core = {":core.utility", ":core.oop", ":core.logging", ":core.event_manage", ":core.event_def", ":core.love_binds", ":core.lib_manage"},
 
 	lib_folders = {
 		{":utility", {}},
