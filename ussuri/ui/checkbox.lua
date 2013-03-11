@@ -26,10 +26,13 @@ checkbox = {
 
 	mousedown = function(self, event)
 		self.checked = not self.checked
+		self:event_toggle()
 	end,
 
 	init = function(self, engine)
 		lib = engine.lib
+
+		self.event_toggle = lib.utility.event:new()
 
 		lib.oop:objectify(self)
 		self:inherit(lib.ui.rectangle, "rectangle")
