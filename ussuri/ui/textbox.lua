@@ -34,13 +34,12 @@ textbox = {
 	draw = function(self, event)
 		local auto_size = self.auto_size
 		local x, y = self.x, self.y
-		local abs_x, abs_y = self:get_absolute_position(event.stack)
 		local width = auto_size and self.font:getWidth(self.text) or self.width
 		local height = auto_size and self.font:getHeight() or self.height
 
 		self._rectangle.draw(self, event)
 
-		love.graphics.setScissor(abs_x, abs_y, math.max(width, 1), height)
+		self:start_scissor(event.stack, nil, nil, width, height)
 
 		local cursor_x = x + self.font:getWidth(self.text:sub(1, self.cursor))
 
@@ -63,7 +62,7 @@ textbox = {
 		love.graphics.setColor(self.text_color)
 		love.graphics.print(self.text, x, y)
 
-		love.graphics.setScissor()
+		self:end_scissor()
 	end,
 
 	new = function(self, text, font)

@@ -16,9 +16,21 @@ textlabel = {
 	draw = function(self, event)
 		self._rectangle.draw(self, event)
 
-		love.graphics.setFont(self.font)
+		if (self.font) then
+			love.graphics.setFont(self.font)
+		end
+
 		love.graphics.setColor(self.text_color)
 		love.graphics.printf(self.text, self.x, self.y, self.width, self.align)
+	end,
+
+	new = function(self, text, font)
+		local instance = self:_new()
+
+		instance.text = text or ""
+		instance.font = font or ""
+
+		return instance
 	end,
 
 	init = function(self, engine)

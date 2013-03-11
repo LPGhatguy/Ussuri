@@ -22,9 +22,15 @@ textlabel = {
 	draw = function(self, event)
 		self._rectangle.draw(self, event)
 
-		love.graphics.setFont(self.font)
+		if (self.font) then
+			love.graphics.setFont(self.font)
+		end
+
+		self:start_scissor(event.stack)
 
 		lib.ui:print_decomposed(self.content_text, self.content_color, self.x, self.y)
+
+		self:end_scissor()
 	end,
 
 	init = function(self, engine)

@@ -17,15 +17,16 @@ ui_container = {
 		love.graphics.translate(self.x, self.y)
 
 		if (self.clips_children) then
-			local abs_pos_x, abs_pos_y = self:get_absolute_position(event.stack)
-
-			love.graphics.setScissor(abs_pos_x, abs_pos_y, self.width, self.height)
+			self:start_scissor()
 		end
 
 		self:trigger_child_event("draw", event)
 
-		love.graphics.setScissor()
 		love.graphics.pop()
+
+		if (self.clips_children) then
+			self:end_scissor()
+		end
 	end,
 
 	mousedown = function(self, event)
@@ -36,7 +37,11 @@ ui_container = {
 		stack[#stack + 1] = self
 		event.up = self
 
-		if (not self.clips_children or self.visible and point_in_item(self, mouse_x, mouse_y)) then
+		local contains_mouse = point_in_item(self, mouse_x, mouse_y)
+
+		if (self.visible and (not self.clips_children or point_in_item(self, mouse_x, mouse_y))) then
+			event.cancel = contains_mouse
+
 			local searching = true
 
 			for key, child in next, self.children do

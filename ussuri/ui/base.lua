@@ -29,6 +29,23 @@ base = {
 		return x, y
 	end,
 
+	start_scissor = function(self, stack, x, y, w, h)
+		local abs_x, abs_y = self:get_absolute_position(stack)
+		local sx, sy, sw, sh = love.graphics.getScissor()
+		self.scissor_x, self.scissor_y = sx, sy
+		self.scissor_width, self.scissor_height = sw, sh
+
+		love.graphics.setScissor(x or abs_x, y or abs_y, w or self.width, h or self.height)
+	end,
+
+	end_scissor = function(self)
+		if (self.scissor_x) then
+			love.graphics.setScissor(self.scissor_x, self.scissor_y, self.scissor_w, self.scissor_h)
+		else
+			love.graphics.setScissor()
+		end
+	end,
+
 	init = function(self, engine)
 		lib = engine.lib
 
