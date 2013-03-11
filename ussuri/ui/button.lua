@@ -8,7 +8,7 @@ local lib
 local button
 
 button = {
-	background_color = {200, 200, 200},
+	background_color = {180, 180, 180},
 
 	mousedown = function(self, event)
 		self:event_mousedown(event)
