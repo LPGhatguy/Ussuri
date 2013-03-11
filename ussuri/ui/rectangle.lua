@@ -14,7 +14,7 @@ rectangle = {
 
 	draw = function(self)
 		local border_width = self.border_width
-		local half_border = math.floor(border_width / 2)
+		local half_border = math.ceil(border_width / 2)
 
 		love.graphics.setColor(self.background_color)
 		love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
