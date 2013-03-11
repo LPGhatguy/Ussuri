@@ -73,8 +73,8 @@ definitions = {
 		return self:event_trigger("quit")
 	end,
 
-	fire_display_update = function(self, width, height, fullscreen, vsync, fsaa)
-		return self:event_trigger("display_update", {
+	fire_display_updating = function(self, width, height, fullscreen, vsync, fsaa)
+		return self:event_trigger("display_updating", {
 			width = width,
 			height = height,
 			fullscreen = fullscreen or false,
@@ -96,7 +96,7 @@ definitions = {
 	init = function(self, engine)
 		engine:event_create({"update", "draw", "quit", "focus",
 			"keydown", "keyup", "joydown", "joyup", "mousedown", "mouseup",
-			"display_update", "display_updated"})
+			"display_updating", "display_updated"})
 
 		engine:inherit(self)
 	end,
