@@ -14,10 +14,15 @@ button = {
 		self:event_mousedown(event)
 	end,
 
+	mouseup = function(self, event)
+		self:event_mouseup(event)
+	end,
+
 	new = function(self)
 		local instance = self:_new()
 
 		instance.event_mousedown = lib.utility.event:new()
+		instance.event_mouseup = lib.utility.event:new()
 		instance.draw = self._rectangle.draw
 
 		return instance
