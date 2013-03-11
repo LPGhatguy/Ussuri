@@ -20,10 +20,10 @@ console = {
 	environment = {},
 
 	event_priority = {
-		keydown = 2,
-		mousedown = 0,
-		update = 0,
-		draw = 950
+		keydown = -501,
+		mousedown = -501,
+		update = -501,
+		draw = 501
 	},
 
 	event = {
@@ -54,6 +54,16 @@ console = {
 				event.cancel = true
 				self._ui_container.mousedown(self, event)
 			end
+		end,
+
+		display_updated = function(self, event)
+			self.width = event.width - 16
+			self.height = event.height - 16
+
+			self.output_box.width = self.width - 8
+			self.output_box.height = self.height - 38
+
+			self.input_box.width = self.width - 8
 		end
 	},
 
@@ -79,8 +89,8 @@ console = {
 		self.output_box = output_box
 		output_box.x = 4
 		output_box.y = 32
-		output_box.width = love.graphics.getWidth() - 24
-		output_box.height = love.graphics.getHeight() - 52
+		output_box.width = self.width - 8
+		output_box.height = self.height - 38
 		output_box.background_color = {100, 100, 100, 100}
 		output_box.font = self.font
 		output_box:refurbish(table.concat(engine.log_history, "\n"))
@@ -118,7 +128,7 @@ console = {
 		self.input_box = input_box
 		input_box.x = 4
 		input_box.y = 4
-		input_box.width = love.graphics.getWidth() - 24
+		input_box.width = self.width - 8
 		input_box.height = 16
 		input_box.background_color = self.output_box.background_color
 		self:add(input_box)
