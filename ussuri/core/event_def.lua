@@ -73,9 +73,30 @@ definitions = {
 		return self:event_trigger("quit")
 	end,
 
+	fire_display_update = function(self, width, height, fullscreen, vsync, fsaa)
+		return self:event_trigger("display_update", {
+			width = width,
+			height = height,
+			fullscreen = fullscreen or false,
+			vsync = (vsync == nil) and true or vsync,
+			vsync = 0
+		})
+	end,
+
+	fire_display_updated = function(self, width, height, fullscreen, vsync, fsaa)
+		return self:event_trigger("display_updated", {
+			width = width,
+			height = height,
+			fullscreen = fullscreen or false,
+			vsync = (vsync == nil) and true or vsync,
+			vsync = 0
+		})
+	end,
+
 	init = function(self, engine)
 		engine:event_create({"update", "draw", "quit", "focus",
-			"keydown", "keyup", "joydown", "joyup", "mousedown", "mouseup"})
+			"keydown", "keyup", "joydown", "joyup", "mousedown", "mouseup",
+			"display_update", "display_updated"})
 
 		engine:inherit(self)
 	end,
