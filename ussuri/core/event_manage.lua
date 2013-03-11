@@ -69,6 +69,8 @@ event_manage = {
 					break
 				end
 			end
+
+			return pass
 		end
 	end,
 
