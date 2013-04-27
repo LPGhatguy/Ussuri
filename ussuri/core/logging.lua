@@ -1,75 +1,71 @@
 --[[
-Logging System
-Enables logging both in realtime and to logfiles
+Logging Module
+Writes logs to output and to the file stream
 ]]
 
-local lib, config
+local lib
+local config
 local logging
 
 logging = {
-	log_history = {},
+	history = {},
 
-	log_write = function(self, ...)
-		local out = {...}
-		for key = 1, #out do
-			out[key] = tostring(out[key])
+	write = function(self, ...)
+		local out = table.concat({...}, " ")
+
+		if (config.history) then
+			self.history[#self.history + 1] = out
 		end
 
-		local add = table.concat(out, " ")
-
-		if (config.log_history_enabled) then
-			table.insert(self.log_history, add)
-		end
-
-		if (config.log_realtime_enabled) then
-			self:log_report(add)
+		if (config.realtime) then
+			self:report(out)
 		end
 	end,
 
-	log_report = function(self, ...)
+	report = function(self, ...)
 		print(...)
 	end,
 
-	log_clear = function(self)
-		self.log_history = {}
+	clear = function(self)
+		self.history = {}
 	end,
 
-	log_pop = function(self)
-		return lib.utility.table_pop(self.log_history, #self.log_history - 1)
-	end,
-
-	log_record = function(self, filename)
-		if (not love.filesystem.exists(config.log_directory)) then
-			love.filesystem.mkdir(config.log_directory)
+	save = function(self, filename)
+		if (not love.filesystem.exists(config.save_directory)) then
+			love.filesystem.mkdir(config.save_directory)
 		end
 
-		local file_out = love.filesystem.newFile(config.log_directory .. "/" .. filename .. ".txt")
+		local file_out = love.filesystem.newFile(config.save_directory .. "/" .. filename .. ".txt")
+
 		file_out:open("w")
-
-		local to_write = ""
-		for key, line in next, self.log_history do
-			to_write = to_write .. self:log_strip_style(tostring(line):gsub("\n", "\r\n")) .. "\r\n"
-		end
-
-		file_out:write(to_write)
-
+		file_out:write(table.concat(self.history, "\r\n"))
 		file_out:close()
 	end,
 
 	init = function(self, engine)
 		lib = engine.lib
-		config = engine.config or config
 
-		engine:inherit(self)
-		engine:log_write("Start:", engine.start_date)
-		engine:log_write("Using engine version " .. tostring(engine.config.version))
+		lib.oop:objectify(self)
+
+		engine.log = self:new()
+
+		config = {
+			realtime = true,
+			history = true,
+			autosave = true,
+			save_directory = "logs"
+		}
+
+		engine.config.log = config
+
+		engine.log:write("Using engine version " .. tostring(engine.config.version))
 	end,
 
 	close = function(self, engine)
-		engine:log_write("End:", engine.end_date)
+		engine.log:write("End")
 
-		if (config.log_recording_enabled) then
-			engine:log_record(engine.start_date:gsub("[:/ ]", "."))
+		if (config.autosave) then
+			engine.log:save(os.date():gsub("[/: ]", "-"))
 		end
 	end
 }

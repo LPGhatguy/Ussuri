@@ -9,12 +9,10 @@ local base
 base = {
 	x = 0,
 	y = 0,
+	z = 0,
 	width = 0,
 	height = 0,
 	visible = true,
-
-	draw = function(self)
-	end,
 
 	get_absolute_position = function(self, stack)
 		local x, y = self.x, self.y
@@ -44,6 +42,13 @@ base = {
 		else
 			love.graphics.setScissor()
 		end
+	end,
+
+	draw = function(self)
+	end,
+
+	added = function(self, event)
+		event.stack[#event.stack]:register(self, "draw")
 	end,
 
 	init = function(self, engine)

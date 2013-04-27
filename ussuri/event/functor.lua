@@ -1,11 +1,11 @@
 --[[
-Event Object
+Event Functor
 A drop-in replacement for functions with multiple bodies
 ]]
 
-local event, meta
+local functor, meta
 
-event = {
+functor = {
 	handlers = {},
 
 	call = function(self, ...)
@@ -42,8 +42,8 @@ event = {
 }
 
 meta = {
-	__call = event.call,
-	__add = event.connect
+	__call = functor.call,
+	__add = functor.connect
 }
 
-return event
+return functor

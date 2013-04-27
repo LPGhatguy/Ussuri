@@ -1,6 +1,7 @@
 --[[
 Event Definitions
-Extends the generic event model by adding LÖVE-specific events to fire
+Implements LÖVE events into the standard Ussuri event stack
+Monkey-patches engine.event (which is perfectly fine)
 ]]
 
 local definitions
@@ -77,9 +78,8 @@ definitions = {
 		return self:event_trigger("display_updating", {
 			width = width,
 			height = height,
-			fullscreen = fullscreen or false,
-			vsync = (vsync == nil) and true or vsync,
-			vsync = 0
+			fullscreen = fullscreen,
+			vsync = vsync
 		})
 	end,
 
@@ -87,22 +87,23 @@ definitions = {
 		return self:event_trigger("display_updated", {
 			width = width,
 			height = height,
-			fullscreen = fullscreen or false,
-			vsync = (vsync == nil) and true or vsync,
-			vsync = 0
+			fullscreen = fullscreen,
+			vsync = vsync
 		})
 	end,
 
 	init = function(self, engine)
-		engine:event_create({"update", "draw", "quit", "focus",
+		engine:lib_get(":event.handler")
+
+		engine.event:event_create({"update", "draw", "quit", "focus",
 			"keydown", "keyup", "joydown", "joyup", "mousedown", "mouseup",
 			"display_updating", "display_updated"})
 
-		engine:inherit(self)
+		engine.event:inherit(self)
 	end,
 
 	close = function(self, engine)
-		engine:fire_quit()
+		engine.event:fire_quit()
 	end
 }
 

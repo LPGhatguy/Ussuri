@@ -40,7 +40,7 @@ utility = {
 	end,
 
 	table_equals = function(first, second)
-		if (second) then
+		if (second and type(first) == "table" and type(second) == "table") then
 			for key, value in pairs(first) do
 				local success = false
 
@@ -51,7 +51,7 @@ utility = {
 						success = (second[key] == value)
 					end
 				end
-				
+
 				if (not success) then
 					return false
 				end
@@ -76,15 +76,18 @@ utility = {
 		return value
 	end,
 
-	table_deepcopy = function(from, to, meta)
+	table_deepcopy = function(from, to, meta, original)
 		local to = to or {}
+		local original = original or from
 
 		for key, value in pairs(from) do
 			if (type(value) == "table") then
-				if (meta ~= utility.DESCENDENTS_ONLY) then
-					to[key] = utility.table_deepcopy(value, {}, meta)
-				else
-					to[key] = utility.table_deepcopy(value, {}, true)
+				if (value ~= original) then
+					if (meta ~= utility.DESCENDENTS_ONLY) then
+						to[key] = utility.table_deepcopy(value, {}, meta, original)
+					else
+						to[key] = utility.table_deepcopy(value, {}, true, original)
+					end
 				end
 			else
 				to[key] = value
@@ -112,19 +115,23 @@ utility = {
 		return to
 	end,
 
-	table_merge = function(from, to, meta, merge_children)
-		if (from) then
-			for key, value in pairs(from) do
-				if (not to[key]) then
-					if (type(value) == "table") then
-						if (merge_children) then
-							to[key] = utility.table_merge(value, {}, meta, true)
-						else
-							to[key] = utility.table_deepcopy(value, {}, meta)
-						end
-					else
+	table_merge = function(from, to, meta, merge_children, original)
+		local original = original or from
+
+		for key, value in pairs(from) do
+			if (not to[key]) then
+				if (type(value) == "table") then
+					if (value == original) then
 						to[key] = value
+					else
+						if (merge_children) then
+							to[key] = utility.table_merge(value, {}, meta, true, original)
+						else
+							to[key] = utility.table_deepcopy(value, {}, meta, false, original)
+						end
 					end
+				else
+					to[key] = value
 				end
 			end
 		end

@@ -7,15 +7,12 @@ local engine, lib
 local header
 
 header = {
-	event_priority = {
-		keydown = -503
-	},
-
 	event = {
+		keydown_priority = -503,
 		keydown = function(self, event)
 			if (love.keyboard.isDown("lctrl")) then
 				if (event.key == "tab") then
-					event.cancel = true
+					event.flags.cancel = true
 
 					if (love.keyboard.isDown("lshift")) then
 						engine.config.log_recording_enabled = true

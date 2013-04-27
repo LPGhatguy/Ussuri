@@ -19,13 +19,8 @@ monitor = {
 		time = 0
 	},
 
-	event_priority = {
-		update = -502,
-		keydown = -502,
-		draw = 951
-	},
-
 	event = {
+		draw_priority = 502,
 		draw = function(self)
 			if (self.enabled) then
 				local out = ""
@@ -49,15 +44,17 @@ monitor = {
 			end
 		end,
 
+		update_priority = -502,
 		update = function(self, event)
 			self.values.fps = love.timer.getFPS()
 			self.values.time = self.values.time + event.delta
 		end,
 
+		keydown_priority = -502,
 		keydown = function(self, event)
 			if (event.key == self.toggle_key and love.keyboard.isDown(unpack(self.toggle_modifiers))) then
 				self.enabled = not self.enabled
-				event.cancel = true
+				event.flags.cancel = true
 			end
 		end
 	},

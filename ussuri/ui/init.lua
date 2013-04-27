@@ -1,6 +1,7 @@
 --[[
 UI Utility Library
-Provides various UI utility methods and adds colored text support to core.logging
+Provides various UI utility methods
+Monkey-patches the logging module inside the engine core for colored text stripping
 ]]
 
 local lib
@@ -113,7 +114,7 @@ ui = {
 		lib = engine.lib
 		utility = lib.utility
 
-		logging_extension.event_log = utility.event:new()
+		logging_extension.event_log = lib.event.functor:new()
 		utility.table_deepcopy(logging_extension, engine, utility.DESCENDENTS_ONLY)
 	end
 }

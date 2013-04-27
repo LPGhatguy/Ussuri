@@ -3,43 +3,44 @@ local engine = require(path .. "core")
 
 function love.run()
 	engine:init()
+	local engine_event = engine.event
 
 	love.graphics.setFont(love.graphics.newFont())
 
 	love.handlers = setmetatable({
 		keypressed = function(b, u)
 			if love.keypressed then love.keypressed(b, u) end
-			engine:fire_keydown(b, u)
+			engine_event:fire_keydown(b, u)
 		end,
 
 		keyreleased = function(b)
 			if love.keyreleased then love.keyreleased(b) end
-			engine:fire_keyup(b)
+			engine_event:fire_keyup(b)
 		end,
 
 		mousepressed = function(x, y, b)
 			if love.mousepressed then love.mousepressed(x, y, b) end
-			engine:fire_mousedown(x, y, b)
+			engine_event:fire_mousedown(x, y, b)
 		end,
 
 		mousereleased = function(x, y, b)
 			if love.mousereleased then love.mousereleased(x, y, b) end
-			engine:fire_mouseup(x, y, b)
+			engine_event:fire_mouseup(x, y, b)
 		end,
 
 		joystickpressed = function(j, b)
 			if love.joystickpressed then love.joystickpressed(j, b) end
-			engine:fire_joydown(j, b)
+			engine_event:fire_joydown(j, b)
 		end,
 
 		joystickreleased = function(j, b)
 			if love.joystickreleased then love.joystickreleased(j, b) end
-			engine:fire_joyup(j, b)
+			engine_event:fire_joyup(j, b)
 		end,
 
 		focus = function(f)
 			if love.focus then love.focus(f) end
-			engine:fire_focus(f)
+			engine_event:fire_focus(f)
 		end,
 
 		quit = function()
@@ -88,12 +89,12 @@ function love.run()
 		if (love.update) then
 			love.update(dt)
 		end
-		engine:fire_update(dt)
+		engine_event:fire_update(dt)
 
 		if (graphics) then
 			graphics.clear()
 
-			engine:fire_draw()
+			engine_event:fire_draw()
 			if (love.draw) then
 				love.draw()
 			end

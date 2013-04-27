@@ -8,7 +8,6 @@ local ussuri = require("ussuri")
 function love.load()
 	local lib = ussuri.lib
 
-	ussuri:event_hook(nil, lib.debug.header)
-	ussuri:event_hook(nil, lib.debug.monitor)
-	ussuri:event_hook(nil, lib.debug.console)
+	ussuri.event:event_hook_object(nil, lib.debug.header)
+	ussuri.event:event_hook_object(nil, lib.debug.monitor)
 end

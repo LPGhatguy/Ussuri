@@ -18,11 +18,18 @@ button = {
 		self:event_mouseup(event)
 	end,
 
+	added = function(self, event)
+		local stack = event.stack
+		local parent = stack[#stack]
+
+		parent:register(self, "mousedown", "mouseup")
+	end,
+
 	new = function(self)
 		local instance = self:_new()
 
-		instance.event_mousedown = lib.utility.event:new()
-		instance.event_mouseup = lib.utility.event:new()
+		instance.event_mousedown = lib.event.functor:new()
+		instance.event_mouseup = lib.event.functor:new()
 		instance.draw = self._rectangle.draw
 
 		return instance

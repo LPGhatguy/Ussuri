@@ -4,29 +4,21 @@ local engine_core = {}
 local engine_path = debug.getinfo(1).short_src:match("([^%.]*)[\\/][^%.]*%..*$"):gsub("[\\/]", ".") .. "."
 config.engine_path = engine_path
 
-engine_core.start_date = os.date()
-
 local version_meta = {
 	__tostring = function(self)
 		return table.concat(self, ".")
 	end
 }
 
-local lib_load = function(load)
-	local name = load:match("([^%.:]*)$")
-	local loaded = require(load:gsub("^:", config.engine_path))
-
-	loaded:init(engine_core)
-
-	lib[name] = loaded
-	corelib[name] = loaded
-
-	return loaded
-end
-
 local lib_batch_load = function(batch)
 	for key, lib_name in next, batch do
-		lib_load(lib_name)
+		local name = lib_name:match("([^%.:]*)$")
+		local loaded = require(lib_name:gsub("^:", config.engine_path))
+
+		loaded:init(engine_core)
+
+		lib[name] = loaded
+		corelib[name] = loaded
 	end
 end
 
@@ -42,24 +34,21 @@ engine_core.init = function(self, glib)
 
 	lib_batch_load(config.lib_core)
 
-	for key, group in next, config.lib_folders do
-		self:lib_folder_load(group[1], group[2])
-	end
+	self:lib_load(config.lib_folders)
+	self:lib_batch_call("post_init")
 
 	return self
 end
 
 engine_core.close = function(self)
-	self.end_date = os.date()
-
 	for key, library in pairs(corelib) do
 		if (library.close) then
 			library:close(self)
 		end
-
-		lib[key] = nil
-		corelib[key] = nil
 	end
+
+	self.lib = {}
+	corelib = {}
 end
 
 engine_core.quit = function(self)

@@ -1,161 +1,124 @@
 --[[
 Library Manager
-Manages the loading and keying of libraries
+Manage libraries elegantly
 ]]
 
 local lib, engine_path
+local lib_flat = {}
 local lib_manage
 
-local lib_meta = {
-	__key = function(self, ...)
-		return self:lib_get(...)
-	end
-}
-
 lib_manage = {
-	libraries = {},
-
-	lib_nav_path = function(self, path, from)
-		local at = from
-
+	lib_nav_path = function(self, from, path, ensure)
 		for child in path:gsub(":", ""):gmatch("[^%.]+") do
-			if (not at[child]) then
+			if (from[child]) then
+				from = from[child]
+			elseif (ensure) then
+				from[child] = {}
+				from = from[child]
+			else
 				return false
-			else
-				at = at[child]
 			end
 		end
 
-		return at
+		return from
 	end,
 
-	lib_get = function(self, path, name)
-		local out = rawget(lib, name or path) or self:lib_nav_path(path, lib)
-
-		if (out) then
-			return out
+	lib_get = function(self, paths)
+		if (type(paths) == "table") then
+			for key, path in next, paths do
+				self:lib_get(path)
+			end
 		else
-			return self:lib_load(path, name)
-		end
-	end,
+			local existing_lib = self:lib_nav_path(lib, paths)
 
-	lib_batch_get = function(self, libs)
-		for key, library in next, libs do
-			if (type(library) == "table") then
-				self:lib_get(unpack(library))
+			if (existing_lib) then
+				return existing_lib
 			else
-				self:lib_get(library)
+				return self:lib_load(paths)
 			end
 		end
 	end,
 
-	lib_batch_load = function(self, libs)
-		for key, library in next, libs do
-			if (type(library) == "table") then
-				self:lib_load(unpack(library))
-			else
-				self:lib_load(library)
+	lib_load = function(self, paths)
+		if (type(paths) == "table") then
+			for key, path in next, paths do
+				self:lib_load(path)
 			end
-		end
-	end,
-
-	lib_folder_load = function(self, folder, order)
-		local loaded = {}
-		local path = folder:gsub("^:", engine_path)
-		local fixed_path = path:gsub("%.", "/")
-
-		if (love.filesystem.exists(fixed_path .. "/init.lua")) then
-			self:lib_get(folder .. ".init")
-		end
-
-		if (order) then
-			for key, library in next, order do
-				if (type(library) == "table") then
-					self:lib_get(folder .. "." .. library[1], library[2])
-				else
-					self:lib_get(folder .. "." .. library)
-				end
-
-				loaded[library] = true
-			end
-		end
-
-		for key, library in next, love.filesystem.enumerate(fixed_path) do
-			local library_name = library:match("(.-)%..-$")
-			local library_path = folder .. "." .. library_name
-			
-			if (not loaded[library_name]) then
-				self:lib_get(library_path)
-			end
-		end
-	end,
-
-	lib_load = function(self, path, name)
-		local name = name or path
-		local path = path:gsub("^:", engine_path)
-
-		local result, loaded = pcall(require, path)
-
-		if (result) then
-			if (type(loaded) == "table") then
-				table.insert(self.libraries, loaded)
-
-				if (string.match(name, "[%.]")) then
-					local name = name:gsub(":", "")
-					local lib_name = name:match("([^%.:]*)$")
-					local store_in = lib
-
-					for addition in string.gmatch(name, "([^%.]+)%.") do
-						if (not store_in[addition]) then
-							store_in[addition] = {}
-						end
-
-						store_in = store_in[addition]
-					end
-
-					if (lib_name == "init") then
-						lib.utility.table_merge(loaded, store_in)
-						loaded = store_in
-					else
-						store_in[lib_name] = loaded
-					end
-				else
-					lib[name] = loaded
-				end
-
-				if (loaded.init) then
-					loaded:init(self)
-				end
-			elseif (type(loaded) == "function") then
-				local result, err = pcall(loaded, self)
-
-				if (not result) then
-					error(err)
-				end
-			end
-
-			return lib
 		else
-			error(loaded)
+			local abs_path = paths:gsub(":", engine_path)
+			local slash_path = abs_path:gsub("%.", "/")
+
+			if (love.filesystem.isFile(slash_path .. ".lua")) then
+				self:lib_file_load(paths)
+			else
+				if (love.filesystem.isDirectory(slash_path)) then
+					self:lib_folder_load(paths)
+				end
+			end
+		end
+	end,
+
+	lib_folder_load = function(self, path)
+		local slash_path = path:gsub(":", engine_path):gsub("%.", "/")
+		local files = love.filesystem.enumerate(slash_path)
+
+		for key, file_path in next, files do
+			self:lib_get(path .. "." .. file_path:gsub("/", "%."):gsub(engine_path, ":"):match("([^%.]+)%..*$"))
+		end
+	end,
+
+	lib_file_load = function(self, path)
+		local loaded = require(path:gsub(":", engine_path))
+
+		if (type(loaded) == "table") then
+			local load_location = self:lib_nav_path(lib, path:match("([^%.]+)%..*$"), true)
+
+			lib_flat[#lib_flat + 1] = loaded
+			load_location[path:match("%.([^%.]+)$")] = loaded
+
+			if (type(loaded.init) == "function") then
+				loaded:init(self)
+			end
+		end
+	end,
+
+	lib_batch_call = function(self, name)
+		for key, library in next, lib_flat do
+			if (library[name]) then
+				library[name](library, self)
+			end
 		end
 	end,
 
 	init = function(self, engine)
-		lib = engine.lib or lib
-		engine_path = engine.config.engine_path or engine_path
+		if (engine.lib) then
+			lib = engine.lib
+		else
+			lib = {}
+			engine.lib = lib
+		end
+
+		if (engine.lib_flat) then
+			lib_flat = engine.lib_flat
+		else
+			lib_flat = {}
+			engine.lib_flat = lib_flat
+		end
+
+		engine_path = engine.config.engine_path
 
 		engine:inherit(self)
 	end,
 
 	close = function(self, engine)
-		for key, library in next, self.libraries do
-			if (library.close) then
-				library:close(engine)
+		for key, library in next, lib_flat do
+			if (lib_flat.close) then
+				lib_flat:close(engine)
 			end
 		end
 	end
 }
 
-setmetatable(lib_manage.libraries, {__mode = "v"})
+setmetatable(lib_flat, {__mode = "v"})
 
 return lib_manage

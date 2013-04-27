@@ -32,7 +32,7 @@ checkbox = {
 	init = function(self, engine)
 		lib = engine.lib
 
-		self.event_toggle = lib.utility.event:new()
+		self.event_toggle = lib.event.functor:new()
 
 		lib.oop:objectify(self)
 		self:inherit(lib.ui.rectangle, "rectangle")

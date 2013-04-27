@@ -118,7 +118,7 @@ text = {
 		local new = self:_new()
 
 		new.text = text or new.text
-		self.event_text_submit = lib.utility.event:new()
+		self.event_text_submit = lib.event.functor:new()
 
 		return new
 	end,
@@ -127,7 +127,7 @@ text = {
 		lib = engine.lib
 		input = lib.input
 
-		self.event_text_submit = lib.utility.event:new()
+		self.event_text_submit = lib.event.functor:new()
 
 		lib.oop:objectify(self)
 	end
