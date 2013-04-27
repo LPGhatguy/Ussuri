@@ -15,8 +15,8 @@ header = {
 					event.flags.cancel = true
 
 					if (love.keyboard.isDown("lshift")) then
-						engine.config.log_recording_enabled = true
-						engine:log_write(lib.utility.table_tree(engine))
+						engine.config.log.autosave = true
+						engine.log:write(lib.utility.table_tree(engine))
 					end
 
 					engine:quit()

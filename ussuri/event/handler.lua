@@ -12,7 +12,13 @@ end
 
 local event_prop_meta = {
 	__index = function(self, key)
-		--STUB!
+		local handler = function(this, ...)
+			rawget(self, "_handler"):event_trigger(key, ...)
+		end
+
+		self[key] = handler
+
+		return handler
 	end
 }
 
@@ -57,7 +63,7 @@ event_handler = {
 
 			if (object_events) then
 				for event_name, method in next, object_events do
-					if (type(method) == "function" or type(method) == "table") then --this works
+					if (type(method) == "function" or type(method) == "table") then
 						local event = self.events[event_name]
 
 						if (event) then
@@ -132,8 +138,16 @@ event_handler = {
 
 			return event_data
 		else
-			error("Attempt to call event '" .. tostring(event_name) .. "' (an undefined event)")
+			print("WARNING: Attempt to call event '" .. tostring(event_name) .. "' (an undefined event)")
 		end
+	end,
+
+	new = function(self)
+		local instance = self:_new()
+
+		instance.event._handler = instance
+
+		return instance
 	end,
 
 	event_data = {
@@ -162,6 +176,7 @@ event_handler = {
 	end
 }
 
-setmetatable(event_handler, event_prop_meta)
+event_handler.event._handler = event_handler
+setmetatable(event_handler.event, event_prop_meta)
 
 return event_handler
