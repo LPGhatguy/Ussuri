@@ -15,6 +15,7 @@ To do today and this weekend:
 	-Normalize ussuri.core.logging (DONE)
 	-Update core engine config format (DONE)
 
+	-Update engine to match LUDUM-DEV specifications from LD #26 (IN PROGRESS)
 	-Rewrite ussuri.ui to match event module (IN PROGRESS MORE OR LESS)
 
 To do sometime in the future:
