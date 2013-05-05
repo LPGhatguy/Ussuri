@@ -37,9 +37,10 @@ logging = {
 
 		local file_out = love.filesystem.newFile(config.save_directory .. "/" .. filename .. ".txt")
 
-		file_out:open("w")
-		file_out:write(table.concat(self.history, "\r\n"))
-		file_out:close()
+		if (file_out:open("w")) then
+			file_out:write(table.concat(self.history, "\r\n"))
+			file_out:close()
+		end
 	end,
 
 	init = function(self, engine)
@@ -52,7 +53,7 @@ logging = {
 		config = {
 			realtime = true,
 			history = true,
-			autosave = true,
+			autosave = false,
 			save_directory = "logs"
 		}
 
