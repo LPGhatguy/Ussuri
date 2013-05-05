@@ -63,18 +63,19 @@ lib_manage = {
 		local files = love.filesystem.enumerate(slash_path)
 
 		for key, file_path in next, files do
-			self:lib_get(path .. "." .. file_path:gsub("/", "%."):gsub(engine_path, ":"):match("([^%.]+)%..*$"))
+			self:lib_get(path .. "." .. file_path:gsub("/", "."):match("([^%.]+)%..*$"))
 		end
 	end,
 
 	lib_file_load = function(self, path)
+		print("load", path)
 		local loaded = require(path:gsub(":", engine_path))
 
 		if (type(loaded) == "table") then
-			local load_location = self:lib_nav_path(lib, path:match("([^%.]+)%..*$"), true)
+			local load_location = self:lib_nav_path(lib, path:match("([^%.]+)%..+$") or "", true)
 
 			lib_flat[#lib_flat + 1] = loaded
-			load_location[path:match("%.([^%.]+)$")] = loaded
+			load_location[path:match("%.?([^%.]+)$")] = loaded
 
 			if (type(loaded.init) == "function") then
 				loaded:init(self)
