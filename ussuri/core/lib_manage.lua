@@ -62,7 +62,7 @@ lib_manage = {
 		local slash_path = path:gsub(":", engine_path):gsub("%.", "/")
 		local files = love.filesystem.enumerate(slash_path)
 
-		for key, file_path in next, files do
+		for key, file_path in pairs(files) do
 			self:lib_get(path .. "." .. file_path:gsub("/", "."):match("([^%.]+)%..*$"))
 		end
 	end,
