@@ -28,7 +28,7 @@ event_handler = {
 
 	event_create = function(self, event_names)
 		if (type(event_names) == "table") then
-			for key, event_name in next, event_names do
+			for key, event_name in pairs(event_names) do
 				if (not self.events[event_name]) then
 					self.events[event_name] = {data = self.event_data:new()}
 				end
@@ -93,7 +93,7 @@ event_handler = {
 
 	event_sort = function(self, event_names)
 		if (type(event_names) == "table") then
-			for key, event_name in next, event_names do
+			for key, event_name in pairs(event_names) do
 				local event = self.events[event_name]
 
 				if (event) then
@@ -120,6 +120,8 @@ event_handler = {
 			local event_data = event.data
 			event_data:update(data)
 
+			event_data:add(self)
+
 			for key = 1, #event do
 				local handler = event[key]
 				local flags = event_data.flags
@@ -135,6 +137,8 @@ event_handler = {
 					break
 				end
 			end
+
+			event_data:pop()
 
 			return event_data
 		else
@@ -156,13 +160,27 @@ event_handler = {
 
 		update = function(self, data)
 			if (data) then
-				for key, value in next, data do
+				for key, value in pairs(data) do
 					self[key] = value
 				end
 			end
+		end,
 
+		reset = function(self)
 			self.stack = {}
 			self.flags = {}
+		end,
+
+		add = function(self, item)
+			self.stack[#self.stack + 1] = item
+		end,
+
+		pop = function(self)
+			self.stack[#self.stack] = nil
+		end,
+
+		parent = function(self)
+			return self.stack[#self.stack]
 		end
 	},
 
