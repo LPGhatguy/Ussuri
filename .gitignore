@@ -2,8 +2,6 @@
 *.sublime-workspace
 .build
 
-*___
-
 Thumbs.db
 Desktop.ini
 
