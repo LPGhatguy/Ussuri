@@ -68,7 +68,6 @@ lib_manage = {
 	end,
 
 	lib_file_load = function(self, path)
-		print("load", path)
 		local loaded = require(path:gsub(":", engine_path))
 
 		if (type(loaded) == "table") then
