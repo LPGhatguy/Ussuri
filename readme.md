@@ -1,8 +1,8 @@
 # Ussuri Framework for Lua and LÖVE
 
-Ussuri is designed for use with LÖVE 0.8.0 and Lua 5.1 and is tested regularly under Windows with both vanilla Lua and LuaJIT. It has been in development since November, 2012 and receives updates at least every week. Presently, I am preparing for a stable 1.0.0 release of the framework.
+Ussuri is designed for use with LÖVE 0.8.0 and Lua 5.1 and is under a volatile development cycle with features coming in and out and rewrites happening quite often. It is not entirely suited for development yet, but it has been used in two Ludum Dare entries thus far.
 
-Ussuri is named after a conglomerate of things such as a river, a bay, and several types of animal. You can use Ussuri for a lot of things to, showing a loose correlation, but I haven't thought that through too terribly much. Above all, Ussuri _sounds_ cool.
+Ussuri is named after a conglomerate of things such as a river, a bay, and several types of animal. You can use Ussuri for a lot of things too, but it's mostly intended for games.
 
 **If you are able to assist in testing for multiple platforms, email me at me@lpghatguy.com as I presently am the only one testing the framework.**
 
