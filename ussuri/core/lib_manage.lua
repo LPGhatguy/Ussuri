@@ -49,7 +49,7 @@ lib_manage = {
 			local slash_path = abs_path:gsub("%.", "/")
 
 			if (love.filesystem.isFile(slash_path .. ".lua")) then
-				self:lib_file_load(paths)
+				return self:lib_file_load(paths)
 			else
 				if (love.filesystem.isDirectory(slash_path)) then
 					self:lib_folder_load(paths)
@@ -80,6 +80,8 @@ lib_manage = {
 				loaded:init(self)
 			end
 		end
+
+		return loaded
 	end,
 
 	lib_batch_call = function(self, name)

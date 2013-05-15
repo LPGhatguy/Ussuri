@@ -8,6 +8,16 @@ local lib
 local base
 
 base = {
+	x = 0,
+	y = 0,
+	width = 0,
+	height = 0,
+	visible = true,
+
+	draw = function(self)
+		--stub abstract method
+	end,
+
 	init = function(self, engine)
 		lib = engine.lib
 
