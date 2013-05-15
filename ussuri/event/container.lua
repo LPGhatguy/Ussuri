@@ -14,4 +14,5 @@ container = {
 		self:inherit(engine:lib_get(":event.handler"))
 	end
 }
+
 return container
