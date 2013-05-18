@@ -11,7 +11,9 @@ function love.load()
 	local eventer = lib.event.handler:new()
 	eventer:event_create({"draw", "keydown"})
 
-	local rectangle = {
+	local rectangle
+
+	rectangle = {
 		event = {
 			draw = function(self, event)
 				love.graphics.rectangle("fill", 50, 50, 50, 50)
