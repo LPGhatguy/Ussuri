@@ -7,6 +7,29 @@ local lib
 local container
 
 container = {
+	children = {},
+
+	get = function(self, id)
+		return children[id]
+	end,
+
+	add = function(self, item, id)
+		id = id or (#self.children + 1)
+
+		children[id] = item
+
+		self:event_hook_object(nil, item)
+	end,
+
+	remove = function(self, id)
+		local item = self.children[id]
+
+		if (item) then
+			self:event_unhook_by_object(item)
+			self.children[id] = nil
+		end
+	end,
+
 	init = function(self, engine)
 		lib = engine.lib
 
