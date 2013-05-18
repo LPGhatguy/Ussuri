@@ -23,6 +23,7 @@ local event_prop_meta = {
 }
 
 event_handler = {
+	auto_hook = {},
 	event = {},
 	events = {},
 
@@ -59,6 +60,17 @@ event_handler = {
 				end
 			end
 		else
+			for key, event_name in pairs(self.auto_hook) do
+				local event = self.events[event_name]
+				local method = object[event_name]
+
+				if (event and method) then
+					local priority = object[event_name .. "_priority"]
+
+					event[#event + 1] = {object, method, priority or 0}
+				end
+			end
+
 			local object_events = object.event
 
 			if (object_events) then
@@ -87,6 +99,34 @@ event_handler = {
 
 			if (event) then
 				event[#event + 1] = {object or {}, method, priority or 0}
+			end
+		end
+	end,
+
+	event_unhook_by_object = function(self, event_name, object)
+		local event = self.events[event_name]
+
+		if (event) then
+			for key = 1, #event do
+				local entry = event[key]
+
+				if (entry[1] == object) then
+					table.remove(event, key)
+				end
+			end
+		end
+	end,
+
+	event_unhook_by_method = function(self, event_name, method)
+		local event = self.events[event_name]
+
+		if (event) then
+			for key = 1, #event do
+				local entry = event[key]
+
+				if (entry[2] == method) then
+					table.remove(event, key)
+				end
 			end
 		end
 	end,
