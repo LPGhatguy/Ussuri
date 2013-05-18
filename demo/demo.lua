@@ -18,6 +18,7 @@ function love.load()
 			draw = function(self, event)
 				love.graphics.rectangle("fill", 50, 50, 50, 50)
 			end,
+
 			keydown = function(self, event)
 				print("You just pressed '" .. event.key .. "'!")
 			end
