@@ -15,6 +15,7 @@ base = {
 	visible = true,
 
 	draw = function(self)
+		print("stub draw")
 		--stub abstract method
 	end,
 
