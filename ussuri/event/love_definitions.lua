@@ -67,11 +67,11 @@ definitions = {
 	end,
 
 	fire_draw = function(self)
-		return self:event_trigger("draw")
+		return self:event_trigger("draw", {})
 	end,
 
 	fire_quit = function(self)
-		return self:event_trigger("quit")
+		return self:event_trigger("quit", {})
 	end,
 
 	fire_display_updating = function(self, width, height, fullscreen, vsync, fsaa)
