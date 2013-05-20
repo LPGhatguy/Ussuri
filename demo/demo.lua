@@ -1,6 +1,6 @@
 --[[
-Ussuri 1.2.0 Demo!
-A demo with the new event model!
+Ussuri 1.2.2 Demo!
+Featuring UI elements!
 ]]
 
 local ussuri = require("ussuri")
@@ -8,26 +8,15 @@ local ussuri = require("ussuri")
 function love.load()
 	local lib = ussuri.lib
 
-	local eventer = lib.event.handler:new()
-	eventer:event_create({"draw", "keydown"})
+	local container = lib.event.container:new()
 
-	local rectangle
+	local ui_item = lib.ui.base:new()
 
-	rectangle = {
-		event = {
-			draw = function(self, event)
-				love.graphics.rectangle("fill", 50, 50, 50, 50)
-			end,
+	container:event_create("draw")
+	--container:add(ui_item)
 
-			keydown = function(self, event)
-				print("You just pressed '" .. event.key .. "'!")
-			end
-		}
-	}
+	ussuri.event:event_hook_object("draw", container)
 
-	eventer:event_hook_object(nil, rectangle)
-
-	ussuri.event:event_hook_object({"draw", "keydown"}, eventer)
 	ussuri.event:event_hook_object(nil, lib.debug.header)
 	ussuri.event:event_hook_object(nil, lib.debug.monitor)
 end
