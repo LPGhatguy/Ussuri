@@ -13,7 +13,7 @@ function love.load()
 	local ui_item = lib.ui.base:new()
 
 	container:event_create("draw")
-	--container:add(ui_item)
+	container:add(ui_item)
 
 	ussuri.event:event_hook_object("draw", container)
 
