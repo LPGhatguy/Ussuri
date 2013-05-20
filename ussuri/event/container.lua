@@ -16,7 +16,7 @@ container = {
 	add = function(self, item, id)
 		id = id or (#self.children + 1)
 
-		children[id] = item
+		self.children[id] = item
 
 		self:event_hook_object(nil, item)
 	end,
