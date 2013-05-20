@@ -34,6 +34,10 @@ container = {
 		lib = engine.lib
 
 		lib.oop:objectify(self)
+
+		--ugly hack: we need event.handler's constructor, which won't overwrite the default constructor...
+		self.new = nil
+
 		self:inherit(engine:lib_get(":event.handler"))
 	end
 }
