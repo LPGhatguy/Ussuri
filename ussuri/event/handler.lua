@@ -5,22 +5,11 @@ Creates and passes events to objects that have registred.
 
 local lib
 local event_handler
+local event_prop_meta
 
 local handler_compare = function(first, second)
 	return first[3] < second[3]
 end
-
-local event_prop_meta = {
-	__index = function(self, key)
-		local handler = function(this, ...)
-			rawget(self, "_handler"):event_trigger(key, ...)
-		end
-
-		self[key] = handler
-
-		return handler
-	end
-}
 
 event_handler = {
 	auto_hook = {},
@@ -32,12 +21,28 @@ event_handler = {
 			for key, event_name in pairs(event_names) do
 				if (not self.events[event_name]) then
 					self.events[event_name] = {data = self.event_data:new()}
+					self:event_handler_make(event_name)
 				end
 			end
 		else
 			if (not self.events[event_names]) then
 				self.events[event_names] = {data = self.event_data:new()}
+				self:event_handler_make(event_names)
 			end
+		end
+	end,
+
+	event_handler_make = function(self, event_name)
+		if (rawget(self.events, event_name)) then
+			return rawget(self.events, event_name)
+		else
+			local handler = function(this, ...)
+				self:event_trigger(event_name, ...)
+			end
+
+			self.events[event_name] = handler
+
+			return handler
 		end
 	end,
 
@@ -60,7 +65,7 @@ event_handler = {
 				end
 			end
 		else
-			for key, event_name in pairs(self.auto_hook) do
+			for event_name, hooked in pairs(self.auto_hook) do
 				local event = self.events[event_name]
 				local method = object[event_name]
 
@@ -231,6 +236,18 @@ event_handler = {
 		lib.oop:objectify(self.event_data)
 
 		engine.event = self:new()
+	end
+}
+
+event_prop_meta = {
+	__index = function(self, key)
+		local handler = function(this, ...)
+			rawget(self, "_handler"):event_trigger(key, ...)
+		end
+
+		self[key] = handler
+
+		return handler
 	end
 }
 
