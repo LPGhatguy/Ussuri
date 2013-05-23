@@ -100,12 +100,12 @@ function love.run()
 			end
 		end
 
-		if (timer) then
-			timer.sleep(0.001)
-		end
-
 		if (graphics) then
 			graphics.present()
+		end
+
+		if (timer) then
+			timer.sleep(0.001)
 		end
 	end
 end
