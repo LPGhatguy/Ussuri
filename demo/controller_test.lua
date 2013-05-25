@@ -10,7 +10,7 @@ function love.load()
 	local lib = ussuri.lib
 
 	love.graphics.setFont(love.graphics.newFont())
-	local mappings = {"A", "B", "X", "Y", "LB", "RB", "Back", "Start"}
+	local mappings = {"A", "B", "X", "Y", "LB", "RB", "Back", "Start", "Left Hat", "Right"}
 
 	local drawer = {
 		event = {
@@ -27,12 +27,12 @@ function love.load()
 				love.graphics.circle("fill",
 					200 + math.floor(love.joystick.getAxis(1, 1) * 90),
 					200 + math.floor(love.joystick.getAxis(1, 2) * 90),
-					10)
+					10, 30)
 
 				love.graphics.circle("fill",
 					450 + math.floor(love.joystick.getAxis(1, 5) * 90),
 					200 + math.floor(love.joystick.getAxis(1, 4) * 90),
-					10)
+					10, 30)
 
 
 				love.graphics.setColor(255, 255, 255)
@@ -86,9 +86,8 @@ function love.load()
 		}
 	}
 
-	ussuri:event_hook(nil, drawer)
+	ussuri.event:event_hook_object(nil, drawer)
 
-	ussuri:event_hook(nil, lib.debug.header)
-	ussuri:event_hook(nil, lib.debug.monitor)
-	ussuri:event_hook(nil, lib.debug.console)
+	ussuri.event:event_hook_object(nil, lib.debug.header)
+	ussuri.event:event_hook_object(nil, lib.debug.monitor)
 end
