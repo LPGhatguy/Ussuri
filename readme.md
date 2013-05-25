@@ -4,7 +4,7 @@ Ussuri is designed for use with LÖVE 0.8.0 and Lua 5.1 and is under a volatile 
 
 Ussuri is named after a conglomerate of things such as a river, a bay, and several types of animal. You can use Ussuri for a lot of things too, but it's mostly intended for games.
 
-For the latest features, check out the **dev** branch, but for stable development, look for a **release-x.x.x** branch or the **stable** branch.
+For the latest features, check out the **dev** branch. For more stable development, look for a **release-x.x.x** branch or the **stable** branch. I'll try to keep those branches working, but there are no guarantees for the dev branch.
 
 **If you are able to assist in testing for multiple platforms, email me at me@lpghatguy.com as I presently am the only one testing the framework and doing so under Windows 8.**
 
