@@ -105,7 +105,7 @@ function love.run()
 		end
 
 		if (timer) then
-			timer.sleep(0.001)
+			timer.sleep(0.01)
 		end
 	end
 end
