@@ -14,6 +14,17 @@ base = {
 	height = 0,
 	visible = true,
 
+	_new = function(self, x, y, w, h)
+		local instance = self:copy()
+
+		instance.x = x or 0
+		instance.y = y or 0
+		instance.width = w or 0
+		instance.height = h or 0
+
+		return instance
+	end,
+
 	draw = function(self)
 		--stub abstract method
 	end,
