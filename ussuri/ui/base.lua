@@ -26,7 +26,7 @@ base = {
 	end,
 
 	draw = function(self)
-		--stub abstract method
+		--abstract method
 	end,
 
 	init = function(self, engine)
