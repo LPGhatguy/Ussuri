@@ -18,7 +18,7 @@ oop = {
 
 				return from
 			else
-				print("Cannot inherit from nil! (id: " .. tostring(base) .. ")")
+				print("Cannot inherit from nil!")
 			end
 		end,
 		new = function(self, ...)
