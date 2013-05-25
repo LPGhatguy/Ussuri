@@ -10,6 +10,19 @@ local ui_container
 ui_container = {
 	auto_hook = {["draw"] = true},
 
+	event = {
+		draw = function(self, event)
+			--todo: element clipping
+
+			love.graphics.push()
+			love.graphics.translate(self.x, self.y)
+
+			self:event_fire("draw", event)
+
+			love.graphics.pop()
+		end
+	},
+
 	_new = function(self)
 		local instance = container._new(self)
 
@@ -18,12 +31,6 @@ ui_container = {
 		end
 
 		return instance
-	end,
-
-	draw = function(self, event)
-		--todo: translate children
-		--todo: element clipping
-		self:event_fire("draw", event)
 	end,
 
 	init = function(self, engine)
