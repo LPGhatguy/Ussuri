@@ -114,8 +114,8 @@ text = {
 		end
 	end,
 
-	new = function(self, text)
-		local new = self:_new()
+	_new = function(self, text)
+		local new = self:copy()
 
 		new.text = text or new.text
 		self.event_text_submit = lib.event.functor:new()
