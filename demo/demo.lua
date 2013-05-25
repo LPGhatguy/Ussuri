@@ -8,9 +8,9 @@ local ussuri = require("ussuri")
 function love.load()
 	local lib = ussuri.lib
 
-	local container = lib.ui.ui_container:new()
+	container = lib.ui.ui_container:new()
 
-	local ui_item = lib.ui.base:new()
+	ui_item = lib.ui.rectangle:new(50, 50, 50, 50)
 
 	container:add(ui_item)
 
