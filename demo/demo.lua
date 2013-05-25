@@ -11,8 +11,12 @@ function love.load()
 	local container = lib.event.container:new()
 
 	local ui_item = lib.ui.base:new()
+	ui_item.draw = function(self)
+		love.graphics.rectangle("fill", 50, 50, 50, 50)
+	end
 
 	container:event_create("draw")
+	container.auto_hook.draw = true
 	container:add(ui_item)
 
 	ussuri.event:event_hook_object("draw", container)
