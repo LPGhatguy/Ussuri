@@ -37,7 +37,7 @@ event_handler = {
 			return rawget(self.events, event_name)
 		else
 			local handler = function(this, ...)
-				self:event_trigger(event_name, ...)
+				self:event_fire(event_name, ...)
 			end
 
 			self.events[event_name] = handler
@@ -158,7 +158,7 @@ event_handler = {
 		end
 	end,
 
-	event_trigger = function(self, event_name, data)
+	event_fire = function(self, event_name, data)
 		local event = self.events[event_name]
 
 		if (event) then
@@ -191,8 +191,8 @@ event_handler = {
 		end
 	end,
 
-	new = function(self)
-		local instance = self:_new()
+	_new = function(self)
+		local instance = self:copy()
 
 		instance.event._handler = instance
 
@@ -242,7 +242,7 @@ event_handler = {
 event_prop_meta = {
 	__index = function(self, key)
 		local handler = function(this, ...)
-			rawget(self, "_handler"):event_trigger(key, ...)
+			rawget(self, "_handler"):event_fire(key, ...)
 		end
 
 		self[key] = handler
