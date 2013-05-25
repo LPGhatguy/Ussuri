@@ -11,7 +11,7 @@ ui_container = {
 	auto_hook = {["draw"] = true},
 
 	_new = function(self)
-		local instance = container:new()
+		local instance = container._new(self)
 
 		for key, flag in pairs(self.auto_hook) do
 			instance:event_create(key)
@@ -21,6 +21,8 @@ ui_container = {
 	end,
 
 	draw = function(self, event)
+		--todo: translate children
+		--todo: element clipping
 		self:event_fire("draw", event)
 	end,
 
