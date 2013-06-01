@@ -22,11 +22,7 @@ rectangle = {
 		love.graphics.setColor(self.border_color)
 		love.graphics.setLineWidth(border)
 
-		if (border % 2 == 0) then
-			love.graphics.rectangle("line", self.x - half_border, self.y - half_border, self.width + border, self.height + border)
-		else
-			love.graphics.rectangle("line", self.x - half_border, self.y - half_border, self.width + border, self.height + border)
-		end
+		love.graphics.rectangle("line", self.x - half_border, self.y - half_border, self.width + border, self.height + border)
 	end,
 
 	init = function(self, engine)
