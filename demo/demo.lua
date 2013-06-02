@@ -8,7 +8,7 @@ local ussuri = require("ussuri")
 function love.load()
 	local lib = ussuri.lib
 
-	container = lib.ui.ui_container:new()
+	container = lib.ui.ui_container:new(0, 0, 1024, 768)
 
 	ui_item = lib.ui.rectangle:new(50, 50, 50, 50)
 
