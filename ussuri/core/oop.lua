@@ -14,13 +14,14 @@ oop = {
 	object = {
 		inherit = function(self, from)
 			if (from) then
-				table_merge(from, self, true)
+				table_merge(from, self, true, true)
 
 				return from
 			else
 				print("Cannot inherit from nil!")
 			end
 		end,
+
 		new = function(self, ...)
 			if (self._new) then
 				return self:_new(self:copy(), ...)
@@ -28,6 +29,7 @@ oop = {
 				return self:copy()
 			end
 		end,
+
 		copy = function(self)
 			return table_deepcopy(self, {}, true)
 		end
