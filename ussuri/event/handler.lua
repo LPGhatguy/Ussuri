@@ -164,7 +164,6 @@ event_handler = {
 		if (event) then
 			local event_data = event.data
 			event_data:update(data)
-
 			event_data:add(self)
 
 			for key = 1, #event do
