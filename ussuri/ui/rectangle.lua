@@ -30,7 +30,7 @@ rectangle = {
 
 		lib.oop:objectify(self)
 
-		self:inherit(engine:lib_get("ui.base"))
+		self:inherit(engine:lib_get(":ui.base"))
 	end
 }
 
