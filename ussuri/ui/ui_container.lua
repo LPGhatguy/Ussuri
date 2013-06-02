@@ -5,6 +5,7 @@ Holds UI objects and passes calls to them
 
 local lib
 local container
+local ui_base
 local ui_container
 
 ui_container = {
@@ -23,14 +24,11 @@ ui_container = {
 		end
 	},
 
-	_new = function(self)
-		local instance = container._new(self)
+	_new = function(base, new, x, y, w, h)
+		container._new(base, new)
+		ui_base._new(base, new, x, y, w, h)
 
-		for key, flag in pairs(self.auto_hook) do
-			instance:event_create(key)
-		end
-
-		return instance
+		return new
 	end,
 
 	init = function(self, engine)
@@ -38,7 +36,7 @@ ui_container = {
 
 		lib.oop:objectify(self)
 
-		self:inherit(engine:lib_get("ui.base"))
+		ui_base = self:inherit(engine:lib_get("ui.base"))
 		container = self:inherit(engine:lib_get("event.container"))
 	end
 }
