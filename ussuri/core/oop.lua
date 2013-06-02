@@ -23,7 +23,7 @@ oop = {
 		end,
 		new = function(self, ...)
 			if (self._new) then
-				return self:_new(...)
+				return self:_new(self:copy(), ...)
 			else
 				return self:copy()
 			end

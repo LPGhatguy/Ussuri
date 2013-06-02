@@ -1,7 +1,6 @@
 --[[
 UI Base
 The root of UI items
-Part of the new UI rewrite to follow the new event scheme
 ]]
 
 local lib
@@ -14,15 +13,13 @@ base = {
 	height = 0,
 	visible = true,
 
-	_new = function(self, x, y, w, h)
-		local instance = self:copy()
+	_new = function(base, new, x, y, w, h)
+		new.x = x or 0
+		new.y = y or 0
+		new.width = w or 0
+		new.height = h or 0
 
-		instance.x = x or 0
-		instance.y = y or 0
-		instance.width = w or 0
-		instance.height = h or 0
-
-		return instance
+		return new
 	end,
 
 	draw = function(self)

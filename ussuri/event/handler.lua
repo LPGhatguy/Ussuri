@@ -191,12 +191,10 @@ event_handler = {
 		end
 	end,
 
-	_new = function(self)
-		local instance = self:copy()
+	_new = function(base, new)
+		new.event._handler = new
 
-		instance.event._handler = instance
-
-		return instance
+		return new
 	end,
 
 	event_data = {
