@@ -8,23 +8,23 @@ local utility
 utility = {
 	DESCENDENTS_ONLY = {},
 
-	string_split = function(source, splitter)
+	string_split = function(from, splitter)
 		local last = 1
 		local current
 		local out = {}
 
 		while (true) do
-			current = source:find(splitter, last, true)
+			current = from:find(splitter, last, true)
 
 			if (not current) then
 				break
 			end
 
-			table.insert(out, source:sub(last, current - 1))
+			table.insert(out, from:sub(last, current - 1))
 			last = current + splitter:len()
 		end
 
-		table.insert(out, source:sub(last))
+		table.insert(out, from:sub(last))
 
 		return out
 	end,
@@ -167,18 +167,18 @@ utility = {
 		return out:sub(1, -2)
 	end,
 
-	table_size = function(the_table, recursive)
+	table_size = function(from, recursive)
 		local size = 0
 
 		if (recursive) then
-			for key, value in next, the_table do
+			for key, value in next, from do
 				size = size + 1
 				if (type(value) == "table") then
 					size = size + utility.table_size(value, true)
 				end
 			end
 		else
-			for key, value in next, the_table do
+			for key, value in next, from do
 				size = size + 1
 			end
 		end
