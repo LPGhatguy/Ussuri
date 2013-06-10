@@ -36,14 +36,6 @@ container = {
 		end
 	end,
 
-	_new = function(base, new)
-		for key, flag in pairs(new.auto_hook) do
-			new:event_create(key)
-		end
-
-		return new
-	end,
-
 	init = function(self, engine)
 		lib = engine.lib
 
