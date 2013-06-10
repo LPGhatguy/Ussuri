@@ -61,13 +61,13 @@ ui_container = {
 		return event_data
 	end,
 
-	mousedown = function(self, event)
-		self:event_fire("mousedown", event)
+	positional_event = function(self, event_name, event)
+		self:event_fire(event_name, event)
 
 		local lx = event.lx and (event.lx - self.x) or (event.x - self.x)
 		local ly = event.ly and (event.ly - self.ly) or (event.y - self.y)
 
-		local handlers = self.events["mousedown_out"]
+		local handlers = self.events[event_name .. "_out"]
 		local event_data = handlers.data
 		event_data:update(event)
 		event_data:add(self)
@@ -79,7 +79,8 @@ ui_container = {
 			local handler = handlers[key]
 			local object = handler[1]
 
-			if (lx < object.x or ly < object.y or lx > object.x + object.width or ly > object.y + object.height) then
+			if (lx < object.x or ly < object.y or
+				lx > (object.x + object.width) or ly > (object.y + object.height)) then
 				handler[2](handler[1], event_data)
 			end
 
@@ -94,7 +95,7 @@ ui_container = {
 		end
 
 		if (not self.clip_children) then
-			local handlers = self.events["mousedown_in"]
+			local handlers = self.events[event_name .. "_in"]
 			local event_data = handlers.data
 			event_data:update(event)
 			event_data:add(self)
@@ -106,7 +107,9 @@ ui_container = {
 				local handler = handlers[key]
 				local object = handler[1]
 
-				if (lx > object.x and ly > object.y and lx < object.x + object.width and ly < object.y + object.height) then
+				if (lx > object.x and ly > object.y and
+					lx < (object.x + object.width) and ly < (object.y + object.height)) then
+
 					handler[2](handler[1], event_data)
 				end
 
@@ -122,9 +125,9 @@ ui_container = {
 		end
 	end,
 
-	mousedown_in = function(self, event)
+	positional_event_in = function(self, event_name, event)
 		if (self.clip_children) then
-			local handlers = self.events["mousedown_in"]
+			local handlers = self.events[event_name .. "_in"]
 			local event_data = handlers.data
 			event_data:update(event)
 			event_data:add(self)
@@ -140,7 +143,9 @@ ui_container = {
 				local handler = handlers[key]
 				local object = handler[1]
 
-				if (lx > object.x and ly > object.y and lx < object.x + object.width and ly < object.y + object.height) then
+				if (lx > object.x and ly > object.y and
+					lx < (object.x + object.width) and ly < (object.y + object.height)) then
+
 					handler[2](handler[1], event_data)
 				end
 
@@ -158,10 +163,20 @@ ui_container = {
 		end
 	end,
 
+	mousedown = function(self, event)
+		self:positional_event("mousedown", event)
+	end,
+
+	mousedown_in = function(self, event)
+		self:positional_event_in("mousedown", event)
+	end,
+
 	mouseup = function(self, event)
+		self:positional_event("mouseup", event)
 	end,
 
 	mouseup_in = function(self, event)
+		self:positional_event_in("mouseup", event)
 	end,
 
 	_new = function(base, new, x, y, w, h)
