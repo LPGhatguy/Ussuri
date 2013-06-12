@@ -9,7 +9,7 @@ local ui_base
 local ui_container
 
 ui_container = {
-	clip_children = true,
+	clip_children = false,
 
 	auto_hook = {
 		["draw"] = true,
