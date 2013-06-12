@@ -1,8 +1,19 @@
 # CRITICAL #
+-Create unit tests
 -Optimize utility methods
 -Prettier utility::table_tree
--Update unit tests for utility module
 -Expression bound variables
+
+# FEATURES #
+-Revise input.text
+-ui.text_box
+-ui.text_button
+-ui.image_button
+-ui.content_button
+--ui.checkbox
+--ui.dropdown
+-ui.draggable
+--ui.slider
 
 # IMPROVEMENTS #
 -event.handler::event_sort should be called automatically
