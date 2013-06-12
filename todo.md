@@ -1,29 +1,13 @@
-Changes to note:
-	-lib_manage no longer loads init.lua automatically; libraries the depend on their corresponding init.lua should lib_get() it manually
+# CRITICAL #
+-Optimize utility methods
+-Prettier utility::table_tree
+-Update unit tests for utility module
+-Expression bound variables
 
-To do today and this weekend:
+# IMPROVEMENTS #
+-event.handler::event_sort should be called automatically
 
-	DONE ON 2013/4/18:
-	-Make stub library on load_lib (DONE)
-	-Rewrite ussuri.event module (DONE)
-	-Scrap debug.console, rewrite later (DONE)
-	-Update basic ussuri.debug components (DONE)
-
-	DONE ON 2013/4/20:
-	-Establish core event priority number space like Dewey (DONE)
-	-Rename ussuri.utility to demerge with ussuri.core.utility (DONE)
-	-Normalize ussuri.core.logging (DONE)
-	-Update core engine config format (DONE)
-
-	DONE ON 2013/5/5:
-	-Update engine to match LUDUM-DEV specifications from LD #26 (DONE)
-
-	-Rewrite ussuri.ui to match event module (IN PROGRESS)
-
-To do sometime in the future:
-
-	-Resource manager
-	-Rewrite sound engine
-	-Update unit tests for ussuri.core.utility
-	-Expression bound variables
-	-Expanded input module for easier bindings
+# STRETCH #
+-Resource manager
+-Rewrite sound engine
+-Expanded input module for easier bindings
