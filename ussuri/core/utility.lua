@@ -6,7 +6,7 @@ Contains methods used by much of the engine
 local utility
 
 utility = {
-	DESCENDENTS_ONLY = {},
+	DESCENDENTS_ONLY = 1,
 
 	string_split = function(from, splitter)
 		local last = 1
@@ -31,7 +31,7 @@ utility = {
 
 	table_contains = function(from, search)
 		for key, value in next, from do
-			if (value == search) then
+			if (rawequal(value, search)) then
 				return true
 			end
 		end
@@ -65,28 +65,38 @@ utility = {
 
 	table_pop = function(from, key)
 		local key = key or 1
-		local value = from[key]
+		local value = rawget(from, key)
 
 		if (type(key) == "number") then
 			table.remove(from, key)
 		else
-			from[key] = nil
+			rawset(from, key, nil)
 		end
 
 		return value
 	end,
 
-	table_deepcopy = function(from, to, meta, original)
+	table_deepcopy = function(from, to, meta, passed)
 		local to = to or {}
-		local original = original or from
+		local passed = passed or {[from] = to, [to] = to}
+		local child_meta = (meta == utility.DESCENDENTS_ONLY) and true or meta
 
 		for key, value in pairs(from) do
 			if (type(value) == "table") then
-				if (value ~= original) then
-					if (meta ~= utility.DESCENDENTS_ONLY) then
-						to[key] = utility.table_deepcopy(value, {}, meta, original)
+				if (next(value) == nil) then
+					to[key] = {}
+				elseif (rawget(value, "__")) then
+					to[key] = value
+				else
+					if (rawget(passed, value) ~= nil) then
+						rawset(to, key, rawget(passed, value))
 					else
-						to[key] = utility.table_deepcopy(value, {}, true, original)
+						local target = {}
+						rawset(passed, value, target)
+
+						utility.table_deepcopy(value, target, child_meta, passed)
+
+						rawset(to, key, target)
 					end
 				end
 			else
@@ -94,7 +104,25 @@ utility = {
 			end
 		end
 
-		if (meta and meta ~= utility.DESCENDENTS_ONLY) then
+		if (meta == true) then
+			setmetatable(to, getmetatable(from))
+		end
+
+		return to
+	end,
+
+	table_deepcopy_fast = function(from, to)
+		local to = to or {}
+
+		for key, value in pairs(from) do
+			if (type(value) == "table") then
+				rawset(to, key, utility.table_deepcopy_fast(value))
+			else
+				rawset(to, key, value)
+			end
+		end
+
+		if (meta == true) then
 			setmetatable(to, getmetatable(from))
 		end
 
@@ -105,40 +133,65 @@ utility = {
 		local to = to or {}
 
 		for key, value in pairs(from) do
-			to[key] = value
+			rawset(to, key, value)
 		end
 
-		if (meta) then
+		if (meta == true) then
 			setmetatable(to, getmetatable(from))
 		end
 
 		return to
 	end,
 
-	table_merge = function(from, to, meta, merge_children, original)
-		local original = original or from
+	table_deepmerge = function(from, to, meta, merge_children, passed)
+		local passed = passed or {[from] = to, [to] = to}
+		local child_meta = (meta == utility.DESCENDENTS_ONLY) and true or meta
 
 		for key, value in pairs(from) do
-			if (not to[key]) then
-				if (type(value) == "table") then
-					if (value == original) then
-						to[key] = value
+			if (rawget(to, key) ~= nil) then
+				local target = rawget(to, key)
+
+				if (type(value) == "table" and type(target) == "table") then
+					if (merge_children) then
+						utility.table_deepmerge(value, target, child_meta, passed)
 					else
-						if (merge_children) then
-							to[key] = utility.table_merge(value, {}, meta, true, original)
-						else
-							to[key] = utility.table_deepcopy(value, {}, meta, false, original)
-						end
+						utility.table_deepcopy(value, target, child_meta, passed)
 					end
+				end
+			else
+				if (type(value) == "table") then
+					local target = {}
+					rawset(to, key, target)
+
+					utility.table_deepcopy(value, target, child_meta, passed)
 				else
-					to[key] = value
+					rawset(to, key, value)
 				end
 			end
+		end
+
+		if (meta == true) then
+			setmetatable(to, getmetatable(from))
 		end
 
 		return to
 	end,
 
+	table_merge = function(from, to, meta)
+		for key, value in pairs(from) do
+			if (rawget(to, key) == nil) then
+				rawset(to, key, value)
+			end
+		end
+
+		if (meta == true) then
+			setmetatable(to, getmetatable(from))
+		end
+
+		return to
+	end,
+
+	--todo: make this less god-awful
 	table_tree = function(location, level, max_depth)
 		local out = ""
 		local level = level or 0
