@@ -6,7 +6,7 @@ config.engine_path = engine_path
 
 local version_meta = {
 	__tostring = function(self)
-		return table.concat(self, ".")
+		return ("%s.%s.%s %q"):format(unpack(self))
 	end
 }
 
