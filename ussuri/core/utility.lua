@@ -6,7 +6,7 @@ Contains methods used by much of the engine
 local utility
 
 utility = {
-	DESCENDENTS_ONLY = 1,
+	DESCENDANTS_ONLY = 1,
 
 	string_split = function(from, splitter)
 		local last = 1
@@ -79,7 +79,7 @@ utility = {
 	table_deepcopy = function(from, to, meta, passed)
 		local to = to or {}
 		local passed = passed or {[from] = to, [to] = to}
-		local child_meta = (meta == utility.DESCENDENTS_ONLY) and true or meta
+		local child_meta = (meta == utility.DESCENDANTS_ONLY) and true or meta
 
 		for key, value in pairs(from) do
 			if (type(value) == "table") then
@@ -145,7 +145,7 @@ utility = {
 
 	table_deepmerge = function(from, to, meta, merge_children, passed)
 		local passed = passed or {[from] = to, [to] = to}
-		local child_meta = (meta == utility.DESCENDENTS_ONLY) and true or meta
+		local child_meta = (meta == utility.DESCENDANTS_ONLY) and true or meta
 
 		for key, value in pairs(from) do
 			if (rawget(to, key) ~= nil) then
