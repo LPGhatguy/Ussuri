@@ -3,18 +3,18 @@ Object Orientation
 Enables instantation and inheritance of objects
 ]]
 
-local lib, table_deepcopy, table_merge
+local lib, table_deepcopy, table_deepmerge
 local oop
 
 oop = {
 	objectify = function(self, to)
-		table_merge(self.object, to)
+		table_deepmerge(self.object, to)
 	end,
 
 	object = {
 		inherit = function(self, from)
 			if (from) then
-				table_merge(from, self, true, true)
+				table_deepmerge(from, self, true, true)
 
 				return from
 			else
@@ -38,7 +38,7 @@ oop = {
 	init = function(self, engine)
 		lib = engine.lib
 		table_deepcopy = lib.utility.table_deepcopy
-		table_merge = lib.utility.table_merge
+		table_deepmerge = lib.utility.table_deepmerge
 
 		self:objectify(engine)
 	end
