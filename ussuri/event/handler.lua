@@ -207,6 +207,14 @@ event_handler = {
 		flags = {},
 
 		update = function(self, data)
+			for key, value in pairs(self) do
+				if (type(value) == "table") then
+					self[key] = {}
+				elseif (type(value) ~= "function") then
+					self[key] = nil
+				end
+			end
+
 			if (data) then
 				for key, value in pairs(data) do
 					if (type(value) == "table") then
@@ -246,13 +254,19 @@ event_handler = {
 
 event_prop_meta = {
 	__index = function(self, key)
-		local handler = function(this, ...)
-			rawget(self, "_handler"):event_fire(key, ...)
+		local parent = rawget(self, "_handler")
+
+		if (parent.events[key]) then
+			local handler = function(this, ...)
+				parent:event_fire(key, ...)
+			end
+
+			self[key] = handler
+
+			return handler
+		else
+			return nil
 		end
-
-		self[key] = handler
-
-		return handler
 	end
 }
 
