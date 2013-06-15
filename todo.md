@@ -1,4 +1,5 @@
-# CRITICAL #
+# UP-FRONT #
+-Clean up ussuri/init.lua
 -Create unit tests
 -Optimize utility methods
 -Prettier utility::table_tree
