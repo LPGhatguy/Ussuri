@@ -1,7 +1,7 @@
 --[[
 Event Definitions
 Implements LÖVE events into the standard Ussuri event stack
-Monkey-patches engine.event (which is perfectly fine)
+Monkey-patches engine.event
 ]]
 
 local definitions
@@ -95,11 +95,74 @@ definitions = {
 	init = function(self, engine)
 		engine:lib_get(":event.handler")
 
-		engine.event:event_create({"update", "draw", "quit", "focus",
+		local engine_event = engine.event
+
+		engine_event:event_create({"update", "draw", "quit", "focus",
 			"keydown", "keyup", "joydown", "joyup", "mousedown", "mouseup",
 			"display_updating", "display_updated"})
 
-		engine.event:inherit(self)
+		engine_event:inherit(self)
+
+		love.handlers = setmetatable({
+			keypressed = function(b, u)
+				if love.keypressed then
+					love.keypressed(b, u)
+				end
+				engine_event:fire_keydown(b, u)
+			end,
+
+			keyreleased = function(b)
+				if love.keyreleased then
+					love.keyreleased(b)
+				end
+				engine_event:fire_keyup(b)
+			end,
+
+			mousepressed = function(x, y, b)
+				if love.mousepressed then
+					love.mousepressed(x, y, b)
+				end
+				engine_event:fire_mousedown(x, y, b)
+			end,
+
+			mousereleased = function(x, y, b)
+				if love.mousereleased then
+					love.mousereleased(x, y, b)
+				end
+				engine_event:fire_mouseup(x, y, b)
+			end,
+
+			joystickpressed = function(j, b)
+				if love.joystickpressed then
+					love.joystickpressed(j, b)
+				end
+				engine_event:fire_joydown(j, b)
+			end,
+
+			joystickreleased = function(j, b)
+				if love.joystickreleased then
+					love.joystickreleased(j, b)
+				end
+				engine_event:fire_joyup(j, b)
+			end,
+
+			focus = function(f)
+				if love.focus then
+					love.focus(f)
+				end
+				engine_event:fire_focus(f)
+			end,
+
+			quit = function()
+				return
+			end
+			},
+			{
+			__index = function(self, name)
+				error("Unknown event: " .. name)
+			end
+			}
+		)
 	end,
 
 	close = function(self, engine)
