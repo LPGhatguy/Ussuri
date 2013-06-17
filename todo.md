@@ -1,11 +1,12 @@
 # UP-FRONT #
--Clean up ussuri/init.lua
--Create unit tests
--Optimize utility methods
 -Prettier utility::table_tree
--Expression bound variables
+
+# IMPROVEMENTS #
+-event.handler::event_sort should be called automatically
 
 # FEATURES #
+-Create unit tests
+-Expression bound variables
 -Revise input.text
 -ui.text_box
 -ui.text_button
@@ -16,10 +17,7 @@
 -ui.draggable
 --ui.slider
 
-# IMPROVEMENTS #
--event.handler::event_sort should be called automatically
-
-# STRETCH #
+# FUTURE #
 -Resource manager
 -Rewrite sound engine
 -Expanded input module for easier bindings
