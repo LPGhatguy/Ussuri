@@ -33,15 +33,13 @@ functor = {
 	end,
 
 	init = function(self, engine)
-		setmetatable(self, meta)
-
 		engine.lib.oop:objectify(self)
 	end
 }
 
-meta = {
+setmetatable(functor, {
 	__call = functor.call,
 	__add = functor.connect
-}
+})
 
 return functor
