@@ -1,59 +1,72 @@
-local lib, config, corelib = {}, {}, {}
-local engine_core = {}
+--[[
+Ussuri Core
+Provides the underlying functionality of Ussuri!
+]]
 
-local engine_path = debug.getinfo(1).short_src:match("([^%.]*)[\\/][^%.]*%..*$"):gsub("[\\/]", ".") .. "."
-config.engine_path = engine_path
+local lib, lib_flat, lib_core = {}, {}, {}
+local config
+local core
+
+local path = debug.getinfo(1).short_src:match("(.*/).*$")
+local path_dot = path:gsub("/", ".")
 
 local version_meta = {
 	__tostring = function(self)
-		return table.concat(self, ".")
+		return ("%s.%s.%s %q"):format(unpack(self))
 	end
 }
 
-local lib_batch_load = function(batch)
-	for key, lib_name in next, batch do
-		local name = lib_name:match("([^%.:]*)$")
-		local loaded = require(lib_name:gsub("^:", config.engine_path))
+local batch_load = function(batch)
+	for key, path in next, batch do
+		local name = path:match("%w+$")
+		local library = require(path:gsub("^:", config.path_dot))
 
-		loaded:init(engine_core)
+		lib[name] = library
+		lib_core[name] = library
 
-		lib[name] = loaded
-		corelib[name] = loaded
-	end
-end
-
-engine_core.init = function(self, glib)
-	lib = glib or lib
-	self.lib = lib
-
-	config = require(engine_path .. "config")
-	config.engine_path = config.engine_path or engine_path
-	self.config = config
-
-	setmetatable(config.version, version_meta)
-
-	lib_batch_load(config.lib_core)
-
-	self:lib_load(config.lib_folders)
-	self:lib_batch_call("post_init")
-
-	return self
-end
-
-engine_core.close = function(self)
-	for key, library in pairs(corelib) do
-		if (library.close) then
-			library:close(self)
+		if (type(library) == "table") then
+			if (library.init) then
+				library:init(core)
+			end
 		end
 	end
-
-	self.lib = {}
-	corelib = {}
 end
 
-engine_core.quit = function(self)
-	love.event.push("quit")
-	self:close()
-end
+core = {
+	lib = lib,
+	lib_flat = lib_flat,
+	lib_core = lib_core,
 
-return engine_core
+	init = function(self)
+		config = require(path_dot .. "config")
+		self.config = config
+
+		if (config.path) then
+			config.path_dot = config.path:gsub("/", ".")
+		else
+			config.path = path
+			config.path_dot = path_dot
+		end
+
+		setmetatable(config.version, version_meta)
+
+		batch_load(config.lib_core)
+	end,
+
+	close = function(self)
+		for key, library in pairs(self.lib_core) do
+			if ((type(library) == "table") and library.close) then
+				library:close(self)
+			end
+		end
+	end,
+
+	quit = function(self)
+		love.event.push("quit")
+		self:close()
+	end
+}
+
+setmetatable(lib_flat, {__mode = "v"})
+
+return core

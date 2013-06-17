@@ -26,12 +26,10 @@ functor = {
 		table.insert(self.handlers, method)
 	end,
 
-	_new = function(self, method)
-		local instance = self:copy()
+	_new = function(base, new, method)
+		new:connect(method)
 
-		instance:connect(method)
-
-		return instance
+		return new
 	end,
 
 	init = function(self, engine)

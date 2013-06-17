@@ -4,6 +4,7 @@ Creates and passes events to objects that have registred.
 ]]
 
 local lib
+local table_copy
 local event_handler
 local event_prop_meta
 
@@ -65,18 +66,8 @@ event_handler = {
 				end
 			end
 		else
-			for event_name, hooked in pairs(self.auto_hook) do
-				local event = self.events[event_name]
-				local method = object[event_name]
-
-				if (event and method) then
-					local priority = object[event_name .. "_priority"]
-
-					event[#event + 1] = {object, method, priority or 0}
-				end
-			end
-
 			local object_events = object.event
+			local hooked = {}
 
 			if (object_events) then
 				for event_name, method in next, object_events do
@@ -84,11 +75,23 @@ event_handler = {
 						local event = self.events[event_name]
 
 						if (event) then
+							hooked[event_name] = true
 							local priority = object_events[event_name .. "_priority"]
 
 							event[#event + 1] = {object, method, priority or 0}
 						end
 					end
+				end
+			end
+
+			for event_name, enabled in pairs(self.auto_hook) do
+				local event = self.events[event_name]
+				local method = object[event_name]
+
+				if (event and method and (not hooked[event_name])) then
+					local priority = object[event_name .. "_priority"]
+
+					event[#event + 1] = {object, method, priority or 0}
 				end
 			end
 		end
@@ -164,12 +167,12 @@ event_handler = {
 		if (event) then
 			local event_data = event.data
 			event_data:update(data)
-
 			event_data:add(self)
+
+			local flags = event_data.flags
 
 			for key = 1, #event do
 				local handler = event[key]
-				local flags = event_data.flags
 
 				handler[2](handler[1], event_data)
 
@@ -183,20 +186,20 @@ event_handler = {
 				end
 			end
 
-			event_data:pop()
-
 			return event_data
 		else
 			print("WARNING: Attempt to call event '" .. tostring(event_name) .. "' (an undefined event)")
 		end
 	end,
 
-	_new = function(self)
-		local instance = self:copy()
+	_new = function(base, new)
+		for key, flag in pairs(new.auto_hook) do
+			new:event_create(key)
+		end
 
-		instance.event._handler = instance
+		new.event._handler = new
 
-		return instance
+		return new
 	end,
 
 	event_data = {
@@ -204,9 +207,21 @@ event_handler = {
 		flags = {},
 
 		update = function(self, data)
+			for key, value in pairs(self) do
+				if (type(value) == "table") then
+					self[key] = {}
+				elseif (type(value) ~= "function") then
+					self[key] = nil
+				end
+			end
+
 			if (data) then
 				for key, value in pairs(data) do
-					self[key] = value
+					if (type(value) == "table") then
+						self[key] = table_copy(value)
+					else
+						self[key] = value
+					end
 				end
 			end
 		end,
@@ -220,10 +235,6 @@ event_handler = {
 			self.stack[#self.stack + 1] = item
 		end,
 
-		pop = function(self)
-			self.stack[#self.stack] = nil
-		end,
-
 		parent = function(self)
 			return self.stack[#self.stack]
 		end
@@ -231,6 +242,8 @@ event_handler = {
 
 	init = function(self, engine)
 		lib = engine.lib
+
+		table_copy = lib.utility.table_copy
 
 		lib.oop:objectify(self)
 		lib.oop:objectify(self.event_data)
@@ -241,13 +254,19 @@ event_handler = {
 
 event_prop_meta = {
 	__index = function(self, key)
-		local handler = function(this, ...)
-			rawget(self, "_handler"):event_fire(key, ...)
+		local parent = rawget(self, "_handler")
+
+		if (parent.events[key]) then
+			local handler = function(this, ...)
+				parent:event_fire(key, ...)
+			end
+
+			self[key] = handler
+
+			return handler
+		else
+			return nil
 		end
-
-		self[key] = handler
-
-		return handler
 	end
 }
 

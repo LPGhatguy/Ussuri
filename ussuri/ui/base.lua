@@ -1,7 +1,6 @@
 --[[
 UI Base
 The root of UI items
-Part of the new UI rewrite to follow the new event scheme
 ]]
 
 local lib
@@ -14,8 +13,17 @@ base = {
 	height = 0,
 	visible = true,
 
+	_new = function(base, new, x, y, w, h)
+		new.x = x or 0
+		new.y = y or 0
+		new.width = w or 0
+		new.height = h or 0
+
+		return new
+	end,
+
 	draw = function(self)
-		--stub abstract method
+		--abstract method
 	end,
 
 	init = function(self, engine)

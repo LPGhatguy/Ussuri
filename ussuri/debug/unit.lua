@@ -8,16 +8,14 @@ local unit
 
 unit = {
 	test = function(self)
-		local out = ""
+		local out = {}
 
 		for name, test in next, self.tests do
-			out = out .. "\byellow\bRUNNING TEST \"" .. name:upper() .. "\"...\n"
-			out = out .. self:report_suite(name) .. "\n"
+			table.insert(out, "SUITE START\t" .. name:upper())
+			table.insert(out, self:report_suite(name))
 		end
 
-		out = out:sub(1, -2)
-
-		return out
+		return table.concat(out, "\n")
 	end,
 
 	report_suite = function(self, suite_name)
@@ -25,27 +23,23 @@ unit = {
 	end,
 
 	generate_report = function(self, out)
-		local report = ""
+		local report = {}
 		local success = lib.utility.table_pop(out)
+		local test_count = 0
+		local success_count = 0
 
 		for name, result in next, out do
-			report = report .. "\bwhite\b TEST \bblue\b" .. name:upper() .. ": "
+			test_count = test_count + 1
 			if (result) then
-				report = report .. "\bgreen\b" .. "SUCCESS"
-			else
-				report = report .. "\bred\b" .. "FAIL"
+				success_count = success_count + 1
 			end
 
-			report = report .. "\n"
+			table.insert(report, "\tTEST\t" .. name:upper() .. ":\t" .. (result and "SUCCESS" or "FAIL"))
 		end
 
-		if (success) then
-			report = report .. "\bgreen\bSUITE SUCCESS"
-		else
-			report = report .. "\bred\bSUITE FAIL"
-		end
+		table.insert(report, (success and "SUITE SUCCESS" or "SUITE FAIL") .. (" (%d/%d)"):format(success_count, test_count))
 
-		return report
+		return table.concat(report, "\n")
 	end,
 
 	run_suite = function(self, suite_name)
@@ -103,7 +97,7 @@ unit = {
 		local second = self:evaluate(test[2])
 
 		if (first and second) then
-			return lib.utility.table_equals(first, second, true)
+			return lib.utility.table_equals(first, second)
 		end
 	end,
 
@@ -127,8 +121,9 @@ unit = {
 				["table deep copy to"] = {{utility.table_deepcopy, {1, 2, 3}, {4, 5, 6}}, {{1, 2, 3, 4, 5, 6}}},
 				["table copy"] = {{utility.table_copy, {1, 2, 3}}, {{1, 2, 3}}},
 				["table merge"] = {{utility.table_merge, {3, 3, 3, 4, 5}, {1, 2, 3}}, {{1, 2, 3, 4, 5}}},
+				["table deep merge"] = {{utility.table_deepmerge, {3, 3, 3, 4, 5}, {1, 2, 3}}, {{1, 2, 3, 4, 5}}},
 				["table size numeric"] = {{utility.table_size, {1, 2, 3}}, {3}},
-				["table size arbitrary"] = {{utility.table_size, {a = 1, b = 2, c = 3}}, {3}}
+				["table size hash"] = {{utility.table_size, {a = 1, b = 2, c = 3}}, {3}}
 			}
 		}
 	end

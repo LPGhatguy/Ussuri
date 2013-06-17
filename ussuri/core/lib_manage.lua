@@ -3,8 +3,7 @@ Library Manager
 Manage libraries elegantly
 ]]
 
-local lib, engine_path
-local lib_flat = {}
+local lib, lib_flat, path_dot
 local lib_manage
 
 lib_manage = {
@@ -45,30 +44,32 @@ lib_manage = {
 				self:lib_load(path)
 			end
 		else
-			local abs_path = paths:gsub(":", engine_path)
+			local abs_path = paths:gsub(":", path_dot)
 			local slash_path = abs_path:gsub("%.", "/")
 
 			if (love.filesystem.isFile(slash_path .. ".lua")) then
 				return self:lib_file_load(paths)
 			else
 				if (love.filesystem.isDirectory(slash_path)) then
-					self:lib_folder_load(paths)
+					return self:lib_folder_load(paths)
 				end
 			end
 		end
 	end,
 
 	lib_folder_load = function(self, path)
-		local slash_path = path:gsub(":", engine_path):gsub("%.", "/")
+		local slash_path = path:gsub(":", path_dot):gsub("%.", "/")
 		local files = love.filesystem.enumerate(slash_path)
 
 		for key, file_path in pairs(files) do
-			self:lib_get(path .. "." .. file_path:gsub("/", "."):match("([^%.]+)%..*$"))
+			self:lib_get(path .. "." .. file_path:gsub("/", "."):match("([^%.]+)%.?.*$"))
 		end
+
+		return self:lib_nav_path(lib, path)
 	end,
 
 	lib_file_load = function(self, path)
-		local loaded = require(path:gsub(":", engine_path))
+		local loaded = require(path:gsub(":", path_dot))
 
 		if (type(loaded) == "table") then
 			local load_location = self:lib_nav_path(lib, path:match("([^%.]+)%..+$") or "", true)
@@ -93,23 +94,13 @@ lib_manage = {
 	end,
 
 	init = function(self, engine)
-		if (engine.lib) then
-			lib = engine.lib
-		else
-			lib = {}
-			engine.lib = lib
-		end
-
-		if (engine.lib_flat) then
-			lib_flat = engine.lib_flat
-		else
-			lib_flat = {}
-			engine.lib_flat = lib_flat
-		end
-
-		engine_path = engine.config.engine_path
+		lib = engine.lib
+		lib_flat = engine.lib_flat
+		path_dot = engine.config.path_dot
 
 		engine:inherit(self)
+
+		engine:lib_load(engine.config.lib_aux)
 	end,
 
 	close = function(self, engine)
@@ -120,7 +111,5 @@ lib_manage = {
 		end
 	end
 }
-
-setmetatable(lib_flat, {__mode = "v"})
 
 return lib_manage

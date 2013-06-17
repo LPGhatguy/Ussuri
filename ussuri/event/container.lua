@@ -21,6 +21,12 @@ container = {
 		self:event_hook_object(nil, item)
 	end,
 
+	adds = function(self, items)
+		for key, item in next, items do
+			self:add(item)
+		end
+	end,
+
 	remove = function(self, id)
 		local item = self.children[id]
 
