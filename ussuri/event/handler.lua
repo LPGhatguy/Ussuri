@@ -197,8 +197,6 @@ event_handler = {
 			new:event_create(key)
 		end
 
-		new.event._handler = new
-
 		return new
 	end,
 
