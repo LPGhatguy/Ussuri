@@ -5,6 +5,7 @@
 -event.handler::event_sort should be called automatically
 
 # FEATURES #
+-Localization Library
 -Create unit tests
 -Expression bound variables
 -Revise input.text
