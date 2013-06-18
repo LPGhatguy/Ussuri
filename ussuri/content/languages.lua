@@ -105,5 +105,5 @@ return {
 		local native = engine.config.author_language
 
 		self["default"] = self[native] or native
-	end,
+	end
 }
