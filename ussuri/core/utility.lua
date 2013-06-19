@@ -31,7 +31,7 @@ utility = {
 
 	table_contains = function(from, search)
 		for key, value in next, from do
-			if (rawequal(value, search)) then
+			if (value == search) then
 				return true
 			end
 		end
@@ -70,7 +70,7 @@ utility = {
 		if (type(key) == "number") then
 			table.remove(from, key)
 		else
-			rawset(from, key, nil)
+			from[key] = nil
 		end
 
 		return value
@@ -85,18 +85,18 @@ utility = {
 			if (type(value) == "table") then
 				if (next(value) == nil) then
 					to[key] = {}
-				elseif (rawget(value, "__")) then
+				elseif (value["__"]) then
 					to[key] = value
 				else
-					if (rawget(passed, value) ~= nil) then
-						rawset(to, key, rawget(passed, value))
+					if (passed[value] ~= nil) then
+						to[key] = passed[value]
 					else
 						local target = {}
-						rawset(passed, value, target)
+						passed[value] = target
 
 						utility.table_deepcopy(value, target, child_meta, passed)
 
-						rawset(to, key, target)
+						to[key] = target
 					end
 				end
 			else
@@ -116,9 +116,9 @@ utility = {
 
 		for key, value in pairs(from) do
 			if (type(value) == "table") then
-				rawset(to, key, utility.table_deepcopy_fast(value))
+				to[key] = utility.table_deepcopy_fast(value)
 			else
-				rawset(to, key, value)
+				to[key] = value
 			end
 		end
 
@@ -133,7 +133,7 @@ utility = {
 		local to = to or {}
 
 		for key, value in pairs(from) do
-			rawset(to, key, value)
+			to[key] = value
 		end
 
 		if (meta == true) then
@@ -148,8 +148,8 @@ utility = {
 		local child_meta = (meta == utility.DESCENDANTS_ONLY) and true or meta
 
 		for key, value in pairs(from) do
-			if (rawget(to, key) ~= nil) then
-				local target = rawget(to, key)
+			if (to[key] ~= nil) then
+				local target = to[key]
 
 				if (type(value) == "table" and type(target) == "table") then
 					if (merge_children) then
@@ -161,11 +161,11 @@ utility = {
 			else
 				if (type(value) == "table") then
 					local target = {}
-					rawset(to, key, target)
+					to[key] = target
 
 					utility.table_deepcopy(value, target, child_meta, passed)
 				else
-					rawset(to, key, value)
+					to[key] = value
 				end
 			end
 		end
@@ -179,8 +179,8 @@ utility = {
 
 	table_merge = function(from, to, meta)
 		for key, value in pairs(from) do
-			if (rawget(to, key) == nil) then
-				rawset(to, key, value)
+			if (to[key] == nil) then
+				to[key] = value
 			end
 		end
 
