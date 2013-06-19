@@ -80,7 +80,8 @@ ui_container = {
 			local object = handler[1]
 
 			if (lx < object.x or ly < object.y or
-				lx > (object.x + object.width) or ly > (object.y + object.height)) then
+			 lx > (object.x + object.width) or ly > (object.y + object.height)) then
+
 				handler[2](handler[1], event_data)
 			end
 
@@ -108,7 +109,7 @@ ui_container = {
 				local object = handler[1]
 
 				if (lx > object.x and ly > object.y and
-					lx < (object.x + object.width) and ly < (object.y + object.height)) then
+				 lx < (object.x + object.width) and ly < (object.y + object.height)) then
 
 					handler[2](handler[1], event_data)
 				end
