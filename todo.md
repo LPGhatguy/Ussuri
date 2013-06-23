@@ -1,13 +1,9 @@
 # UP-FRONT #
--Prettier utility::table_tree
 
 # IMPROVEMENTS #
 -event.handler::event_sort should be called automatically
 
 # FEATURES #
--Class templating library
--Create unit tests
--Expression bound variables
 -Revise input.text
 -ui.text_box
 -ui.text_button
@@ -19,6 +15,9 @@
 --ui.slider
 
 # FUTURE #
+-Prettier utility::table_tree
+-Expanded unit testing
+-Fleshing out databinding
 -Resource manager
 -Rewrite sound engine
 -Expanded input module for easier bindings
