@@ -17,8 +17,8 @@ text = {
 		local key = event.key
 
 		if (self.enabled) then
-			local ctrl = love.keyboard.isDown("lctrl") or love.keyboard.isDown("rctrl")
-			local shift = love.keyboard.isDown("lshift") or love.keyboard.isDown("rshift")
+			local ctrl = love.keyboard.isDown("lctrl", "rctrl")
+			local shift = love.keyboard.isDown("lshift", "rshift")
 
 			if (ctrl) then
 				if (key == "a") then
