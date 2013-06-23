@@ -7,10 +7,10 @@ Monkey-patches engine.event
 local definitions
 
 definitions = {
-	fire_keydown = function(self, key, unicode)
+	fire_keydown = function(self, key, code)
 		return self:event_fire("keydown", {
 			key = key,
-			unicode = unicode
+			code = code
 		})
 	end,
 
