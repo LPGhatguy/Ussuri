@@ -5,24 +5,5 @@
 			"path": "/",
 			"file_exclude_patterns": ["*.sublime-*", ".git*"]
 		}
-	],
-	"build_systems":
-	[
-		{
-			"name": "LÖVE",
-			"cmd": ["C:/love/win64/love.exe", "$project_path"],
-			"variants":
-			[
-				{
-					"name": "LÖVE (x86)",
-					"cmd": ["C:/love/win32/love.exe", "$project_path"]
-				},
-
-				{
-					"name": "LÖVE (LuaJIT)",
-					"cmd": ["C:/love/win32-luajit/love.exe", "$project_path"]
-				}
-			]
-		}
 	]
 }
