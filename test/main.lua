@@ -11,6 +11,4 @@ function love.load()
 	local ui_root = lib.ui.ui_container:new()
 	ussuri.event:event_hook_object(nil, ui_root)
 	ussuri.event:event_sort()
-	
-	
 end
