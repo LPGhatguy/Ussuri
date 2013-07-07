@@ -40,7 +40,7 @@ text = {
 				end
 			else
 				if (key:len() == 1) then
-					self:text_in(string.char(event.unicode))
+					self:text_in(string.char(event.code))
 				elseif (key == "backspace") then
 					self:backspace(1)
 				elseif (key == "delete") then

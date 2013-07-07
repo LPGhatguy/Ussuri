@@ -8,6 +8,9 @@ local utility
 utility = {
 	DESCENDANTS_ONLY = 1,
 
+	do_nothing = function()
+	end,
+
 	string_split = function(from, splitter)
 		local last = 1
 		local current

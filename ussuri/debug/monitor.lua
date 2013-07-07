@@ -44,8 +44,8 @@ monitor = {
 			end
 		end,
 
-		update_priority = -502,
-		update = function(self, event)
+		tick_priority = -502,
+		tick = function(self, event)
 			self.values.fps = love.timer.getFPS()
 			self.values.time = self.values.time + event.delta
 		end,

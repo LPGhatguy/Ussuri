@@ -3,9 +3,6 @@ Button
 Exposes click functionality
 ]]
 
---DEBUG:
---contains debug code for testing at present
-
 local lib
 local button
 

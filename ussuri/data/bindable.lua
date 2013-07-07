@@ -17,7 +17,7 @@ bindable = {
 			if (type(target) == "table") then
 				target[1][target[2]] = self[key]
 			elseif (type(target) == "function") then
-				target(key, self[key])
+				target(self, key, self[key])
 			end
 		end
 	end,
@@ -28,7 +28,7 @@ bindable = {
 		if (type(target) == "table") then
 			target[1][target[2]] = self[key]
 		else
-			target(key, self[key])
+			target(self, key, self[key])
 		end
 	end,
 

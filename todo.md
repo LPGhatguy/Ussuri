@@ -1,10 +1,23 @@
-# UP-FRONT #
+## ussuri.utility ##
+-Prettier table_tree
 
-# IMPROVEMENTS #
--event.handler::event_sort should be called automatically
+## ussuri.event ##
+-handler::event_sort should be called automatically
+-Efficient allocation of event data in love_definitions
 
-# FEATURES #
--Revise input.text
+## ussuri.debug ##
+-Combine debug.header and debug.monitor
+--Enable high-level debugging through merged debug module
+-Reimplement unit testing alongside fake objects, merging debug.unit and debug.templating
+-Create processor interface for debug.meta for command line meta information
+
+## ussuri.content ##
+-Global resource manager with localization support
+
+## ussuri.data ##
+-Flesh-out databinding facilities
+
+## ussuri.ui ##
 -ui.text_box
 -ui.text_button
 -ui.image_button
@@ -14,10 +27,12 @@
 -ui.draggable
 --ui.slider
 
-# FUTURE #
--Prettier utility::table_tree
--Expanded unit testing
--Fleshing out databinding
--Resource manager
--Rewrite sound engine
--Expanded input module for easier bindings
+## ussuri.input ##
+-Keybinding styled like Ussuri's event stack
+
+## ussuri.graphics ##
+-Scale9 support
+-Other useful utilities to be lined out in the future
+
+## ussuri.misc ##
+-Evaluate necessity of ussuri.misc's libraries (recurring)

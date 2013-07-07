@@ -22,8 +22,10 @@ definitions = {
 
 	fire_mousedown = function(self, x, y, button)
 		return self:event_fire("mousedown", {
+			ox = 0,
 			x = x,
 			abs_x = x,
+			oy = 0,
 			y = y,
 			abs_y = y,
 			button = button
@@ -32,8 +34,10 @@ definitions = {
 
 	fire_mouseup = function(self, x, y, button)
 		return self:event_fire("mouseup", {
+			ox = 0,
 			x = x,
 			abs_x = x,
+			oy = 0,
 			y = y,
 			abs_y = y,
 			button = button
@@ -60,14 +64,17 @@ definitions = {
 		})
 	end,
 
-	fire_update = function(self, delta)
-		return self:event_fire("update", {
+	fire_tick = function(self, delta)
+		return self:event_fire("tick", {
 			delta = delta
 		})
 	end,
 
 	fire_draw = function(self)
-		return self:event_fire("draw", {})
+		return self:event_fire("draw", {
+			ox = 0,
+			oy = 0
+		})
 	end,
 
 	fire_quit = function(self)
@@ -97,7 +104,7 @@ definitions = {
 
 		local engine_event = engine.event
 
-		engine_event:event_create({"update", "draw", "quit", "focus",
+		engine_event:event_create({"tick", "draw", "quit", "focus",
 			"keydown", "keyup", "joydown", "joyup", "mousedown", "mouseup",
 			"display_updating", "display_updated"})
 
@@ -105,51 +112,30 @@ definitions = {
 
 		love.handlers = setmetatable({
 			keypressed = function(b, u)
-				if love.keypressed then
-					love.keypressed(b, u)
-				end
 				engine_event:fire_keydown(b, u)
 			end,
 
 			keyreleased = function(b)
-				if love.keyreleased then
-					love.keyreleased(b)
-				end
 				engine_event:fire_keyup(b)
 			end,
 
 			mousepressed = function(x, y, b)
-				if love.mousepressed then
-					love.mousepressed(x, y, b)
-				end
 				engine_event:fire_mousedown(x, y, b)
 			end,
 
 			mousereleased = function(x, y, b)
-				if love.mousereleased then
-					love.mousereleased(x, y, b)
-				end
 				engine_event:fire_mouseup(x, y, b)
 			end,
 
 			joystickpressed = function(j, b)
-				if love.joystickpressed then
-					love.joystickpressed(j, b)
-				end
 				engine_event:fire_joydown(j, b)
 			end,
 
 			joystickreleased = function(j, b)
-				if love.joystickreleased then
-					love.joystickreleased(j, b)
-				end
 				engine_event:fire_joyup(j, b)
 			end,
 
 			focus = function(f)
-				if love.focus then
-					love.focus(f)
-				end
 				engine_event:fire_focus(f)
 			end,
 

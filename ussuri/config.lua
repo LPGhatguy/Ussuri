@@ -1,8 +1,8 @@
 return {
-	version = {1, 3, 4, "DEV"},
+	version = {1, 4, 0, "DEV"},
 
 	lib_core = {":core.utility", ":core.oop", ":core.logging", ":core.lib_manage"},
-	lib_aux = {":event", ":misc", ":input", ":debug", ":ui", ":data", ":content"},
+	lib_aux = {":event", ":misc", ":input", ":debug", ":graphics", ":ui", ":data", ":content"},
 
 	author_language = "en"
 }

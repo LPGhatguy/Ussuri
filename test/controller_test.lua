@@ -6,11 +6,10 @@ Tailored for an Xbox 360 Controller
 
 local ussuri = require("ussuri")
 
-function love.load()
+ussuri.start = function()
 	local lib = ussuri.lib
 
-	love.graphics.setFont(love.graphics.newFont())
-	local mappings = {"A", "B", "X", "Y", "LB", "RB", "Back", "Start", "Left Hat", "Right"}
+	local mappings = {"A", "B", "X", "Y", "LB", "RB", "Back", "Start", "Left Hat", "Right Hat"}
 
 	local drawer = {
 		event = {
@@ -80,7 +79,7 @@ function love.load()
 					end
 
 					love.graphics.print((mappings[id] or "Button " .. id) .. ": " ..
-						(down and "down" or "up") .. "\n", 4, height * id)
+						(down and "down" or "up") .. "\n", 4, (height * id) - height)
 				end
 			end
 		}

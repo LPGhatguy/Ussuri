@@ -40,7 +40,7 @@ queue = {
 		end
 	end,
 
-	update = function(self, event)
+	tick = function(self, event)
 		local current = self.stack[1]
 
 		if (current) then
@@ -61,7 +61,7 @@ queue = {
 }
 
 queue.event = {
-	update = queue.update
+	tick = queue.tick
 }
 
 return queue

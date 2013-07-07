@@ -10,7 +10,7 @@ function love.run()
     math.randomseed(os.time())
     math.random() math.random()
 
-	if love.load then love.load(arg) end
+    engine:start(arg)
 
 	local dt = 0
 	local event, timer, graphics = love.event, love.timer, love.graphics
@@ -41,18 +41,12 @@ function love.run()
 			dt = timer.getDelta()
 		end
 
-		if (love.update) then
-			love.update(dt)
-		end
-		engine_event:fire_update(dt)
+		engine_event:fire_tick(dt)
 
 		if (graphics) then
 			graphics.clear()
 
 			engine_event:fire_draw()
-			if (love.draw) then
-				love.draw()
-			end
 		end
 
 		if (graphics) then

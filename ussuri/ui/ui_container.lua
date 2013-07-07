@@ -18,8 +18,8 @@ ui_container = {
 	},
 
 	draw = function(self, event)
-		local tx = event.tx and (event.tx + self.x) or self.x
-		local ty = event.ty and (event.ty + self.y) or self.y
+		local ox = event.ox + self.x
+		local oy = event.oy + self.y
 
 		local handlers = self.events["draw"]
 		local event_data = handlers.data
@@ -27,17 +27,17 @@ ui_container = {
 		event_data:add(self)
 
 		local flags = event_data.flags
-		local tx = event.tx and (event.tx + self.x) or self.x
-		local ty = event.ty and (event.ty + self.y) or self.y
+		local ox = event.ox + self.x
+		local oy = event.oy + self.y
 
-		event_data.tx = tx
-		event_data.ty = ty
+		event_data.ox = ox
+		event_data.oy = oy
 
 		love.graphics.push()
-		love.graphics.translate(tx, ty)
+		love.graphics.translate(ox, oy)
 
 		if (self.clip_children) then
-			love.graphics.setScissor(tx, ty, self.width, self.height)
+			love.graphics.setScissor(ox, oy, self.width, self.height)
 		end
 
 		for key = 1, #handlers do
@@ -64,14 +64,19 @@ ui_container = {
 	positional_event = function(self, event_name, event)
 		self:event_fire(event_name, event)
 
-		local lx = event.lx and (event.lx - self.x) or (event.x - self.x)
-		local ly = event.ly and (event.ly - self.ly) or (event.y - self.y)
+		local ox = event.ox + self.x
+		local oy = event.oy + self.y
+
+		local x = event.abs_x - ox
+		local y = event.abs_y - oy
+
 
 		local handlers = self.events[event_name .. "_out"]
 		local event_data = handlers.data
 		event_data:update(event)
 		event_data:add(self)
-		event_data.lx, event_data.ly = lx, ly
+		event_data.x, event_data.y = x, y
+		event_data.ox, event_data.oy = ox, oy
 
 		local flags = event_data.flags
 
@@ -79,9 +84,8 @@ ui_container = {
 			local handler = handlers[key]
 			local object = handler[1]
 
-			if (lx < object.x or ly < object.y or
-			 lx > (object.x + object.width) or ly > (object.y + object.height)) then
-
+			if (x < object.x or y < object.y or
+			 x > (object.x + object.width) or y > (object.y + object.height)) then
 				handler[2](handler[1], event_data)
 			end
 
@@ -100,7 +104,8 @@ ui_container = {
 			local event_data = handlers.data
 			event_data:update(event)
 			event_data:add(self)
-			event_data.lx, event_data.ly = lx, ly
+			event_data.x, event_data.y = x, y
+			event_data.ox, event_data.oy = ox, oy
 
 			local flags = event_data.flags
 
@@ -108,9 +113,8 @@ ui_container = {
 				local handler = handlers[key]
 				local object = handler[1]
 
-				if (lx > object.x and ly > object.y and
-				 lx < (object.x + object.width) and ly < (object.y + object.height)) then
-
+				if (x > object.x and y > object.y and
+				 x < (object.x + object.width) and y < (object.y + object.height)) then
 					handler[2](handler[1], event_data)
 				end
 
@@ -133,10 +137,14 @@ ui_container = {
 			event_data:update(event)
 			event_data:add(self)
 
-			local lx = event.lx and (event.lx - self.x) or (event.x - self.x)
-			local ly = event.ly and (event.ly - self.y) or (event.y - self.y)
+			local ox = event.ox + self.x
+			local oy = event.oy + self.y
 
-			event_data.lx, event_data.ly = lx, ly
+			local x = event.abs_x - ox
+			local y = event.abs_y - oy
+
+			event_data.x, event_data.y = x, y
+			event_data.ox, event_data.oy = ox, oy
 
 			local flags = event_data.flags
 
@@ -144,8 +152,8 @@ ui_container = {
 				local handler = handlers[key]
 				local object = handler[1]
 
-				if (lx > object.x and ly > object.y and
-					lx < (object.x + object.width) and ly < (object.y + object.height)) then
+				if (x > object.x and y > object.y and
+				 x < (object.x + object.width) and y < (object.y + object.height)) then
 
 					handler[2](handler[1], event_data)
 				end

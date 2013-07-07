@@ -37,6 +37,9 @@ core = {
 	lib_flat = lib_flat,
 	lib_core = lib_core,
 
+	start = function()
+	end,
+
 	init = function(self)
 		config = require(path_dot .. "config")
 		self.config = config

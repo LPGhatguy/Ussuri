@@ -69,11 +69,7 @@ localization = {
 
 		local repo = self.strings[language] or self.strings["default"]
 
-		if (repo) then
-			return repo[id] or "nil"
-		else
-			return "nil"
-		end
+		return repo and repo[id] or "nil"
 	end,
 
 	_new = function(base, new)
