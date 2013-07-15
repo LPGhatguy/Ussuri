@@ -37,7 +37,7 @@ unit = {
 			table.insert(report, "\tTEST\t" .. name:upper() .. ":\t" .. (result and "SUCCESS" or "FAIL"))
 		end
 
-		table.insert(report, (success and "SUITE SUCCESS" or "SUITE FAIL") .. (" (%d/%d)"):format(success_count, test_count))
+		table.insert(report, (success and "SUITE SUCCESS" or "SUITE FAIL") .. success_count .. "/" .. test_count)
 
 		return table.concat(report, "\n")
 	end,

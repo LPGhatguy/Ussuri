@@ -34,14 +34,14 @@ event_handler = {
 	end,
 
 	event_handler_make = function(self, event_name)
-		if (rawget(self.events, event_name)) then
-			return rawget(self.events, event_name)
+		if (rawget(self.event, event_name)) then
+			return rawget(self.event, event_name)
 		else
 			local handler = function(this, ...)
 				self:event_fire(event_name, ...)
 			end
 
-			self.events[event_name] = handler
+			self.event[event_name] = handler
 
 			return handler
 		end
@@ -249,26 +249,5 @@ event_handler = {
 		engine.event = self:new()
 	end
 }
-
-event_prop_meta = {
-	__index = function(self, key)
-		local parent = rawget(self, "_handler")
-
-		if (parent.events[key]) then
-			local handler = function(this, ...)
-				parent:event_fire(key, ...)
-			end
-
-			self[key] = handler
-
-			return handler
-		else
-			return nil
-		end
-	end
-}
-
-event_handler.event._handler = event_handler
-setmetatable(event_handler.event, event_prop_meta)
 
 return event_handler

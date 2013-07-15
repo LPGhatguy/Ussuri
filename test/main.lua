@@ -1,5 +1,5 @@
 --[[
-Ussuri 1.4.0 Test
+Ussuri 1.4.1 Test
 ]]
 
 local ussuri = require("ussuri")
@@ -7,5 +7,12 @@ local ussuri = require("ussuri")
 ussuri.start = function(engine, args)
 	local lib = ussuri.lib
 
-	print(ussuri.lib.debug.unit:test())
+	local ui_root = lib.ui.ui_container:new()
+
+	local drag = lib.ui.draggable:new(nil, 50, 50, 50, 50)
+
+	ui_root:add(drag)
+
+	ussuri.event:event_hook_object(nil, ui_root)
+	ussuri.event:event_hook_object(nil, lib.debug.monitor)
 end

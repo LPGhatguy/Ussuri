@@ -12,7 +12,7 @@ ui_container = {
 	clip_children = false,
 
 	auto_hook = {
-		["draw"] = true,
+		["draw"] = true, ["tick"] = true,
 		["mousedown"] = true, ["mousedown_in"] = true, ["mousedown_out"] = true,
 		["mouseup"] = true, ["mouseup_in"] = true, ["mouseup_out"] = true
 	},
@@ -23,7 +23,7 @@ ui_container = {
 
 		local handlers = self.events["draw"]
 		local event_data = handlers.data
-		event_data:update(data)
+		event_data:update(event)
 		event_data:add(self)
 
 		local flags = event_data.flags

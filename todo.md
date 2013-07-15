@@ -22,9 +22,7 @@
 -ui.text_button
 -ui.image_button
 -ui.content_button
---ui.checkbox
 --ui.dropdown
--ui.draggable
 --ui.slider
 
 ## ussuri.input ##

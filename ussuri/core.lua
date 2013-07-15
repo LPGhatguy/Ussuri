@@ -12,7 +12,7 @@ local path_dot = path:gsub("/", ".")
 
 local version_meta = {
 	__tostring = function(self)
-		return ("%s.%s.%s %q"):format(unpack(self))
+		return ("%d.%d.%d %q"):format(unpack(self))
 	end
 }
 
