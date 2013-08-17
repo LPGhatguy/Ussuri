@@ -7,12 +7,16 @@ local ussuri = require("ussuri")
 ussuri.start = function(engine, args)
 	local lib = ussuri.lib
 
-	local ui_root = lib.ui.ui_container:new()
+	local queue = lib.misc.timed_queue:new()
 
-	local drag = lib.ui.draggable:new(nil, 50, 50, 50, 50)
+	ussuri.event:event_hook_light("keydown", {}, function(self, event)
+		queue:queue(1, queue.LOCKINGABLE,
+			function()
+				print("pre")
+			end
+		)
+	end)
 
-	ui_root:add(drag)
-
-	ussuri.event:event_hook_object(nil, ui_root)
+	ussuri.event:event_hook_object(nil, queue)
 	ussuri.event:event_hook_object(nil, lib.debug.monitor)
 end

@@ -19,12 +19,12 @@ queue = {
 			local locking = (lock == self.LOCKING or lock == self.LOCKINGABLE)
 			local lockable = (lock == self.LOCKABLE or lock == self.LOCKINGABLE)
 
-			if (not (self.locked == 0 and lockable)) then
+			if (not (self.lock ~= 0 and lockable)) then
 				local stack = self.stack
 				local queued = {
 					time = time or 0,
 					pre = pre,
-					post = post
+					post = post,
 					locking = locking,
 					lockable = lockable
 				}
@@ -49,7 +49,11 @@ queue = {
 
 		if (last) then
 			if (last.post) then
-				lib.utility.table_pop(last.post)(unpack(last.post))
+				if (type(last.post) == "table") then
+					lib.utility.table_pop(last.post)(unpack(last.post))
+				else
+					last.post()
+				end
 			end
 
 			if (last.locking) then
@@ -60,7 +64,11 @@ queue = {
 		local current = self.stack[1]
 
 		if (current and current.pre) then
-			lib.utility.table_pop(current.pre)(unpack(current.pre))
+			if (type(current.pre) == "table") then
+				lib.utility.table_pop(current.pre)(unpack(current.pre))
+			else
+				current.pre()
+			end
 		end
 	end,
 
