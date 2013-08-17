@@ -7,30 +7,54 @@ local lib
 local queue
 
 queue = {
+	LOCKING = 1,
+	LOCKABLE = 2,
+	LOCKINGABLE = 3,
+
+	lock = 0,
 	stack = {},
 
-	queue = function(self, time, pre, post)
-		local stack = self.stack
-		local queued = {
-			time = time or 0,
-			pre = pre,
-			post = post
-		}
+	queue = function(self, time, lock, pre, post)
+		if (not self.locked) then
+			local locking = (lock == self.LOCKING or lock == self.LOCKINGABLE)
+			local lockable = (lock == self.LOCKABLE or lock == self.LOCKINGABLE)
 
-		if (#stack == 0) then
-			stack[1] = false
-			stack[2] = queued
-			self:cycle()
-		else
-			stack[#stack + 1] = queued
+			if (not (self.locked == 0 and lockable)) then
+				local stack = self.stack
+				local queued = {
+					time = time or 0,
+					pre = pre,
+					post = post
+					locking = locking,
+					lockable = lockable
+				}
+
+				if (locking) then
+					self.lock = self.lock + 1
+				end
+
+				if (#stack == 0) then
+					stack[1] = false
+					stack[2] = queued
+					self:cycle()
+				else
+					stack[#stack + 1] = queued
+				end
+			end
 		end
 	end,
 
 	cycle = function(self)
 		local last = lib.utility.table_pop(self.stack)
 
-		if (last and last.post) then
-			lib.utility.table_pop(last.post)(unpack(last.post))
+		if (last) then
+			if (last.post) then
+				lib.utility.table_pop(last.post)(unpack(last.post))
+			end
+
+			if (last.locking) then
+				self.lock = math.max(self.lock - 1, 0)
+			end
 		end
 
 		local current = self.stack[1]
