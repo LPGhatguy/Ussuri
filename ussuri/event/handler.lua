@@ -47,7 +47,7 @@ event_handler = {
 		end
 	end,
 
-	event_hook_object = function(self, event_names, object)
+	event_hook_object = function(self, object, event_names)
 		if (type(event_names) == "table") then
 			for key, event_name in next, event_names do
 				self:event_hook_object(event_name, object)
@@ -97,7 +97,7 @@ event_handler = {
 		end
 	end,
 
-	event_hook_light = function(self, event_names, object, method, priority)
+	event_hook_light = function(self, object, event_names, method, priority)
 		if (type(event_names) == "table") then
 			for key, event_name in next, event_names do
 				self:event_hook_light(event_name, object, method, priority)
