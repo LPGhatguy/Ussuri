@@ -10,6 +10,6 @@ This work is covered under the zlib/libpng license, with more detail available i
 
 **Development has stopped on this project entirely.**
 The following projects used Ussuri in various states:
-- Ludum Dare 27 - (:Fast :Food!)[http://www.ludumdare.com/compo/ludum-dare-27/?action=preview&uid=14296]
-- Ludum Dare 26 - (JOHN)[http://www.ludumdare.com/compo/ludum-dare-26/?action=preview&uid=14296]
-- Ludum Dare 25 - (London Bridges)[http://www.ludumdare.com/compo/ludum-dare-25/?action=preview&uid=14296]
+- Ludum Dare 27 - [:Fast :Food!](http://www.ludumdare.com/compo/ludum-dare-27/?action=preview&uid=14296)
+- Ludum Dare 26 - [JOHN](http://www.ludumdare.com/compo/ludum-dare-26/?action=preview&uid=14296)
+- Ludum Dare 25 - [London Bridges](http://www.ludumdare.com/compo/ludum-dare-25/?action=preview&uid=14296)
