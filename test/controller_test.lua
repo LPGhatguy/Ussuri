@@ -85,8 +85,5 @@ ussuri.start = function()
 		}
 	}
 
-	ussuri.event:event_hook_object(nil, drawer)
-
-	ussuri.event:event_hook_object(nil, lib.debug.header)
-	ussuri.event:event_hook_object(nil, lib.debug.monitor)
+	ussuri.event:event_hook_object(nil, drawer, {"draw"})
 end

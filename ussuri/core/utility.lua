@@ -194,6 +194,24 @@ utility = {
 		return to
 	end,
 
+	table_nav = function(location, path, carve)
+		for key = 1, #path do
+			local target = location[path[key]]
+
+			if (target) then
+				location = target
+			elseif (carve) then
+				target = {}
+				location[path[key]] = target
+				location = target
+			else
+				return nil
+			end
+		end
+
+		return location
+	end,
+
 	--todo: make this less god-awful
 	table_tree = function(location, level, max_depth)
 		local out = ""
